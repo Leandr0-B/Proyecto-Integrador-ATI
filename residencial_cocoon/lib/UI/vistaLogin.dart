@@ -69,7 +69,6 @@ class _LoginPageState extends State<LoginPage> implements IvistaLogin {
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               icon: Icon(Icons.account_box),
-              hintText: '3211235-4',
               labelText: 'Cedula de identidad',
             ),
             onChanged: (value) {
@@ -92,7 +91,6 @@ class _LoginPageState extends State<LoginPage> implements IvistaLogin {
             obscureText: true,
             decoration: InputDecoration(
               icon: Icon(Icons.lock),
-              hintText: 'Contraseña',
               labelText: 'Contraseña',
             ),
             onChanged: (value) {
