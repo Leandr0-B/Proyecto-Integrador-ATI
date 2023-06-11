@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/UI/vistaInicio.dart';
+import 'package:residencial_cocoon/UI/vistaLogin.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +11,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      title: 'Residencial Cocoon',
+      debugShowCheckedModeBanner: false,
+      initialRoute: LoginPage.id,
+      routes: {
+        LoginPage.id: (context) => LoginPage(),
+        InicioPage.id: (context) => InicioPage(),
+      },
     );
   }
 }
