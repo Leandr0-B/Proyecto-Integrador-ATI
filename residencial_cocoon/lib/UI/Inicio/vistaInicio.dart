@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 class InicioPage extends StatefulWidget {
-  static String id = 'vistaInicio';
+  static String id = 'inicio';
 
   @override
   State<InicioPage> createState() => _InicioPageState();

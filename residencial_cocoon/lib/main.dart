@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/UI/vistaInicio.dart';
-import 'package:residencial_cocoon/UI/vistaLogin.dart';
+import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
+import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 
 void main() {
   runApp(const MainApp());

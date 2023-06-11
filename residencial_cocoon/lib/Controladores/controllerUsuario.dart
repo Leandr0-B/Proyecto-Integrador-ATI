@@ -1,33 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 
 class ControllerUsuario {
   //Atributos
   Function(String mensaje) mostrarMensaje;
-  Function() ingreso;
 
   //Constructor
   ControllerUsuario({
     required this.mostrarMensaje,
-    required this.ingreso,
   });
 
   //Funciones
-  void loginUsuario(String ci, String clave) {
+  Future<Usuario?> loginUsuario(String ci, String clave) async {
     //Hace el pasamanos del login
-    ci = _limpieza(ci);
-    String? control = _controlDatos(ci, clave);
-    if (control == null) {
-      Usuario? usuario = Fachada.getInstancia()?.login(ci, clave);
-      if (usuario == null) {
-        mostrarMensaje("Los datos ingresados no estan en el sistema.");
-      } else {
-        ingreso();
-      }
-    } else {
-      mostrarMensaje(control);
+    Usuario? usuario;
+    try {
+      usuario = await Fachada.getInstancia()?.login(ci, clave);
+    } on LoginException catch (ex) {
+      mostrarMensaje(ex.toString());
+    } catch (ex) {
+      mostrarMensaje(ex.toString());
     }
+
+    return usuario;
   }
 
   String? _controlDatos(String ci, String clave) {

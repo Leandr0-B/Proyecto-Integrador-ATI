@@ -1,20 +1,26 @@
 class Rol {
-  //Atributos
-  int? id_Rol;
-  String? descripcion;
-  bool? inactivo;
+  int _idRol;
+  String _descripcion;
 
-  //Constructor
-  Rol(int id_Rol, String descripcion, bool inactivo) {
-    this.id_Rol = id_Rol;
-    this.descripcion = descripcion;
-    this.inactivo = inactivo;
+  Rol({required int idRol, required String descripcion})
+      : _idRol = idRol,
+        _descripcion = descripcion;
+
+  int get idRol => _idRol;
+  set idRol(int value) => _idRol = value;
+
+  String get descripcion => _descripcion;
+  set descripcion(String value) => _descripcion = value;
+
+  factory Rol.fromJson(Map<String, dynamic> json) {
+    return Rol(
+      idRol: json['id_rol'],
+      descripcion: json['descripcion'],
+    );
   }
 
-  //Get Set
-  int? get idRol => this.id_Rol;
-
-  String? get getDescripcion => this.descripcion;
-
-  bool? get getInactivo => this.inactivo;
+  @override
+  String toString() {
+    return 'Rol(idRol: $_idRol, descripcion: $_descripcion)';
+  }
 }
