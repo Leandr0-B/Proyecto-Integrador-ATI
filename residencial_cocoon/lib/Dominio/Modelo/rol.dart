@@ -1,7 +1,9 @@
 class Rol {
+  //Atributos
   int _idRol;
   String _descripcion;
 
+  //Constructores
   Rol({required int idRol, required String descripcion})
       : _idRol = idRol,
         _descripcion = descripcion;
@@ -10,12 +12,6 @@ class Rol {
       : _idRol = idRol,
         _descripcion = "";
 
-  int get idRol => _idRol;
-  set idRol(int value) => _idRol = value;
-
-  String get descripcion => _descripcion;
-  set descripcion(String value) => _descripcion = value;
-
   factory Rol.fromJson(Map<String, dynamic> json) {
     return Rol(
       idRol: json['id_rol'],
@@ -23,9 +19,25 @@ class Rol {
     );
   }
 
+  //Get Set
+  int get idRol => _idRol;
+  set idRol(int value) => _idRol = value;
+
+  String get descripcion => _descripcion;
+  set descripcion(String value) => _descripcion = value;
+
+  //Funciones
+  Map<String, dynamic> toJson() {
+    return {
+      'id_rol': _idRol,
+      'descripcion': _descripcion,
+    };
+  }
+
+  //ToString
   @override
   String toString() {
-    return 'Rol(idRol: $_idRol, descripcion: $_descripcion)';
+    return toJson().toString();
   }
 
   //Equals

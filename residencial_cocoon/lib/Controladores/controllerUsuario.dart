@@ -1,6 +1,8 @@
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:universal_html/html.dart' as html;
+import 'dart:convert';
 
 class ControllerUsuario {
   //Atributos
@@ -17,32 +19,27 @@ class ControllerUsuario {
     Usuario? usuario;
     try {
       usuario = await Fachada.getInstancia()?.login(ci, clave);
+      Fachada.getInstancia()?.setUsuario(usuario);
+      _guardarUsuarioEnLocalStorage(usuario);
     } on LoginException catch (ex) {
       mostrarMensaje(ex.toString());
     } catch (ex) {
       mostrarMensaje(ex.toString());
     }
-
     return usuario;
   }
 
-  String? _controlDatos(String ci, String clave) {
-    //Controla los valores de cedula y clave
-    String? respuesta;
-    if (ci == "" || clave == "") {
-      respuesta = "Los datos de ingreso no pueden estar vacios.";
-    }
-    return respuesta;
-  }
+  void _guardarUsuarioEnLocalStorage(Usuario? usuario) {
+    final jsonData = {
+      'ci': usuario?.ci,
+      'nombre': usuario?.nombre,
+      'administrador': usuario?.administrador,
+      'roles': usuario?.roles.map((rol) => rol.toJson()).toList(),
+      'sucursales':
+          usuario?.sucursales.map((sucursal) => sucursal.toJson()).toList(),
+    };
 
-  String _limpieza(String ci) {
-    //Limpia los puntos y guiones de la cedula
-    if (ci.contains(".")) {
-      ci = ci.replaceAll(".", "");
-    }
-    if (ci.contains("-")) {
-      ci = ci.replaceAll("-", "");
-    }
-    return ci;
+    final jsonString = json.encode(jsonData);
+    html.window.localStorage['usuario'] = jsonString;
   }
 }

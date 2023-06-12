@@ -1,27 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:universal_html/html.dart' as html;
+import 'dart:convert';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  bool isLoggedIn =
-      html.window.localStorage.containsKey('isLoggedIn') ? true : false;
+  bool isLoggedIn = false;
+  Usuario? usuario;
+
+  final localStorage = html.window.localStorage;
+  final jsonString = localStorage['usuario'];
+  if (jsonString != null) {
+    final userData = json.decode(jsonString);
+    usuario = Usuario.fromJson(userData);
+    print(usuario.toString());
+    Fachada.getInstancia()?.setUsuario(usuario);
+    isLoggedIn = true;
+  }
+
   String initialRoute = isLoggedIn ? InicioPage.id : LoginPage.id;
 
   runApp(MainApp(
     initialRoute: initialRoute,
     isLoggedIn: isLoggedIn,
+    usuario: usuario,
   ));
 }
 
 class MainApp extends StatelessWidget {
   final String initialRoute;
   final bool isLoggedIn; // Agregar esta propiedad
+  final Usuario? usuario;
   MainApp({
     required this.initialRoute,
     required this.isLoggedIn,
+    required this.usuario,
   });
 
   @override
@@ -32,7 +48,7 @@ class MainApp extends StatelessWidget {
         initialRoute: initialRoute,
         routes: {
           LoginPage.id: (context) => LoginPage(),
-          InicioPage.id: (context) => InicioPage(usuario: Usuario.vacio()),
+          InicioPage.id: (context) => InicioPage(usuario: usuario),
         });
   }
 }
