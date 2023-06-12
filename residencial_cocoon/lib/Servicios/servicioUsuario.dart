@@ -25,23 +25,11 @@ class ServicioUsuario {
 
   Future<Usuario?> login(String ci, String clave) async {
     // validar la CI y la Clave
-    String? control = _controlDatos(ci, clave);
-    if (control != null) {
-      throw LoginException(control);
-    }
+    Usuario.validarUsuario(ci, clave);
     ci = _limpieza(ci);
     String usuario = await APIService.fetchAuth(ci, clave);
     Map<String, dynamic> jsonMap = jsonDecode(usuario);
     return Usuario.fromJson(jsonMap);
-  }
-
-  String? _controlDatos(String ci, String clave) {
-    //Controla los valores de cedula y clave
-    String? respuesta;
-    if (ci == "" || clave == "") {
-      respuesta = "Los datos de ingreso no pueden estar vacios.";
-    }
-    return respuesta;
   }
 
   String _limpieza(String ci) {

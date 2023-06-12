@@ -4,7 +4,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 
 class InicioPage extends StatelessWidget {
-  static String id = 'vistaInicio';
+  static String id = 'inicio';
   final Usuario? usuario;
 
   InicioPage({required this.usuario});

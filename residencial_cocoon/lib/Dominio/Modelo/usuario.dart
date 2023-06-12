@@ -1,3 +1,4 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
@@ -83,6 +84,13 @@ class Usuario {
       'roles': rolesJson,
       'sucursales': sucursalesJson,
     };
+  }
+
+  static void validarUsuario(String ci, String clave) {
+    //Controla los valores de cedula y clave
+    if (ci == "" || clave == "") {
+      throw LoginException("Los datos de ingreso no pueden estar vacios.");
+    }
   }
 
   //ToString
