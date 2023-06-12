@@ -2,12 +2,14 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
 class Usuario {
+  //Atributos
   String _ci;
   String _nombre;
   int _administrador;
   List<Rol> _roles;
   List<Sucursal> _sucursales;
 
+  //Constructores
   Usuario({
     required String ci,
     required String nombre,
@@ -26,21 +28,6 @@ class Usuario {
         _administrador = 0,
         _roles = [],
         _sucursales = [];
-
-  String get ci => _ci;
-  set ci(String value) => _ci = value;
-
-  String get nombre => _nombre;
-  set nombre(String value) => _nombre = value;
-
-  int get administrador => _administrador;
-  set administrador(int value) => _administrador = value;
-
-  List<Rol> get roles => _roles;
-  set roles(List<Rol> value) => _roles = value;
-
-  List<Sucursal> get sucursales => _sucursales;
-  set sucursales(List<Sucursal> value) => _sucursales = value;
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
     List<Rol> rolesList = [];
@@ -66,8 +53,41 @@ class Usuario {
     );
   }
 
+  //Get Set
+  String get ci => _ci;
+  set ci(String value) => _ci = value;
+
+  String get nombre => _nombre;
+  set nombre(String value) => _nombre = value;
+
+  int get administrador => _administrador;
+  set administrador(int value) => _administrador = value;
+
+  List<Rol> get roles => _roles;
+  set roles(List<Rol> value) => _roles = value;
+
+  List<Sucursal> get sucursales => _sucursales;
+  set sucursales(List<Sucursal> value) => _sucursales = value;
+
+  //Funciones
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> rolesJson =
+        _roles.map((rol) => rol.toJson()).toList();
+    List<Map<String, dynamic>> sucursalesJson =
+        _sucursales.map((sucursal) => sucursal.toJson()).toList();
+
+    return {
+      'ci': _ci,
+      'nombre': _nombre,
+      'administrador': _administrador,
+      'roles': rolesJson,
+      'sucursales': sucursalesJson,
+    };
+  }
+
+  //ToString
   @override
   String toString() {
-    return 'Usuario(ci: $_ci, nombre: $_nombre, administrador: $_administrador, roles: $_roles, sucursales: $_sucursales)';
+    return toJson().toString();
   }
 }

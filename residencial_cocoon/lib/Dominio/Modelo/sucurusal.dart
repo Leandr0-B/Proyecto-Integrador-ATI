@@ -1,8 +1,10 @@
 class Sucursal {
+  //Atributos
   int _idSucursal;
   String _nombre;
   String _direccion;
 
+  //Constructor
   Sucursal(
       {required int idSucursal,
       required String nombre,
@@ -10,15 +12,6 @@ class Sucursal {
       : _idSucursal = idSucursal,
         _nombre = nombre,
         _direccion = direccion;
-
-  int get idSucursal => _idSucursal;
-  set idSucursal(int value) => _idSucursal = value;
-
-  String get nombre => _nombre;
-  set nombre(String value) => _nombre = value;
-
-  String get direccion => _direccion;
-  set direccion(String value) => _direccion = value;
 
   factory Sucursal.fromJson(Map<String, dynamic> json) {
     return Sucursal(
@@ -28,8 +21,28 @@ class Sucursal {
     );
   }
 
+  //Get set
+  int get idSucursal => _idSucursal;
+  set idSucursal(int value) => _idSucursal = value;
+
+  String get nombre => _nombre;
+  set nombre(String value) => _nombre = value;
+
+  String get direccion => _direccion;
+  set direccion(String value) => _direccion = value;
+
+  //Funciones
+  Map<String, dynamic> toJson() {
+    return {
+      'id_sucursal': _idSucursal,
+      'nombre': _nombre,
+      'direccion': _direccion,
+    };
+  }
+
+  //ToString
   @override
   String toString() {
-    return 'Sucursal(idSucursal: $_idSucursal, nombre: $_nombre, direccion: $_direccion)';
+    return toJson().toString();
   }
 }

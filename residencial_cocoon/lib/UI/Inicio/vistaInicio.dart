@@ -5,7 +5,7 @@ import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 
 class InicioPage extends StatelessWidget {
   static String id = 'vistaInicio';
-  final Usuario usuario;
+  final Usuario? usuario;
 
   InicioPage({required this.usuario});
 
@@ -26,7 +26,7 @@ class InicioPage extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final Usuario usuario;
+  final Usuario? usuario;
 
   MyHomePage({required this.usuario});
 
@@ -36,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var currentPage = DrawerSections.inicio;
-  final Usuario usuario;
+  final Usuario? usuario;
 
   _MyHomePageState({required this.usuario});
 
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class MyDrawerList extends StatelessWidget {
   final BuildContext context; // Agregar una propiedad context
-  final Usuario usuario;
+  final Usuario? usuario;
 
   MyDrawerList(this.context,
       {required this.usuario}); // Constructor que recibe el argumento context
@@ -72,7 +72,7 @@ class MyDrawerList extends StatelessWidget {
             MyHederDrawer(),
             //Botones y permisos de los botones
             menuItem(1, "Inicio", Icons.home),
-            if (usuario.roles.contains(Rol.id(1))) ...[
+            if (usuario?.administrador == 1) ...[
               menuItem(2, "Usuarios", Icons.people_alt_outlined),
             ],
           ],
