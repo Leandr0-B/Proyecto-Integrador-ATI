@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
     Usuario? u = await controller?.loginUsuario(_ci, _clave);
     if (u != null) {
       print(u);
-      ingreso();
+      ingreso(u);
     }
 
     setState(() {
@@ -176,8 +176,13 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
     });
   }
 
-  void ingreso() {
-    Navigator.pushReplacementNamed(context, InicioPage.id);
+  void ingreso(Usuario usuario) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InicioPage(usuario: usuario),
+      ),
+    );
   }
 
   @override

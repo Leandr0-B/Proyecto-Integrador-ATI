@@ -20,6 +20,13 @@ class Usuario {
         _roles = roles,
         _sucursales = sucursales;
 
+  Usuario.vacio()
+      : _ci = '',
+        _nombre = '',
+        _administrador = 0,
+        _roles = [],
+        _sucursales = [];
+
   String get ci => _ci;
   set ci(String value) => _ci = value;
 
