@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerUsuario.dart';
 import 'package:residencial_cocoon/UI/Login/iVistaLogin.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
-import 'package:residencial_cocoon/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class LoginPage extends StatefulWidget {
   static String id = 'login';

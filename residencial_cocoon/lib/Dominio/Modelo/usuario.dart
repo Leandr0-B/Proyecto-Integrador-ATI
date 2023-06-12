@@ -1,5 +1,5 @@
-import 'package:residencial_cocoon/Modelo/rol.dart';
-import 'package:residencial_cocoon/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
 class Usuario {
   String _ci;

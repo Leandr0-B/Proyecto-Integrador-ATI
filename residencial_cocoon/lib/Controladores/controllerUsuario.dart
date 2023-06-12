@@ -1,4 +1,4 @@
-import 'package:residencial_cocoon/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 

@@ -1,5 +1,5 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
-import 'package:residencial_cocoon/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
 
 class ServicioUsuario {
@@ -23,6 +23,7 @@ class ServicioUsuario {
   // }
 
   Future<Usuario?> login(String ci, String clave) async {
+    // validar la CI y la Clave
     String usuario = await APIService.fetchAuth(ci, clave);
     Map<String, dynamic> jsonMap = jsonDecode(usuario);
     return Usuario.fromJson(jsonMap);
