@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ void main() {
 
   String initialRoute = isLoggedIn ? InicioPage.id : LoginPage.id;
 
+  setPathUrlStrategy();
   runApp(MainApp(
     initialRoute: initialRoute,
     isLoggedIn: isLoggedIn,
@@ -43,12 +45,20 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Residencial Cocoon',
-        debugShowCheckedModeBanner: false,
-        initialRoute: initialRoute,
-        routes: {
-          LoginPage.id: (context) => LoginPage(),
-          InicioPage.id: (context) => InicioPage(usuario: usuario),
-        });
+      title: 'Residencial Cocoon',
+      debugShowCheckedModeBanner: false,
+      initialRoute: initialRoute,
+      routes: {
+        LoginPage.id: (context) => LoginPage(),
+        InicioPage.id: (context) => InicioPage(usuario: usuario),
+      },
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) {
+            return isLoggedIn ? InicioPage(usuario: usuario) : LoginPage();
+          },
+        );
+      },
+    );
   }
 }
