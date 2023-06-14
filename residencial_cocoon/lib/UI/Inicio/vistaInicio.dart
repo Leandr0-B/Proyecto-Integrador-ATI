@@ -1,67 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
 
-class InicioPage extends StatelessWidget {
+class InicioPage extends StatefulWidget {
   static String id = 'inicio';
   final Usuario? usuario;
 
   InicioPage({required this.usuario});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[700],
-        title: Text("Rapid Tech"),
-      ),
-      body: Center(
-        child: Text("Contenido de InicioPage"),
-      ),
-      drawer: MyDrawerList(context,
-          usuario: usuario), // Pasar context como argumento
-    );
-  }
+  _InicioPageState createState() => _InicioPageState();
 }
 
-class MyHomePage extends StatefulWidget {
-  final Usuario? usuario;
-
-  MyHomePage({required this.usuario});
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState(usuario: usuario);
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _InicioPageState extends State<InicioPage> {
   var currentPage = DrawerSections.inicio;
-  final Usuario? usuario;
-
-  _MyHomePageState({required this.usuario});
 
   @override
   Widget build(BuildContext context) {
+    var container;
+    switch (currentPage) {
+      case (DrawerSections.inicio):
+        container =
+            Container(); // Aquí, muestra algo diferente. La línea anterior causaba un bucle infinito.
+        break;
+      case (DrawerSections.usuarios):
+        container = NuevoUsuarioPage();
+        break;
+      default:
+    }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[700],
-        title: Text("Rapid Tech"),
+        backgroundColor: Color.fromRGBO(225, 183, 72, 1),
+        title: Text("Grupo Cocoon"),
       ),
-      body: Center(
-        child: Text("Contenido de MyHomePage"),
+      body: container,
+      drawer: MyDrawerList(
+        context: context,
+        usuario: widget.usuario,
+        onPageSelected: (page) {
+          setState(() {
+            currentPage = page;
+          });
+        },
       ),
-      drawer: MyDrawerList(context,
-          usuario: usuario), // Pasar context como argumento
     );
   }
 }
 
 class MyDrawerList extends StatelessWidget {
-  final BuildContext context; // Agregar una propiedad context
+  final BuildContext context;
   final Usuario? usuario;
+  final ValueChanged<DrawerSections> onPageSelected;
 
-  MyDrawerList(this.context,
-      {required this.usuario}); // Constructor que recibe el argumento context
+  MyDrawerList({
+    required this.context,
+    required this.usuario,
+    required this.onPageSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +66,10 @@ class MyDrawerList extends StatelessWidget {
         child: Column(
           children: [
             MyHederDrawer(),
-            //Botones y permisos de los botones
-            menuItem(1, "Inicio", Icons.home),
+            menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[
-              menuItem(2, "Usuarios", Icons.people_alt_outlined),
+              menuItem(2, "Usuarios", Icons.people_alt_outlined,
+                  DrawerSections.usuarios),
             ],
           ],
         ),
@@ -81,11 +77,12 @@ class MyDrawerList extends StatelessWidget {
     );
   }
 
-  Widget menuItem(int id, String title, IconData icon) {
+  Widget menuItem(int id, String title, IconData icon, DrawerSections page) {
     return ListTile(
       onTap: () {
         Navigator.pop(context);
-        // Aquí puedes agregar la lógica para manejar la selección del elemento del menú
+        onPageSelected(
+            page); // Aquí cambiamos la página usando el callback en lugar de hacer la navegación
       },
       leading: Icon(
         icon,
@@ -106,5 +103,4 @@ class MyDrawerList extends StatelessWidget {
 enum DrawerSections {
   inicio,
   usuarios,
-  sucursales,
 }

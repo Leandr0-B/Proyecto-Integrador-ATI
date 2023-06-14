@@ -47,7 +47,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Residencial Cocoon',
       debugShowCheckedModeBanner: false,
-      initialRoute: initialRoute,
+      initialRoute: InicioPage.id,
       routes: {
         LoginPage.id: (context) => LoginPage(),
         InicioPage.id: (context) => InicioPage(usuario: usuario),
