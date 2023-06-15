@@ -5,6 +5,8 @@ import 'package:residencial_cocoon/Servicios/fachada.dart';
 class ControllerVistaAltaUsuario {
   //Atributos
   Function(String mensaje) mostrarMensaje;
+  List<Rol>? _roles;
+  List<Sucursal>? _sucursales;
 
   //Constructor
   ControllerVistaAltaUsuario({
@@ -13,13 +15,22 @@ class ControllerVistaAltaUsuario {
 
   //Funciones
   Future<List<Rol>?> listaRoles() async {
-    return await Fachada.getInstancia()?.listaRoles();
+    if (this._roles == null) {
+      this._roles = await Fachada.getInstancia()?.listaRoles();
+    }
+    return this._roles;
   }
 
   Future<List<Sucursal>?> listaSucursales() async {
-    return await Fachada.getInstancia()?.listaSucursales();
+    if (this._sucursales == null) {
+      this._sucursales = await Fachada.getInstancia()?.listaSucursales();
+    }
+    return this._sucursales;
   }
 
   Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {}
+      List<int> selectedRoles, List<int> selectedSucursales) async {
+    await Fachada.getInstancia()?.altaUsuario(
+        ci, nombre, administrador, selectedRoles, selectedSucursales);
+  }
 }

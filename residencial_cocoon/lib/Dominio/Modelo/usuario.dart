@@ -9,6 +9,7 @@ class Usuario {
   int _administrador;
   List<Rol>? _roles;
   List<Sucursal>? _sucursales;
+  String? _authToken;
 
   //Constructores
   Usuario({
@@ -17,11 +18,13 @@ class Usuario {
     required int administrador,
     required List<Rol> roles,
     required List<Sucursal> sucursales,
+    required String authToken,
   })  : _ci = ci,
         _nombre = nombre,
         _administrador = administrador,
         _roles = roles,
-        _sucursales = sucursales;
+        _sucursales = sucursales,
+        _authToken = authToken;
 
   Usuario.sinListas({
     required String ci,
@@ -54,12 +57,12 @@ class Usuario {
 
     // Crear y retornar un nuevo objeto Usuario
     return Usuario(
-      ci: json['ci'],
-      nombre: json['nombre'],
-      administrador: json['administrador'],
-      roles: rolesList,
-      sucursales: sucursalesList,
-    );
+        ci: json['ci'],
+        nombre: json['nombre'],
+        administrador: json['administrador'],
+        roles: rolesList,
+        sucursales: sucursalesList,
+        authToken: json['authToken']);
   }
 
   //Get Set
@@ -80,6 +83,10 @@ class Usuario {
   set sucursales(List<Sucursal> sucursales) => _sucursales = sucursales;
   List<Sucursal>? getSucursales() {
     return _sucursales;
+  }
+
+  String? getToken() {
+    return this._authToken;
   }
 
   //Funciones

@@ -21,6 +21,14 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
   ControllerVistaAltaUsuario? controller;
 
   @override
+  void initState() {
+    super.initState();
+    controller = ControllerVistaAltaUsuario(mostrarMensaje: (mensaje) {
+      // Aquí puedes definir cómo quieres mostrar el mensaje, por ejemplo con un print:
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -97,6 +105,9 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
                       if (snapshot.hasData) {
                         return Column(
                           children: snapshot.data!
+                              .where((role) =>
+                                  role.idRol !=
+                                  3) // Esto excluirá el rol con id 3
                               .map((role) => CheckboxListTile(
                                     title: Text(role.descripcion),
                                     value: selectedRoles.contains(role.idRol),
@@ -180,26 +191,18 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
                   ),
                 ],
                 ElevatedButton(
+                  child: Text("Crear usuario"),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-
-                      altaUsuario(_ci, _nombre, _administrador, selectedRoles,
-                          selectedSucursales);
-
-                      Usuario nuevoUsuario = Usuario.sinListas(
-                        ci: _ci,
-                        nombre: _nombre,
-                        administrador: _administrador,
-                      );
-
-                      // Aquí puedes hacer algo con tu nuevoUsuario, como enviarlo a una API o agregarlo a una lista.
-                      print(nuevoUsuario);
-                      print(selectedRoles);
-                      print(selectedSucursales);
+                      if (_esFuncionario) {
+                        altaUsuarioFuncionario(_ci, _nombre, _administrador,
+                            selectedRoles, selectedSucursales);
+                      } else {
+                        //Alta no funcionarios
+                      }
                     }
                   },
-                  child: Text('Crear Usuario'),
                 ),
               ],
             ),
@@ -217,9 +220,9 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
     return controller?.listaSucursales();
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {
-    controller?.altaUsuario(
+  Future<void> altaUsuarioFuncionario(String ci, String nombre,
+      int administrador, List<int> roles, List<int> sucursales) async {
+    await controller?.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
   }
 }

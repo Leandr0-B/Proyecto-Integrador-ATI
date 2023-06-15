@@ -40,6 +40,12 @@ class Fachada {
     return await _servicioUsuario?.listaRoles();
   }
 
+  Future<void> altaUsuario(String ci, String nombre, int administrador,
+      List<int> selectedRoles, List<int> selectedSucursales) async {
+    await _servicioUsuario?.altaUsuario(
+        ci, nombre, administrador, selectedRoles, selectedSucursales);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();

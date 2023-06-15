@@ -168,6 +168,7 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
     Usuario? u = await controller?.loginUsuario(_ci, _clave);
     if (u != null) {
       print(u);
+      print(u.getToken());
       ingreso(u);
     }
 

@@ -43,4 +43,61 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static Future<String> fetchRoles(String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/rol/lista');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<String> fetchSucursales(String? token) async {
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/sucursal/lista');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> fetchAltaUsuario(String ci, String nombre,
+      int administrador, String roles, String sucursales, String? token) async {
+    // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
+
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci': ci,
+        'nombre': nombre,
+        'password': ci,
+        'administrador': administrador,
+        'sucursales': sucursales,
+        'roles': roles,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }
