@@ -73,8 +73,13 @@ class APIService {
     }
   }
 
-  static Future<void> fetchAltaUsuario(String ci, String nombre,
-      int administrador, String roles, String sucursales, String? token) async {
+  static Future<void> fetchAltaUsuario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> roles,
+      List<int> sucursales,
+      String? token) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url =

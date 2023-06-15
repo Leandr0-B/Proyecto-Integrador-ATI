@@ -1,3 +1,4 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -30,7 +31,11 @@ class ControllerVistaAltaUsuario {
 
   Future<void> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
-    await Fachada.getInstancia()?.altaUsuario(
-        ci, nombre, administrador, selectedRoles, selectedSucursales);
+    try {
+      await Fachada.getInstancia()?.altaUsuario(
+          ci, nombre, administrador, selectedRoles, selectedSucursales);
+    } on AltaUsuarioException catch (ex) {
+      mostrarMensaje(ex.mensaje);
+    }
   }
 }

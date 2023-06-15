@@ -1,3 +1,4 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
@@ -109,6 +110,18 @@ class Usuario {
     //Controla los valores de cedula y clave
     if (ci == "" || clave == "") {
       throw LoginException("Los datos de ingreso no pueden estar vacios.");
+    }
+  }
+
+  static void validarRoles(List<int> roles) {
+    if (roles.isEmpty) {
+      throw AltaUsuarioException("Seleccione al menos un rol.");
+    }
+  }
+
+  static void validarSucursales(List<int> sucursales) {
+    if (sucursales.isEmpty) {
+      throw AltaUsuarioException("Seleccione al menos una sucursal.");
     }
   }
 

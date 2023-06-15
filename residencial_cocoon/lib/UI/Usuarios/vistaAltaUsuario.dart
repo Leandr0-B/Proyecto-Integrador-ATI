@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaUsuario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class NuevoUsuarioPage extends StatefulWidget {
   @override
@@ -23,9 +22,7 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaAltaUsuario(mostrarMensaje: (mensaje) {
-      // Aquí puedes definir cómo quieres mostrar el mensaje, por ejemplo con un print:
-    });
+    controller = ControllerVistaAltaUsuario(mostrarMensaje: mostrarMensaje);
   }
 
   @override
@@ -68,6 +65,7 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
                   },
                 ),
                 TextFormField(
+                  maxLength: 100,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Nombre',
                   ),
@@ -224,5 +222,10 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
       int administrador, List<int> roles, List<int> sucursales) async {
     await controller?.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
+  }
+
+  void mostrarMensaje(String mensaje) {
+    final snackBar = SnackBar(content: Text(mensaje));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

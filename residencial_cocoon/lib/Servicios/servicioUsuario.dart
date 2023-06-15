@@ -55,12 +55,9 @@ class ServicioUsuario {
 
   Future<void> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
-    String roles =
-        '[' + selectedRoles.map((id) => id.toString()).join(', ') + ']';
-    String sucursales =
-        '[' + selectedSucursales.map((id) => id.toString()).join(', ') + ']';
-    print(ci + " " + nombre + " " + " " + roles + " " + sucursales + " ");
-    await APIService.fetchAltaUsuario(ci, nombre, administrador, roles,
-        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+    Usuario.validarRoles(selectedRoles);
+    Usuario.validarSucursales(selectedSucursales);
+    await APIService.fetchAltaUsuario(ci, nombre, administrador, selectedRoles,
+        selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 }
