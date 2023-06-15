@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaAltaUsuario.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class NuevoUsuarioPage extends StatefulWidget {
@@ -10,7 +13,12 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
+  String _nombreFamiliar = '';
+  bool _esFuncionario = false;
   int _administrador = 0;
+  List<int> selectedRoles = [];
+  List<int> selectedSucursales = [];
+  ControllerVistaAltaUsuario? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +27,25 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
         title: Text('Alta de nuevo usuario'),
         backgroundColor: Color.fromRGBO(225, 183, 72, 1),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                CheckboxListTile(
+                  title: Text("Funcionario"),
+                  value: _esFuncionario,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _esFuncionario = newValue!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 TextFormField(
+                  maxLength: 8,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese CI',
                   ),
@@ -54,30 +73,130 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
                     _nombre = value!;
                   },
                 ),
-                CheckboxListTile(
-                  title: Text("Administrador"),
-                  value: _administrador == 1,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _administrador = newValue! ? 1 : 0;
-                    });
-                  },
-                  controlAffinity:
-                      ListTileControlAffinity.leading, //  <-- leading Checkbox
-                ),
+                if (_esFuncionario) ...[
+                  SizedBox(height: 16.0),
+                  CheckboxListTile(
+                    title: Text("Administrador"),
+                    value: _administrador == 1,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _administrador = newValue! ? 1 : 0;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Seleccione los roles del usuario:"),
+                  ),
+                  FutureBuilder<List<Rol>?>(
+                    future: _getRoles(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Rol>?> snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: snapshot.data!
+                              .map((role) => CheckboxListTile(
+                                    title: Text(role.descripcion),
+                                    value: selectedRoles.contains(role.idRol),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        if (newValue!) {
+                                          selectedRoles.add(role.idRol);
+                                        } else {
+                                          selectedRoles.remove(role.idRol);
+                                        }
+                                      });
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    contentPadding:
+                                        EdgeInsets.only(left: 16, right: 0),
+                                  ))
+                              .toList(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Seleccione las sucursales del usuario:"),
+                  ),
+                  FutureBuilder<List<Sucursal>?>(
+                    future: _getSucursales(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Sucursal>?> snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: snapshot.data!
+                              .map((sucursal) => CheckboxListTile(
+                                    title: Text(sucursal.nombre),
+                                    value: selectedSucursales
+                                        .contains(sucursal.idSucursal),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        if (newValue!) {
+                                          selectedSucursales
+                                              .add(sucursal.idSucursal);
+                                        } else {
+                                          selectedSucursales
+                                              .remove(sucursal.idSucursal);
+                                        }
+                                      });
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    contentPadding:
+                                        EdgeInsets.only(left: 16, right: 0),
+                                  ))
+                              .toList(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                ],
+                if (!_esFuncionario) ...[
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Ingrese Nombre del Familiar',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese Nombre del Familiar';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _nombreFamiliar = value!;
+                    },
+                  ),
+                ],
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      Usuario nuevoUsuario = Usuario(
+
+                      altaUsuario(_ci, _nombre, _administrador, selectedRoles,
+                          selectedSucursales);
+
+                      Usuario nuevoUsuario = Usuario.sinListas(
                         ci: _ci,
                         nombre: _nombre,
                         administrador: _administrador,
-                        roles: [],
-                        sucursales: [],
                       );
+
                       // Aquí puedes hacer algo con tu nuevoUsuario, como enviarlo a una API o agregarlo a una lista.
                       print(nuevoUsuario);
+                      print(selectedRoles);
+                      print(selectedSucursales);
                     }
                   },
                   child: Text('Crear Usuario'),
@@ -88,5 +207,19 @@ class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
         ),
       ),
     );
+  }
+
+  Future<List<Rol>?> _getRoles() async {
+    return controller?.listaRoles();
+  }
+
+  Future<List<Sucursal>?> _getSucursales() async {
+    return controller?.listaSucursales();
+  }
+
+  Future<void> altaUsuario(String ci, String nombre, int administrador,
+      List<int> selectedRoles, List<int> selectedSucursales) async {
+    controller?.altaUsuario(
+        ci, nombre, administrador, selectedRoles, selectedSucursales);
   }
 }

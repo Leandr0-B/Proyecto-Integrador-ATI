@@ -1,5 +1,5 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
-import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
 
@@ -41,5 +41,9 @@ class ServicioUsuario {
       ci = ci.replaceAll("-", "");
     }
     return ci;
+  }
+
+  Future<List<Rol>?> listaRoles() async {
+    return await [];
   }
 }

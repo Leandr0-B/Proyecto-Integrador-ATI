@@ -7,8 +7,8 @@ class Usuario {
   String _ci;
   String _nombre;
   int _administrador;
-  List<Rol> _roles;
-  List<Sucursal> _sucursales;
+  List<Rol>? _roles;
+  List<Sucursal>? _sucursales;
 
   //Constructores
   Usuario({
@@ -22,6 +22,14 @@ class Usuario {
         _administrador = administrador,
         _roles = roles,
         _sucursales = sucursales;
+
+  Usuario.sinListas({
+    required String ci,
+    required String nombre,
+    required int administrador,
+  })  : _ci = ci,
+        _nombre = nombre,
+        _administrador = administrador;
 
   Usuario.vacio()
       : _ci = '',
@@ -64,18 +72,22 @@ class Usuario {
   int get administrador => _administrador;
   set administrador(int value) => _administrador = value;
 
-  List<Rol> get roles => _roles;
-  set roles(List<Rol> value) => _roles = value;
+  set roles(List<Rol> roles) => _roles = roles;
+  List<Rol>? getRoles() {
+    return _roles;
+  }
 
-  List<Sucursal> get sucursales => _sucursales;
-  set sucursales(List<Sucursal> value) => _sucursales = value;
+  set sucursales(List<Sucursal> sucursales) => _sucursales = sucursales;
+  List<Sucursal>? getSucursales() {
+    return _sucursales;
+  }
 
   //Funciones
   Map<String, dynamic> toJson() {
     List<Map<String, dynamic>> rolesJson =
-        _roles.map((rol) => rol.toJson()).toList();
+        _roles!.map((rol) => rol.toJson()).toList();
     List<Map<String, dynamic>> sucursalesJson =
-        _sucursales.map((sucursal) => sucursal.toJson()).toList();
+        _sucursales!.map((sucursal) => sucursal.toJson()).toList();
 
     return {
       'ci': _ci,
