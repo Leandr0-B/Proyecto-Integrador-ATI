@@ -1,5 +1,6 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
@@ -11,6 +12,8 @@ class Usuario {
   List<Rol>? _roles;
   List<Sucursal>? _sucursales;
   String? _authToken;
+  List<Familiar>? _familiares;
+  int? _inactivo;
 
   //Constructores
   Usuario({
@@ -27,6 +30,22 @@ class Usuario {
         _sucursales = sucursales,
         _authToken = authToken;
 
+  Usuario.paraLista({
+    required String ci,
+    required String nombre,
+    required int administrador,
+    required List<Rol> roles,
+    required List<Sucursal> sucursales,
+    required int inactivo,
+    required List<Familiar> familiares,
+  })  : _ci = ci,
+        _nombre = nombre,
+        _administrador = administrador,
+        _roles = roles,
+        _sucursales = sucursales,
+        _inactivo = inactivo,
+        _familiares = familiares;
+
   Usuario.sinListas({
     required String ci,
     required String nombre,
@@ -34,13 +53,6 @@ class Usuario {
   })  : _ci = ci,
         _nombre = nombre,
         _administrador = administrador;
-
-  Usuario.vacio()
-      : _ci = '',
-        _nombre = '',
-        _administrador = 0,
-        _roles = [],
-        _sucursales = [];
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
     List<Rol> rolesList = [];
@@ -56,14 +68,48 @@ class Usuario {
         .map((sucursalJson) => Sucursal.fromJson(sucursalJson))
         .toList();
 
-    // Crear y retornar un nuevo objeto Usuario
     return Usuario(
-        ci: json['ci'],
-        nombre: json['nombre'],
-        administrador: json['administrador'],
-        roles: rolesList,
-        sucursales: sucursalesList,
-        authToken: json['authToken']);
+      ci: json['ci'],
+      nombre: json['nombre'],
+      administrador: json['administrador'],
+      roles: rolesList,
+      sucursales: sucursalesList,
+      authToken: json['authToken'],
+    );
+  }
+
+  factory Usuario.fromJsonLista(Map<String, dynamic> json) {
+    List<Rol> rolesList = [];
+    List<Sucursal> sucursalesList = [];
+    List<Familiar> familiaresList = [];
+
+    // Recuperar los roles del JSON y convertirlos en objetos de Rol
+    List<dynamic> rolesJson = json['roles'];
+    rolesList = rolesJson.map((roleJson) => Rol.fromJson(roleJson)).toList();
+
+    // Recuperar las sucursales del JSON y convertirlas en objetos de Sucursal
+    List<dynamic> sucursalesJson = json['sucursales'];
+    sucursalesList = sucursalesJson
+        .map((sucursalJson) => Sucursal.fromJson(sucursalJson))
+        .toList();
+
+    if (json.containsKey('familiares')) {
+      List<dynamic> familiaresJson = json['familiares'];
+      familiaresList = familiaresJson
+          .map((familiarJson) => Familiar.fromJson(familiarJson))
+          .toList();
+    }
+
+    // Crear y retornar un nuevo objeto Usuario
+    return Usuario.paraLista(
+      ci: json['ci'],
+      nombre: json['nombre'],
+      administrador: json['administrador'] ?? 0,
+      roles: rolesList,
+      sucursales: sucursalesList,
+      inactivo: json['inactivo'] ?? 0,
+      familiares: familiaresList,
+    );
   }
 
   //Get Set
@@ -88,6 +134,10 @@ class Usuario {
 
   String? getToken() {
     return this._authToken;
+  }
+
+  List<Familiar>? getfamiliares() {
+    return _familiares;
   }
 
   //Funciones
@@ -123,6 +173,13 @@ class Usuario {
     if (sucursales.isEmpty) {
       throw AltaUsuarioException("Seleccione al menos una sucursal.");
     }
+  }
+
+  static List<Usuario> listadoJson(List<dynamic> jsonList) {
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<Usuario>((json) => Usuario.fromJsonLista(json))
+        .toList();
   }
 
   //ToString

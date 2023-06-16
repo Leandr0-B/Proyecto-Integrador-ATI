@@ -46,6 +46,10 @@ class Fachada {
         ci, nombre, administrador, selectedRoles, selectedSucursales);
   }
 
+  Future<List<Usuario>?> obtenerUsuarios() async {
+    return await _servicioUsuario?.obtenerUsuarios();
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();

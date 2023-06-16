@@ -12,19 +12,6 @@ class ServicioUsuario {
   ServicioUsuario();
 
   //Funciones
-  // Usuario? login(String ci, String clave) {
-  //   //if (Usuario.validarCi() && Usuario.validarClave()) {
-  //   APIService.fetchAuth(ci, clave).then((usuario) {
-  //     print('usuario: $usuario');
-  //   });
-  //   //}
-
-  //   // if (ci == '52116324' && clave == '123') {
-  //   //   return Usuario.login(ci, clave);
-  //   // }
-  //   return null;
-  // }
-
   Future<Usuario?> login(String ci, String clave) async {
     // validar la CI y la Clave
     Usuario.validarUsuario(ci, clave);
@@ -59,5 +46,13 @@ class ServicioUsuario {
     Usuario.validarSucursales(selectedSucursales);
     await APIService.fetchAltaUsuario(ci, nombre, administrador, selectedRoles,
         selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<List<Usuario>?> obtenerUsuarios() async {
+    String usuarios = await APIService.fetchUsuarios(
+        Fachada.getInstancia()?.getUsuario()!.getToken());
+
+    List<dynamic> jsonList = jsonDecode(usuarios);
+    return await Usuario.listadoJson(jsonList);
   }
 }

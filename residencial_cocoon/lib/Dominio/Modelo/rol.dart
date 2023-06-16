@@ -53,6 +53,10 @@ class Rol {
     return toJson().toString();
   }
 
+  String toStringMostrar() {
+    return this._descripcion;
+  }
+
   //Equals
   @override
   bool operator ==(Object other) {

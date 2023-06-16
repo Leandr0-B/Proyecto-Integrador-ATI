@@ -55,4 +55,8 @@ class Sucursal {
   String toString() {
     return toJson().toString();
   }
+
+  String toStringMostrar() {
+    return this._nombre + " direccion: " + this._direccion;
+  }
 }
