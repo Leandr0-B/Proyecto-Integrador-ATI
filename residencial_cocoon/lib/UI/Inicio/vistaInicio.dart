@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaUsuarios.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
 
-class InicioPage extends StatefulWidget {
+class VistaInicio extends StatefulWidget {
   static String id = '/inicio';
   final Usuario? usuario;
 
-  InicioPage({this.usuario});
+  VistaInicio({this.usuario});
 
   @override
-  _InicioPageState createState() => _InicioPageState();
+  _VistaInicioState createState() => _VistaInicioState();
 }
 
-class _InicioPageState extends State<InicioPage> {
+class _VistaInicioState extends State<VistaInicio> {
   var currentPage = DrawerSections.inicio;
   Usuario? usuario;
 
@@ -30,7 +30,7 @@ class _InicioPageState extends State<InicioPage> {
             Container(); // Aquí, muestra algo diferente. La línea anterior causaba un bucle infinito.
         break;
       case (DrawerSections.usuarios):
-        container = UsuariosPage();
+        container = VistaListaUsuario();
         break;
       default:
     }
@@ -77,7 +77,7 @@ class MyDrawerList extends StatelessWidget {
                   bottom: BorderSide(color: Colors.black, width: 0.25),
                 ),
               ),
-              child: MyHederDrawer(),
+              child: SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[

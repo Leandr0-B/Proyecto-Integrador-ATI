@@ -18,12 +18,11 @@ void main() {
   if (jsonString != null) {
     final userData = json.decode(jsonString);
     usuario = Usuario.fromJson(userData);
-    print(usuario.toString());
     Fachada.getInstancia()?.setUsuario(usuario);
     isLoggedIn = true;
   }
 
-  String initialRoute = isLoggedIn ? InicioPage.id : LoginPage.id;
+  String initialRoute = isLoggedIn ? VistaInicio.id : VistaLogin.id;
 
   setPathUrlStrategy();
   runApp(MainApp(
@@ -37,7 +36,8 @@ class MainApp extends StatelessWidget {
   final String initialRoute;
   final bool isLoggedIn; // Agregar esta propiedad
   final Usuario? usuario;
-  MainApp({
+  const MainApp({
+    super.key,
     required this.initialRoute,
     required this.isLoggedIn,
     required this.usuario,
@@ -50,14 +50,14 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: initialRoute,
       routes: {
-        LoginPage.id: (context) => LoginPage(),
-        InicioPage.id: (context) => InicioPage(usuario: usuario),
-        "/usuario/alta": (context) => NuevoUsuarioPage()
+        VistaLogin.id: (context) => VistaLogin(),
+        VistaInicio.id: (context) => VistaInicio(usuario: usuario),
+        VistaAltaUsuario.id: (context) => VistaAltaUsuario()
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           builder: (BuildContext context) {
-            return isLoggedIn ? InicioPage(usuario: usuario) : LoginPage();
+            return isLoggedIn ? VistaInicio(usuario: usuario) : VistaLogin();
           },
         );
       },

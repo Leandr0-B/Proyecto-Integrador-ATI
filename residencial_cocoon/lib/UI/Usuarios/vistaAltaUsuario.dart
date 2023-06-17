@@ -3,13 +3,13 @@ import 'package:residencial_cocoon/Controladores/controllerVistaAltaUsuario.dart
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
-class NuevoUsuarioPage extends StatefulWidget {
+class VistaAltaUsuario extends StatefulWidget {
   static String id = '/usuario/alta';
   @override
-  _NuevoUsuarioPageState createState() => _NuevoUsuarioPageState();
+  _VistaAltaUsuarioState createState() => _VistaAltaUsuarioState();
 }
 
-class _NuevoUsuarioPageState extends State<NuevoUsuarioPage> {
+class _VistaAltaUsuarioState extends State<VistaAltaUsuario> {
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';

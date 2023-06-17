@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MyHederDrawer extends StatefulWidget {
-  const MyHederDrawer({super.key});
+class SideBarHeader extends StatefulWidget {
+  const SideBarHeader({super.key});
 
   @override
-  _MyHederDrawerState createState() => _MyHederDrawerState();
+  _SideBarHeaderState createState() => _SideBarHeaderState();
 }
 
-class _MyHederDrawerState extends State<MyHederDrawer> {
+class _SideBarHeaderState extends State<SideBarHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(

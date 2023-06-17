@@ -4,14 +4,14 @@ import 'package:residencial_cocoon/UI/Login/iVistaLogin.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
-class LoginPage extends StatefulWidget {
+class VistaLogin extends StatefulWidget {
   static String id = '/login';
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _VistaLoginState createState() => _VistaLoginState();
 }
 
-class _LoginPageState extends State<LoginPage> implements IVistaLogin {
+class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
   String _ci = '';
   String _clave = '';
   ControllerUsuario? controller;
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
   void ingreso(Usuario usuario) {
     Navigator.pushReplacementNamed(
       context,
-      InicioPage.id,
+      VistaInicio.id,
       arguments: usuario,
     );
   }

@@ -3,12 +3,12 @@ import 'package:residencial_cocoon/Controladores/controllerVistaUsuarios.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
 
-class UsuariosPage extends StatefulWidget {
+class VistaListaUsuario extends StatefulWidget {
   @override
-  _UsuariosPageState createState() => _UsuariosPageState();
+  _VistaListaUsuarioState createState() => _VistaListaUsuarioState();
 }
 
-class _UsuariosPageState extends State<UsuariosPage> {
+class _VistaListaUsuarioState extends State<VistaListaUsuario> {
   ControllerVistaUsuarios? controller;
 
   @override
@@ -60,7 +60,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
           //   MaterialPageRoute(builder: (context) => NuevoUsuarioPage()),
           // );
           //Navigator.pushReplacementNamed(context, NuevoUsuarioPage.id);
-          Navigator.pushNamed(context, NuevoUsuarioPage.id);
+          Navigator.pushNamed(context, VistaAltaUsuario.id);
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
