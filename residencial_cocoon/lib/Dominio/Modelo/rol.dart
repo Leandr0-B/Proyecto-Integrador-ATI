@@ -34,10 +34,27 @@ class Rol {
     };
   }
 
+  Map<String, dynamic> toIdJson() {
+    return {
+      'id_rol': _idRol,
+    };
+  }
+
+  static List<Rol> fromJsonList(List<dynamic> jsonList) {
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<Rol>((json) => Rol.fromJson(json))
+        .toList();
+  }
+
   //ToString
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  String toStringMostrar() {
+    return this._descripcion;
   }
 
   //Equals

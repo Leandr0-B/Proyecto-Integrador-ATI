@@ -34,9 +34,11 @@ class ControllerUsuario {
       'ci': usuario?.ci,
       'nombre': usuario?.nombre,
       'administrador': usuario?.administrador,
-      'roles': usuario?.roles.map((rol) => rol.toJson()).toList(),
-      'sucursales':
-          usuario?.sucursales.map((sucursal) => sucursal.toJson()).toList(),
+      'roles': usuario!.getRoles()?.map((rol) => rol.toJson()).toList(),
+      'sucursales': usuario!
+          .getSucursales()
+          ?.map((sucursal) => sucursal.toJson())
+          .toList(),
     };
 
     final jsonString = json.encode(jsonData);

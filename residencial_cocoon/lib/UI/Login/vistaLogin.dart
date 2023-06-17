@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/Controladores/controllerUsuario.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaLogin.dart';
 import 'package:residencial_cocoon/UI/Login/iVistaLogin.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
@@ -168,6 +168,7 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
     Usuario? u = await controller?.loginUsuario(_ci, _clave);
     if (u != null) {
       print(u);
+      print(u.getToken());
       ingreso(u);
     }
 

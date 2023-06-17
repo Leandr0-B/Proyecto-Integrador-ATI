@@ -1,7 +1,9 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
-import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
+
+import 'package:residencial_cocoon/Servicios/fachada.dart';
 
 class ServicioUsuario {
   //Atributos
@@ -10,19 +12,6 @@ class ServicioUsuario {
   ServicioUsuario();
 
   //Funciones
-  // Usuario? login(String ci, String clave) {
-  //   //if (Usuario.validarCi() && Usuario.validarClave()) {
-  //   APIService.fetchAuth(ci, clave).then((usuario) {
-  //     print('usuario: $usuario');
-  //   });
-  //   //}
-
-  //   // if (ci == '52116324' && clave == '123') {
-  //   //   return Usuario.login(ci, clave);
-  //   // }
-  //   return null;
-  // }
-
   Future<Usuario?> login(String ci, String clave) async {
     // validar la CI y la Clave
     Usuario.validarUsuario(ci, clave);
@@ -41,5 +30,29 @@ class ServicioUsuario {
       ci = ci.replaceAll("-", "");
     }
     return ci;
+  }
+
+  Future<List<Rol>?> listaRoles() async {
+    String roles = await APIService.fetchRoles(
+        Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList =
+        jsonDecode(roles); // convert the JSON text to a List
+    return Rol.fromJsonList(jsonList);
+  }
+
+  Future<void> altaUsuario(String ci, String nombre, int administrador,
+      List<int> selectedRoles, List<int> selectedSucursales) async {
+    Usuario.validarRoles(selectedRoles);
+    Usuario.validarSucursales(selectedSucursales);
+    await APIService.fetchAltaUsuario(ci, nombre, administrador, selectedRoles,
+        selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<List<Usuario>?> obtenerUsuarios() async {
+    String usuarios = await APIService.fetchUsuarios(
+        Fachada.getInstancia()?.getUsuario()!.getToken());
+
+    List<dynamic> jsonList = jsonDecode(usuarios);
+    return await Usuario.listadoJson(jsonList);
   }
 }

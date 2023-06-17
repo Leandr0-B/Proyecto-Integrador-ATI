@@ -40,9 +40,23 @@ class Sucursal {
     };
   }
 
+  static List<Sucursal> fromJsonList(List<dynamic> jsonList) {
+    return jsonList
+        .cast<
+            Map<String,
+                dynamic>>() // cast the dynamic List to a List<Map<String, dynamic>>
+        .map<Sucursal>(
+            (json) => Sucursal.fromJson(json)) // convert each Map to a Rol
+        .toList();
+  }
+
   //ToString
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  String toStringMostrar() {
+    return this._nombre + " direccion: " + this._direccion;
   }
 }
