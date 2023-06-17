@@ -5,7 +5,7 @@ import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class LoginPage extends StatefulWidget {
-  static String id = 'login';
+  static String id = '/login';
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -167,8 +167,6 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
 
     Usuario? u = await controller?.loginUsuario(_ci, _clave);
     if (u != null) {
-      print(u);
-      print(u.getToken());
       ingreso(u);
     }
 
@@ -178,11 +176,10 @@ class _LoginPageState extends State<LoginPage> implements IVistaLogin {
   }
 
   void ingreso(Usuario usuario) {
-    Navigator.pushReplacement(
+    Navigator.pushReplacementNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => InicioPage(usuario: usuario),
-      ),
+      InicioPage.id,
+      arguments: usuario,
     );
   }
 

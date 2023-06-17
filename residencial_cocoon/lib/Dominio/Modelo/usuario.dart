@@ -69,13 +69,12 @@ class Usuario {
         .toList();
 
     return Usuario(
-      ci: json['ci'],
-      nombre: json['nombre'],
-      administrador: json['administrador'],
-      roles: rolesList,
-      sucursales: sucursalesList,
-      authToken: json['authToken'],
-    );
+        ci: json['ci'],
+        nombre: json['nombre'],
+        administrador: json['administrador'],
+        roles: rolesList,
+        sucursales: sucursalesList,
+        authToken: json['authToken'] ?? '');
   }
 
   factory Usuario.fromJsonLista(Map<String, dynamic> json) {
@@ -114,6 +113,7 @@ class Usuario {
 
   //Get Set
   String get ci => _ci;
+
   set ci(String value) => _ci = value;
 
   String get nombre => _nombre;
@@ -153,6 +153,7 @@ class Usuario {
       'administrador': _administrador,
       'roles': rolesJson,
       'sucursales': sucursalesJson,
+      'authToken': _authToken
     };
   }
 

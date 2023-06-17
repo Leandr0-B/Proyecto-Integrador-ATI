@@ -39,6 +39,7 @@ class ControllerUsuario {
           .getSucursales()
           ?.map((sucursal) => sucursal.toJson())
           .toList(),
+      'authToken': usuario.getToken()
     };
 
     final jsonString = json.encode(jsonData);

@@ -5,10 +5,10 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaUsuarios.dart';
 
 class InicioPage extends StatefulWidget {
-  static String id = 'inicio';
+  static String id = '/inicio';
   final Usuario? usuario;
 
-  InicioPage({required this.usuario});
+  InicioPage({this.usuario});
 
   @override
   _InicioPageState createState() => _InicioPageState();
@@ -16,10 +16,14 @@ class InicioPage extends StatefulWidget {
 
 class _InicioPageState extends State<InicioPage> {
   var currentPage = DrawerSections.inicio;
+  Usuario? usuario;
 
   @override
   Widget build(BuildContext context) {
     var container;
+    usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
+    usuario ??= widget.usuario;
+
     switch (currentPage) {
       case (DrawerSections.inicio):
         container =
@@ -38,7 +42,7 @@ class _InicioPageState extends State<InicioPage> {
       body: container,
       drawer: MyDrawerList(
         context: context,
-        usuario: widget.usuario,
+        usuario: usuario,
         onPageSelected: (page) {
           setState(() {
             currentPage = page;
