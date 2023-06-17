@@ -63,10 +63,18 @@ class MyDrawerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
-            MyHederDrawer(),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.black, width: 0.25),
+                ),
+              ),
+              child: MyHederDrawer(),
+            ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[
               menuItem(2, "Usuarios", Icons.people_alt_outlined,
