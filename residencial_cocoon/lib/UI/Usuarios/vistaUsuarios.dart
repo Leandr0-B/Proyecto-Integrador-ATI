@@ -55,10 +55,12 @@ class _UsuariosPageState extends State<UsuariosPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NuevoUsuarioPage()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => NuevoUsuarioPage()),
+          // );
+          //Navigator.pushReplacementNamed(context, NuevoUsuarioPage.id);
+          Navigator.pushNamed(context, NuevoUsuarioPage.id);
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.green,

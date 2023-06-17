@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 import 'package:url_strategy/url_strategy.dart';
@@ -51,6 +52,7 @@ class MainApp extends StatelessWidget {
       routes: {
         LoginPage.id: (context) => LoginPage(),
         InicioPage.id: (context) => InicioPage(usuario: usuario),
+        "/usuario/alta": (context) => NuevoUsuarioPage()
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(

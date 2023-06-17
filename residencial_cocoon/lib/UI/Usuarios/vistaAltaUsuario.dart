@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
 class NuevoUsuarioPage extends StatefulWidget {
+  static String id = '/usuario/alta';
   @override
   _NuevoUsuarioPageState createState() => _NuevoUsuarioPageState();
 }
