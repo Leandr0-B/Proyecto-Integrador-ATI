@@ -11,7 +11,7 @@ class _MyHederDrawerState extends State<MyHederDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green[700],
+      color: Colors.white,
       width: double.infinity,
       height: 200,
       padding: const EdgeInsets.only(top: 20.0),
@@ -22,20 +22,20 @@ class _MyHederDrawerState extends State<MyHederDrawer> {
             margin: const EdgeInsets.only(bottom: 10),
             height: 70,
             decoration: const BoxDecoration(
-              shape: BoxShape.circle,
+              shape: BoxShape.rectangle,
               image: DecorationImage(
                 image: AssetImage('assets/images/menu.jpg'),
               ),
             ),
           ),
           const Text(
-            "Rapid Tech",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            "Grupo Cocoon",
+            style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          Text(
-            "info bla bla",
+          const Text(
+            "094 606 032  grupo@cocoon.uy",
             style: TextStyle(
-              color: Colors.grey[200],
+              color: Colors.black,
               fontSize: 14,
             ),
           ),
