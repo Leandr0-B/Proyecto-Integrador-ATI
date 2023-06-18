@@ -3,12 +3,13 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 import 'package:url_strategy/url_strategy.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool isLoggedIn = false;
   Usuario? usuario;
@@ -16,10 +17,12 @@ void main() {
   final localStorage = html.window.localStorage;
   final jsonString = localStorage['usuario'];
   if (jsonString != null) {
-    final userData = json.decode(jsonString);
-    usuario = Usuario.fromJson(userData);
-    Fachada.getInstancia()?.setUsuario(usuario);
     isLoggedIn = true;
+    final jsonData = json.decode(jsonString);
+    String tokenUsuario = jsonData['authToken'];
+    usuario = await Fachada.getInstancia()?.obtenerUsuarioToken(tokenUsuario);
+    print(usuario);
+    Fachada.getInstancia()?.setUsuario(usuario);
   }
 
   String initialRoute = isLoggedIn ? VistaInicio.id : VistaLogin.id;
@@ -52,7 +55,6 @@ class MainApp extends StatelessWidget {
       routes: {
         VistaLogin.id: (context) => VistaLogin(),
         VistaInicio.id: (context) => VistaInicio(usuario: usuario),
-        VistaAltaUsuario.id: (context) => VistaAltaUsuario()
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(

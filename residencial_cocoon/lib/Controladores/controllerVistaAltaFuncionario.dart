@@ -3,14 +3,14 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 
-class ControllerVistaAltaUsuario {
+class ControllerVistaAltaFuncionario {
   //Atributos
   Function(String mensaje) mostrarMensaje;
   List<Rol>? _roles;
   List<Sucursal>? _sucursales;
 
   //Constructor
-  ControllerVistaAltaUsuario({
+  ControllerVistaAltaFuncionario({
     required this.mostrarMensaje,
   });
 

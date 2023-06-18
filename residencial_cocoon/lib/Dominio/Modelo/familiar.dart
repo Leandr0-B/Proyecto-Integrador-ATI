@@ -30,6 +30,18 @@ class Familiar {
     );
   }
 
+  //Get Set
+  int get contactoPrimario => this._contactoPrimario;
+
+  set contactoPrimario(int value) => this._contactoPrimario = value;
+
+  String get nombre => this._nombre;
+
+  set nombre(String value) => this._nombre = value;
+  String get apellido => this._apellido;
+
+  set apellido(String value) => this._apellido = value;
+
   //Funciones
   Map<String, dynamic> toJson() {
     return {
@@ -37,7 +49,7 @@ class Familiar {
       'nombre': _nombre,
       'apellido': _apellido,
       'email': _email,
-      'contactoPrimario': _contactoPrimario,
+      'contacto_primario': _contactoPrimario,
     };
   }
 
@@ -48,17 +60,29 @@ class Familiar {
   }
 
   String toStringMostrar() {
-    String primario = "No es primario";
+    String primario = "no";
     if (this._contactoPrimario == 1) {
-      primario = "Es contacto primario";
+      primario = "si";
     }
 
     return this._nombre +
         " " +
         this._apellido +
         " " +
+        "Es contacto primario: " +
         primario +
         " " +
         this._email;
   }
+
+  // Equals
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Familiar && other._ci == _ci;
+  }
+
+  @override
+  int get hashCode => _ci.hashCode;
 }

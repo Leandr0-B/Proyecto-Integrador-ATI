@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
@@ -48,6 +49,10 @@ class Fachada {
 
   Future<List<Usuario>?> obtenerUsuarios() async {
     return await _servicioUsuario?.obtenerUsuarios();
+  }
+
+  Future<Usuario?> obtenerUsuarioToken(String token) async {
+    return await _servicioUsuario?.obtenerUsuarioToken(token);
   }
 
   //Sucursal

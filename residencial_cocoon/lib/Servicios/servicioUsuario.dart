@@ -55,4 +55,12 @@ class ServicioUsuario {
     List<dynamic> jsonList = jsonDecode(usuarios);
     return await Usuario.listadoJson(jsonList);
   }
+
+  Future<Usuario>? obtenerUsuarioToken(String token) async {
+    String respuesta = await APIService.fetchUserInfo(token);
+    print(respuesta);
+    Map<String, dynamic> jsonMap = jsonDecode(respuesta);
+    Usuario usu = Usuario.fromJson(jsonMap);
+    return usu;
+  }
 }
