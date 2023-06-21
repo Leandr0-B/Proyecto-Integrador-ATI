@@ -29,13 +29,18 @@ class ControllerVistaAltaFuncionario {
     return this._sucursales;
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
+  Future<bool> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
     try {
       await Fachada.getInstancia()?.altaUsuario(
           ci, nombre, administrador, selectedRoles, selectedSucursales);
+      return false;
     } on AltaUsuarioException catch (ex) {
       mostrarMensaje(ex.mensaje);
+      return true;
+    } on Exception catch (ex) {
+      mostrarMensaje(ex.toString());
+      return false;
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'dart:convert';
 
 class Usuario {
   //Atributos
@@ -181,6 +182,13 @@ class Usuario {
         .cast<Map<String, dynamic>>()
         .map<Usuario>((json) => Usuario.fromJsonLista(json))
         .toList();
+  }
+
+  static String listaFamiliaresToJson(List<Familiar> familiares) {
+    List<Map<String, dynamic>> jsonList =
+        familiares.map((familiar) => familiar.toJson()).toList();
+    String jsonString = jsonEncode(jsonList);
+    return jsonString.replaceAll('\\', '');
   }
 
   //ToString

@@ -16,6 +16,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
   List<int> selectedRoles = [];
   List<int> selectedSucursales = [];
   ControllerVistaAltaFuncionario? controller;
+  final fieldCi = TextEditingController();
+  final fieldNombre = TextEditingController();
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
               children: <Widget>[
                 TextFormField(
                   maxLength: 8,
+                  controller: fieldCi,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese documento identificador',
                   ),
@@ -58,6 +61,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
                 ),
                 TextFormField(
                   maxLength: 100,
+                  controller: fieldNombre,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Nombre',
                   ),
@@ -190,12 +194,24 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
 
   Future<void> altaUsuarioFuncionario(String ci, String nombre,
       int administrador, List<int> roles, List<int> sucursales) async {
-    await controller?.altaUsuario(
+    bool? resultado = await controller?.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
+    if (resultado == true) {
+      _limpiarDatos();
+    }
   }
 
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _limpiarDatos() {
+    setState(() {
+      selectedRoles = [];
+      selectedSucursales = [];
+      fieldCi.clear();
+      fieldNombre.clear();
+    });
   }
 }

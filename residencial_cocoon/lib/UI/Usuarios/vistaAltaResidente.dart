@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaResidente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 
 class VistaAltaResidente extends StatefulWidget {
   @override
@@ -16,9 +17,16 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
   String _apellidoFamiliar = '';
   String _emailFamiliar = '';
   int _contactoPrimarioFamiliar = 0;
-  bool _showContactoPrimarioCheckbox = true;
+  bool _agregarContactoPrimario = false;
   ControllerVistaAltaResidente? controller;
+  int? selectedSucursal;
   List<Familiar> _familiares = []; // Variable _familiares declarada aquí
+  final fieldCi = TextEditingController();
+  final fieldNombre = TextEditingController();
+  final ciFamiliar = TextEditingController();
+  final nombreFamiliar = TextEditingController();
+  final apellidoFamiliar = TextEditingController();
+  final emailFamiliar = TextEditingController();
 
   @override
   void initState() {
@@ -46,6 +54,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
               children: <Widget>[
                 TextFormField(
                   maxLength: 8,
+                  controller: fieldCi,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese documento identificador',
                   ),
@@ -61,6 +70,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   maxLength: 100,
+                  controller: fieldNombre,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Nombre',
                   ),
@@ -74,6 +84,41 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                     _nombre = value!;
                   },
                 ),
+                SizedBox(height: 16.0),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Seleccione la sucursal:"),
+                ),
+                FutureBuilder<List<Sucursal>?>(
+                  future: _getSucursales(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: snapshot.data!.map((sucursal) {
+                          final bool isSelected =
+                              selectedSucursal == sucursal.idSucursal;
+
+                          return RadioListTile<int>(
+                            title: Text(sucursal.nombre),
+                            value: sucursal.idSucursal,
+                            groupValue: selectedSucursal,
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                selectedSucursal = newValue;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.only(left: 16, right: 0),
+                          );
+                        }).toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text("Familiares:"),
@@ -82,6 +127,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                   decoration: const InputDecoration(
                     hintText: 'Ingrese CI del Familiar',
                   ),
+                  controller: ciFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese CI del Familiar';
@@ -96,6 +142,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Nombre del Familiar',
                   ),
+                  controller: nombreFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese Nombre del Familiar';
@@ -110,6 +157,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Apellido del Familiar',
                   ),
+                  controller: apellidoFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese Apellido del Familiar';
@@ -122,8 +170,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
-                    hintText: 'Ingrese Email del Familiar',
+                    hintText:
+                        'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
                   ),
+                  controller: emailFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese Email del Familiar';
@@ -138,10 +188,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 if (_shouldShowContactoPrimarioCheckbox())
                   CheckboxListTile(
                     title: Text("Contacto primario"),
-                    value: _contactoPrimarioFamiliar == 1,
+                    value: _agregarContactoPrimario,
                     onChanged: (newValue) {
                       setState(() {
-                        _contactoPrimarioFamiliar = newValue! ? 1 : 0;
+                        _agregarContactoPrimario = newValue!;
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
@@ -176,7 +226,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                     return ListTile(
                       title: Row(
                         children: [
-                          Text('${familiar.nombre} ${familiar.apellido}'),
+                          Text(
+                              '${familiar.nombre} ${familiar.apellido} ${familiar.ci}'),
                           IconButton(
                             icon: Icon(Icons.remove_circle),
                             onPressed: () {
@@ -221,13 +272,16 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
       nombre: _nombreFamiliar,
       apellido: _apellidoFamiliar,
       email: _emailFamiliar,
-      contactoPrimario: _contactoPrimarioFamiliar,
+      contactoPrimario: _agregarContactoPrimario ? 1 : 0,
     );
 
     setState(() {
-      bool resultado = controller!.controlAlta(familiar, _familiares);
+      bool resultado = controller!.controlAltaFamiliar(familiar, _familiares);
       if (resultado) {
         _familiares.add(familiar);
+        if (_agregarContactoPrimario) {
+          _agregarContactoPrimario = false;
+        }
       }
     });
   }
@@ -238,26 +292,47 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
     });
   }
 
-  void _crearUsuario() {
+  Future<void> _crearUsuario() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      // Aquí puedes realizar acciones adicionales con los datos ingresados, como crear el usuario o realizar acciones personalizadas.
-      // Por ejemplo, puedes imprimir los datos del usuario y sus familiares:
-      print('Usuario:');
-      print('CI: $_ci');
-      print('Nombre: $_nombre');
-      print('Familiares:');
-      if (_familiares != null && _familiares!.isNotEmpty) {
-        for (final familiar in _familiares!) {
-          print('${familiar.nombre} ${familiar.apellido}');
-        }
+      bool? resultado = await controller?.altaUsuario(
+          _familiares, _ci, _nombre, selectedSucursal);
+      if (resultado == true) {
+        limpiarDatos();
+        clearText();
       }
     }
+  }
+
+  Future<List<Sucursal>?> _getSucursales() async {
+    return controller?.listaSucursales();
   }
 
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void limpiarDatos() {
+    setState(() {
+      _ci = '';
+      _nombre = '';
+      _ciFamiliar = '';
+      _nombreFamiliar = '';
+      _apellidoFamiliar = '';
+      _emailFamiliar = '';
+      _contactoPrimarioFamiliar = 0;
+      _agregarContactoPrimario = false;
+      _familiares = [];
+    });
+  }
+
+  void clearText() {
+    fieldCi.clear();
+    fieldNombre.clear();
+    ciFamiliar.clear();
+    nombreFamiliar.clear();
+    apellidoFamiliar.clear();
+    emailFamiliar.clear();
   }
 }

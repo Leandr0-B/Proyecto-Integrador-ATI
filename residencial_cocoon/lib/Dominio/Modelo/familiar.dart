@@ -42,15 +42,32 @@ class Familiar {
 
   set apellido(String value) => this._apellido = value;
 
+  String get ci => this._ci;
+
+  set ci(String value) => this._ci = value;
+
+  String get email => this._email;
+
+  set email(String value) => this._email = value;
+
   //Funciones
   Map<String, dynamic> toJson() {
     return {
-      'ci': _ci,
-      'nombre': _nombre,
-      'apellido': _apellido,
-      'email': _email,
-      'contacto_primario': _contactoPrimario,
+      "ci": _ci,
+      "nombre": _nombre,
+      "apellido": _apellido,
+      "email": _email,
+      "contacto_primario": _contactoPrimario,
     };
+  }
+
+  bool esEmailValido() {
+    // Expresión regular para verificar el formato del email
+    final pattern =
+        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
+    final regex = RegExp(pattern);
+
+    return regex.hasMatch(this._email);
   }
 
   //ToString

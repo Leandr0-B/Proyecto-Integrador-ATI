@@ -1,4 +1,5 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
@@ -46,6 +47,16 @@ class ServicioUsuario {
     Usuario.validarSucursales(selectedSucursales);
     await APIService.fetchAltaUsuario(ci, nombre, administrador, selectedRoles,
         selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
+      String nombre, int? selectedSucursal) async {
+    List<Map<String, dynamic>> familiaresJsonList =
+        familiares.map((familiar) => familiar.toJson()).toList();
+    List<int?> sucursales = [];
+    sucursales.add(selectedSucursal);
+    await APIService.fetchAltaUsuarioResidente(ci, nombre, familiaresJsonList,
+        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {

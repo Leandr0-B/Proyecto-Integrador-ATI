@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
@@ -45,6 +46,12 @@ class Fachada {
       List<int> selectedRoles, List<int> selectedSucursales) async {
     await _servicioUsuario?.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
+  }
+
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
+      String nombre, int? selectedSucursal) async {
+    await _servicioUsuario?.altaUsuarioResidente(
+        familiares, ci, nombre, selectedSucursal);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {
