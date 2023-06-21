@@ -1,4 +1,5 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
@@ -48,11 +49,29 @@ class ServicioUsuario {
         selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
+      String nombre, int? selectedSucursal) async {
+    List<Map<String, dynamic>> familiaresJsonList =
+        familiares.map((familiar) => familiar.toJson()).toList();
+    List<int?> sucursales = [];
+    sucursales.add(selectedSucursal);
+    await APIService.fetchAltaUsuarioResidente(ci, nombre, familiaresJsonList,
+        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
   Future<List<Usuario>?> obtenerUsuarios() async {
     String usuarios = await APIService.fetchUsuarios(
         Fachada.getInstancia()?.getUsuario()!.getToken());
 
     List<dynamic> jsonList = jsonDecode(usuarios);
     return await Usuario.listadoJson(jsonList);
+  }
+
+  Future<Usuario>? obtenerUsuarioToken(String token) async {
+    String respuesta = await APIService.fetchUserInfo(token);
+    print(respuesta);
+    Map<String, dynamic> jsonMap = jsonDecode(respuesta);
+    Usuario usu = Usuario.fromJson(jsonMap);
+    return usu;
   }
 }

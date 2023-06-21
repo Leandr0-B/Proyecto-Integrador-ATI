@@ -30,17 +30,7 @@ class ControllerUsuario {
   }
 
   void _guardarUsuarioEnLocalStorage(Usuario? usuario) {
-    final jsonData = {
-      'ci': usuario?.ci,
-      'nombre': usuario?.nombre,
-      'administrador': usuario?.administrador,
-      'roles': usuario!.getRoles()?.map((rol) => rol.toJson()).toList(),
-      'sucursales': usuario!
-          .getSucursales()
-          ?.map((sucursal) => sucursal.toJson())
-          .toList(),
-      'authToken': usuario.getToken()
-    };
+    final jsonData = {'authToken': usuario?.getToken()};
 
     final jsonString = json.encode(jsonData);
     html.window.localStorage['usuario'] = jsonString;

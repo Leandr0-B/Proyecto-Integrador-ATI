@@ -1,9 +1,11 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 
 class ControllerVistaUsuarios {
   //Atributos
   Function(String mensaje) mostrarMensaje;
+  List<Usuario>? _usuarios;
 
   //Constructor
   ControllerVistaUsuarios({
@@ -12,6 +14,9 @@ class ControllerVistaUsuarios {
 
   //Funciones
   Future<List<Usuario>?> obtenerUsuarios() async {
-    return await Fachada.getInstancia()?.obtenerUsuarios();
+    if (_usuarios == null) {
+      this._usuarios = await Fachada.getInstancia()?.obtenerUsuarios();
+    }
+    return this._usuarios;
   }
 }

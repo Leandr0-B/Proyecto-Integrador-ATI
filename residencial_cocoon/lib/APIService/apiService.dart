@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
+import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 
 class APIService {
   static String errorUsuarioClave = "Usuario o Contrseña incorrectos";
@@ -101,8 +103,49 @@ class APIService {
       },
     );
 
-    if (response.statusCode != 200) {
-      throw Exception(errorObtenerToken);
+    if (response.statusCode == 400) {
+      throw Exception("El funcionario ya esta ingresado.");
+    }
+
+    if (response.statusCode == 200) {
+      throw AltaUsuarioException("El funcionario fue ingresado correctamente.");
+    }
+  }
+
+  static Future<void> fetchAltaUsuarioResidente(
+      String ci,
+      String nombre,
+      List<Map<String, dynamic>> familiares,
+      List<int?> sucursales,
+      String? token) async {
+    // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
+
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci': ci,
+        'nombre': nombre,
+        'password': ci,
+        'administrador': 0,
+        'sucursales': sucursales,
+        'roles': [3],
+        'familiares': familiares,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 400) {
+      throw Exception("El residente ya esta ingresado.");
+    }
+
+    if (response.statusCode == 200) {
+      throw AltaUsuarioException("El residente fue ingresado correctamente.");
     }
   }
 

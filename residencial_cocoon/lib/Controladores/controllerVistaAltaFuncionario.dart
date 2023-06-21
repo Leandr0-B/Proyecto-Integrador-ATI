@@ -3,14 +3,14 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 
-class ControllerVistaAltaUsuario {
+class ControllerVistaAltaFuncionario {
   //Atributos
   Function(String mensaje) mostrarMensaje;
   List<Rol>? _roles;
   List<Sucursal>? _sucursales;
 
   //Constructor
-  ControllerVistaAltaUsuario({
+  ControllerVistaAltaFuncionario({
     required this.mostrarMensaje,
   });
 
@@ -29,13 +29,18 @@ class ControllerVistaAltaUsuario {
     return this._sucursales;
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
+  Future<bool> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
     try {
       await Fachada.getInstancia()?.altaUsuario(
           ci, nombre, administrador, selectedRoles, selectedSucursales);
+      return false;
     } on AltaUsuarioException catch (ex) {
       mostrarMensaje(ex.mensaje);
+      return true;
+    } on Exception catch (ex) {
+      mostrarMensaje(ex.toString());
+      return false;
     }
   }
 }

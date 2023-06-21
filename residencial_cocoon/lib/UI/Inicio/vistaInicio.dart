@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
 
 class VistaInicio extends StatefulWidget {
@@ -17,23 +18,43 @@ class VistaInicio extends StatefulWidget {
 class _VistaInicioState extends State<VistaInicio> {
   var currentPage = DrawerSections.inicio;
   Usuario? usuario;
+  bool isUsuariosSubMenuVisible = false;
+
+  void onPageSelected(DrawerSections page) {
+    setState(() {
+      if (page == DrawerSections.usuarios) {
+        isUsuariosSubMenuVisible = !isUsuariosSubMenuVisible;
+      } else {
+        currentPage = page;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var container;
     usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
     usuario ??= widget.usuario;
 
+    Widget container;
+
     switch (currentPage) {
-      case (DrawerSections.inicio):
-        container =
-            Container(); // Aquí, muestra algo diferente. La línea anterior causaba un bucle infinito.
+      case DrawerSections.inicio:
+        container = Container();
         break;
-      case (DrawerSections.usuarios):
+      case DrawerSections.listaUsuarios:
         container = VistaListaUsuario();
         break;
+      case DrawerSections.altaFuncionario:
+        container = VistaAltaFuncionario();
+        break;
+
+      case DrawerSections.altaResidente:
+        container = VistaAltaResidente();
+        break;
       default:
+        container = Container();
     }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(225, 183, 72, 1),
@@ -43,11 +64,8 @@ class _VistaInicioState extends State<VistaInicio> {
       drawer: MyDrawerList(
         context: context,
         usuario: usuario,
-        onPageSelected: (page) {
-          setState(() {
-            currentPage = page;
-          });
-        },
+        onPageSelected: onPageSelected,
+        isUsuariosSubMenuVisible: isUsuariosSubMenuVisible,
       ),
     );
   }
@@ -57,11 +75,13 @@ class MyDrawerList extends StatelessWidget {
   final BuildContext context;
   final Usuario? usuario;
   final ValueChanged<DrawerSections> onPageSelected;
+  final bool isUsuariosSubMenuVisible;
 
   MyDrawerList({
     required this.context,
     required this.usuario,
     required this.onPageSelected,
+    required this.isUsuariosSubMenuVisible,
   });
 
   @override
@@ -81,8 +101,23 @@ class MyDrawerList extends StatelessWidget {
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[
-              menuItem(2, "Usuarios", Icons.people_alt_outlined,
-                  DrawerSections.usuarios),
+              ExpansionTile(
+                leading: Icon(Icons.people_alt_outlined,
+                    size: 20, color: Colors.black),
+                title: Text("Usuarios",
+                    style: TextStyle(color: Colors.black, fontSize: 16)),
+                onExpansionChanged: (expanded) {
+                  onPageSelected(DrawerSections.usuarios);
+                },
+                children: [
+                  menuItem(2, "Lista de Usuarios", Icons.list,
+                      DrawerSections.listaUsuarios),
+                  menuItem(3, "Alta de Funcionario", Icons.person_add,
+                      DrawerSections.altaFuncionario),
+                  menuItem(4, "Alta de Residente", Icons.person_add,
+                      DrawerSections.altaResidente),
+                ],
+              ),
             ],
           ],
         ),
@@ -94,8 +129,7 @@ class MyDrawerList extends StatelessWidget {
     return ListTile(
       onTap: () {
         Navigator.pop(context);
-        onPageSelected(
-            page); // Aquí cambiamos la página usando el callback en lugar de hacer la navegación
+        onPageSelected(page);
       },
       leading: Icon(
         icon,
@@ -116,4 +150,7 @@ class MyDrawerList extends StatelessWidget {
 enum DrawerSections {
   inicio,
   usuarios,
+  altaFuncionario,
+  altaResidente,
+  listaUsuarios
 }

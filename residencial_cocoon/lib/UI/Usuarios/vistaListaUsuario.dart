@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaUsuarios.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaUsuario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 
 class VistaListaUsuario extends StatefulWidget {
   @override
@@ -42,28 +42,21 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> {
               itemBuilder: (context, index) {
                 Usuario usuario = snapshot.data![index];
                 String adminText = usuario.administrador == 1 ? 'Si' : 'No';
+                String subtitleText =
+                    'Documento identificador: ${usuario.ci}, Administrador: $adminText, Roles: ${usuario.getRoles()?.map((rol) => rol.toStringMostrar()).join(", ")}, Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}';
+
+                if (usuario.getfamiliares()?.isNotEmpty == true) {
+                  subtitleText +=
+                      ', Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")}';
+                }
                 return ListTile(
                   title: Text(usuario.nombre),
-                  subtitle: Text(
-                    'CI: ${usuario.ci}, Administrador: $adminText, Roles: ${usuario.getRoles()?.map((rol) => rol.toStringMostrar()).join(", ")}, Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}, Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")}',
-                  ),
+                  subtitle: Text(subtitleText),
                 );
               },
             );
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => NuevoUsuarioPage()),
-          // );
-          //Navigator.pushReplacementNamed(context, NuevoUsuarioPage.id);
-          Navigator.pushNamed(context, VistaAltaUsuario.id);
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green,
       ),
     );
   }
