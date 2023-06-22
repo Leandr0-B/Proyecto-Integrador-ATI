@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
+import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
 
 class VistaInicio extends StatefulWidget {
@@ -51,6 +52,8 @@ class _VistaInicioState extends State<VistaInicio> {
       case DrawerSections.altaResidente:
         container = VistaAltaResidente();
         break;
+      case DrawerSections.cambioContrasena:
+        container = VistaCambioContrasena();
       default:
         container = Container();
     }
@@ -118,7 +121,10 @@ class MyDrawerList extends StatelessWidget {
                       DrawerSections.altaResidente),
                 ],
               ),
-            ],
+            ] else
+              ...[],
+            menuItem(5, "Cambio de contraseña", Icons.password,
+                DrawerSections.cambioContrasena),
           ],
         ),
       ),
@@ -152,5 +158,6 @@ enum DrawerSections {
   usuarios,
   altaFuncionario,
   altaResidente,
-  listaUsuarios
+  listaUsuarios,
+  cambioContrasena,
 }

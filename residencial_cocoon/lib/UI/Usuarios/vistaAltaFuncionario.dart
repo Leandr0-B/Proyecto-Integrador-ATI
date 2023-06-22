@@ -44,9 +44,10 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  maxLength: 8,
+                  maxLength: 30,
                   controller: fieldCi,
                   decoration: const InputDecoration(
+                    labelText: 'Documento identificador',
                     hintText: 'Ingrese documento identificador',
                   ),
                   validator: (value) {
@@ -63,6 +64,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
                   maxLength: 100,
                   controller: fieldNombre,
                   decoration: const InputDecoration(
+                    labelText: 'Nombre',
                     hintText: 'Ingrese Nombre',
                   ),
                   validator: (value) {

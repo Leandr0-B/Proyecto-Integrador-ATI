@@ -69,9 +69,13 @@ class ServicioUsuario {
 
   Future<Usuario>? obtenerUsuarioToken(String token) async {
     String respuesta = await APIService.fetchUserInfo(token);
-    print(respuesta);
     Map<String, dynamic> jsonMap = jsonDecode(respuesta);
     Usuario usu = Usuario.fromJson(jsonMap);
     return usu;
+  }
+
+  Future<void> cambioClave(String actual, String nueva) async {
+    await APIService.fetchUserPass(
+        actual, nueva, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 }

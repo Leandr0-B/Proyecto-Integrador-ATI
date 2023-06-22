@@ -53,9 +53,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  maxLength: 8,
+                  maxLength: 30,
                   controller: fieldCi,
                   decoration: const InputDecoration(
+                    labelText: 'Documento identificador residente',
                     hintText: 'Ingrese documento identificador',
                   ),
                   validator: (value) {
@@ -73,6 +74,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                   controller: fieldNombre,
                   decoration: const InputDecoration(
                     hintText: 'Ingrese Nombre',
+                    labelText: 'Nombre residente',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -125,8 +127,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'Documento del familiar',
                     hintText: 'Ingrese CI del Familiar',
                   ),
+                  maxLength: 30,
                   controller: ciFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -140,8 +144,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'Nombre del familiar',
                     hintText: 'Ingrese Nombre del Familiar',
                   ),
+                  maxLength: 100,
                   controller: nombreFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -155,8 +161,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'Apellido del familiar',
                     hintText: 'Ingrese Apellido del Familiar',
                   ),
+                  maxLength: 100,
                   controller: apellidoFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -170,9 +178,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'Email del familiar',
                     hintText:
                         'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
                   ),
+                  maxLength: 100,
                   controller: emailFamiliar,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

@@ -1,8 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:universal_html/html.dart';
 
 class APIService {
   static String errorUsuarioClave = "Usuario o Contrseña incorrectos";
@@ -161,6 +163,28 @@ class APIService {
       return response.body;
     } else {
       throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> fetchUserPass(
+      String actual, String nueva, String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/usuario/cambiar-pass');
+
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'oldPassword': actual,
+        'newPassword': nueva,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw CambioContrsenaException("Contraseña actual incorrecta.");
     }
   }
 }
