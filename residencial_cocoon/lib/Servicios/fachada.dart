@@ -62,6 +62,10 @@ class Fachada {
     return await _servicioUsuario?.obtenerUsuarioToken(token);
   }
 
+  Future<void> cambioClave(String actual, String nueva) async {
+    await _servicioUsuario?.cambioClave(actual, nueva);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();

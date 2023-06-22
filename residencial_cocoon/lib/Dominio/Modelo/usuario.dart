@@ -15,6 +15,7 @@ class Usuario {
   String? _authToken;
   List<Familiar>? _familiares;
   int? _inactivo;
+  String? _tokenNotificacion;
 
   //Constructores
   Usuario({
@@ -24,12 +25,14 @@ class Usuario {
     required List<Rol> roles,
     required List<Sucursal> sucursales,
     required String authToken,
+    required String tokenNotificacion,
   })  : _ci = ci,
         _nombre = nombre,
         _administrador = administrador,
         _roles = roles,
         _sucursales = sucursales,
-        _authToken = authToken;
+        _authToken = authToken,
+        _tokenNotificacion = tokenNotificacion;
 
   Usuario.paraLista({
     required String ci,
@@ -75,7 +78,8 @@ class Usuario {
         administrador: json['administrador'],
         roles: rolesList,
         sucursales: sucursalesList,
-        authToken: json['authToken'] ?? '');
+        authToken: json['authToken'] ?? '',
+        tokenNotificacion: json['tokenNotificacion']);
   }
 
   factory Usuario.fromJsonLista(Map<String, dynamic> json) {
@@ -154,7 +158,8 @@ class Usuario {
       'administrador': _administrador,
       'roles': rolesJson,
       'sucursales': sucursalesJson,
-      'authToken': _authToken
+      'authToken': _authToken,
+      'tokenNotificacion': _tokenNotificacion
     };
   }
 
