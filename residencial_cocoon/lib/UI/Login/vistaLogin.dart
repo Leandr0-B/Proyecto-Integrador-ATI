@@ -167,7 +167,6 @@ class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
 
     Usuario? u = await controller?.loginUsuario(_ci, _clave);
     if (u != null) {
-      print(u);
       ingreso(u);
     }
 

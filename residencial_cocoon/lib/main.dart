@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/residente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 import 'package:url_strategy/url_strategy.dart';
@@ -15,19 +15,6 @@ void main() async {
   bool isLoggedIn = false;
   Usuario? usuario;
 
-  Usuario usu = Usuario.sinRoles(
-      ci: "ci",
-      nombre: "nombre",
-      administrador: 1,
-      sucursales: [],
-      authToken: "authToken",
-      tokenNotificacion: "tokenNotificacion");
-  Rol rol = Rol.id(1);
-
-  usu.roles?.add(rol);
-
-  rol.usuario = usu;
-
   final localStorage = html.window.localStorage;
   final jsonString = localStorage['usuario'];
   if (jsonString != null) {
@@ -35,7 +22,6 @@ void main() async {
     final jsonData = json.decode(jsonString);
     String tokenUsuario = jsonData['authToken'];
     usuario = await Fachada.getInstancia()?.obtenerUsuarioToken(tokenUsuario);
-    print(usuario);
     Fachada.getInstancia()?.setUsuario(usuario);
   }
 

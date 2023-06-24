@@ -120,8 +120,7 @@ class MyDrawerList extends StatelessWidget {
                 ],
               ),
             ],
-            if (usuario!.contieneRol("Geriatra") ||
-                usuario?.administrador == 1) ...[
+            if (usuario!.esGeriatra() || usuario?.administrador == 1) ...[
               ExpansionTile(
                 leading: Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: Text("Geriatra",

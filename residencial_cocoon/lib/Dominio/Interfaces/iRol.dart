@@ -1,7 +1,7 @@
-import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
-
 abstract class IRol {
+  bool esCocinero();
+  bool esNutricionista();
   bool esResidente();
-  List<Familiar> getFamiliares();
-  Map<String, dynamic> toJson();
+  bool esGeriatra();
+  bool esEnfermero();
 }

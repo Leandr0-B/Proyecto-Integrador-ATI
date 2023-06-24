@@ -278,11 +278,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
     int _contactoPrimarioFamiliar,
   ) {
     Familiar familiar = Familiar(
-      ci: _ciFamiliar,
-      nombre: _nombreFamiliar,
-      apellido: _apellidoFamiliar,
-      email: _emailFamiliar,
-      contactoPrimario: _agregarContactoPrimario ? 1 : 0,
+      _ciFamiliar,
+      _nombreFamiliar,
+      _apellidoFamiliar,
+      _emailFamiliar,
+      _agregarContactoPrimario ? 1 : 0,
     );
 
     setState(() {

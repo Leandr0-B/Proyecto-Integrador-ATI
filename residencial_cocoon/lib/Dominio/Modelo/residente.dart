@@ -1,39 +1,37 @@
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class Residente extends Rol {
   //Atributos
-  //List<Familiar> _familiares;
+  List<Familiar> _familiares = [];
 
   //Constructor
-  Residente(
-      {required int idRol,
-      required String descripcion,
-      required Usuario usuario})
-      : super(idRol: idRol, descripcion: descripcion, usuario: usuario);
+  Residente(int idRol, String descripcion, this._familiares)
+      : super.sinUsuario(idRol, descripcion);
+
+  Residente.sinFamiliares(int idRol, String descripcion)
+      : super.sinUsuario(idRol, descripcion);
 
   //Funciones
   @override
   bool esResidente() {
     return true;
   }
-/*
-  @override
+
   List<Familiar> getFamiliares() {
     return _familiares;
   }
 
+  set familiares(List<Familiar> familiares) => _familiares = familiares;
+
+  //ToString
   @override
-  Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>> familiaresJson =
-        _familiares!.map((familiar) => familiar.toJson()).toList();
-    return {
-      'id_rol': idRol,
-      'descripcion': descripcion,
-      'usuario': usuario,
-      'familiares': familiaresJson,
-    };
+  String toString() {
+    String retorno = "";
+    retorno += "id_rol: $idRol, ";
+    retorno += "descripcion: $descripcion, ";
+    retorno += "usuario: ${usuario.ci} ${usuario.nombre}";
+    retorno += "Familiares: $_familiares";
+    return retorno;
   }
-  */
 }

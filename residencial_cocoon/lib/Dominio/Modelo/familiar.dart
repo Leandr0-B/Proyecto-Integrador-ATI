@@ -1,32 +1,28 @@
 class Familiar {
   //Atributos
-  String _ci;
-  String _nombre;
-  String _apellido;
-  String _email;
-  int _contactoPrimario;
+  String _ci = "";
+  String _nombre = "";
+  String _apellido = "";
+  String _email = "";
+  int _contactoPrimario = 0;
 
   //Constructorres
-  Familiar({
-    required String ci,
-    required String nombre,
-    required String apellido,
-    required String email,
-    required int contactoPrimario,
-  })  : _ci = ci,
-        _nombre = nombre,
-        _apellido = apellido,
-        _email = email,
-        _contactoPrimario = contactoPrimario;
+  Familiar(
+    this._ci,
+    this._nombre,
+    this._apellido,
+    this._email,
+    this._contactoPrimario,
+  );
 
   factory Familiar.fromJson(Map<String, dynamic> json) {
     // Crear y retornar un nuevo objeto Usuario
     return Familiar(
-      ci: json['ci'],
-      nombre: json['nombre'],
-      apellido: json['apellido'],
-      email: json['email'],
-      contactoPrimario: json['contacto_primario'],
+      json['ci'],
+      json['nombre'],
+      json['apellido'],
+      json['email'],
+      json['contacto_primario'],
     );
   }
 
@@ -63,7 +59,7 @@ class Familiar {
 
   bool esEmailValido() {
     // Expresión regular para verificar el formato del email
-    final pattern =
+    const pattern =
         r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
     final regex = RegExp(pattern);
 
@@ -73,23 +69,22 @@ class Familiar {
   //ToString
   @override
   String toString() {
-    return toJson().toString();
+    String retorno = "";
+    retorno += "ci: $_ci, ";
+    retorno += "nombre: $_nombre, ";
+    retorno += "apellido: $_apellido, ";
+    retorno += "email: $_email, ";
+    retorno += "contactoPrimario: $_contactoPrimario, ";
+    return retorno;
   }
 
   String toStringMostrar() {
     String primario = "no";
-    if (this._contactoPrimario == 1) {
+    if (_contactoPrimario == 1) {
       primario = "si";
     }
 
-    return this._nombre +
-        " " +
-        this._apellido +
-        " " +
-        "Es contacto primario: " +
-        primario +
-        " " +
-        this._email;
+    return "${this._nombre} ${this._apellido} Es contacto primario: $primario ${this._email}";
   }
 
   // Equals
