@@ -1,23 +1,17 @@
 class Sucursal {
   //Atributos
-  int _idSucursal;
-  String _nombre;
-  String _direccion;
+  int _idSucursal = 0;
+  String _nombre = "";
+  String _direccion = "";
 
   //Constructor
-  Sucursal(
-      {required int idSucursal,
-      required String nombre,
-      required String direccion})
-      : _idSucursal = idSucursal,
-        _nombre = nombre,
-        _direccion = direccion;
+  Sucursal(this._idSucursal, this._nombre, this._direccion);
 
   factory Sucursal.fromJson(Map<String, dynamic> json) {
     return Sucursal(
-      idSucursal: json['id_sucursal'],
-      nombre: json['nombre'],
-      direccion: json['direccion'],
+      json['id_sucursal'],
+      json['nombre'],
+      json['direccion'],
     );
   }
 
@@ -53,10 +47,14 @@ class Sucursal {
   //ToString
   @override
   String toString() {
-    return toJson().toString();
+    String retorno = "";
+    retorno += "idSucursal: $idSucursal, ";
+    retorno += "nombre: $nombre, ";
+    retorno += "direccion: $direccion";
+    return retorno;
   }
 
   String toStringMostrar() {
-    return this._nombre + " direccion: " + this._direccion;
+    return "$_nombre direccion: $_direccion";
   }
 }

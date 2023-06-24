@@ -19,7 +19,12 @@ class ServicioUsuario {
     ci = _limpieza(ci);
     String usuario = await APIService.fetchAuth(ci, clave);
     Map<String, dynamic> jsonMap = jsonDecode(usuario);
-    return Usuario.fromJson(jsonMap);
+
+    Usuario usu = Usuario.login(jsonMap);
+
+    print(usu.toString());
+
+    return usu;
   }
 
   String _limpieza(String ci) {
@@ -70,7 +75,7 @@ class ServicioUsuario {
   Future<Usuario>? obtenerUsuarioToken(String token) async {
     String respuesta = await APIService.fetchUserInfo(token);
     Map<String, dynamic> jsonMap = jsonDecode(respuesta);
-    Usuario usu = Usuario.fromJson(jsonMap);
+    Usuario usu = Usuario.login(jsonMap);
     return usu;
   }
 

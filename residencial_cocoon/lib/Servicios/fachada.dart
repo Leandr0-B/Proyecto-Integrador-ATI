@@ -3,6 +3,8 @@ import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
+import 'package:residencial_cocoon/Servicios/servicioSalidas.dart';
 import 'package:residencial_cocoon/Servicios/servicioSucursal.dart';
 import 'package:residencial_cocoon/Servicios/servicioUsuario.dart';
 
@@ -12,11 +14,15 @@ class Fachada {
   static Fachada? _instancia;
   ServicioUsuario? _servicioUsuario;
   ServicioSucursal? _servicioSucursal;
+  ServicioSalidas? _servicioSalidas;
+  ServicioCequeoMedico? _servicioCequeoMedico;
 
   //Constructor
   Fachada._() {
     _servicioUsuario = ServicioUsuario();
     _servicioSucursal = ServicioSucursal();
+    _servicioSalidas = ServicioSalidas();
+    _servicioCequeoMedico = ServicioCequeoMedico();
   }
 
   static Fachada? getInstancia() {
