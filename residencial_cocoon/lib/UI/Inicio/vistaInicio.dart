@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
+import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
@@ -19,15 +21,10 @@ class VistaInicio extends StatefulWidget {
 class _VistaInicioState extends State<VistaInicio> {
   var currentPage = DrawerSections.inicio;
   Usuario? usuario;
-  bool isUsuariosSubMenuVisible = false;
 
   void onPageSelected(DrawerSections page) {
     setState(() {
-      if (page == DrawerSections.usuarios) {
-        isUsuariosSubMenuVisible = !isUsuariosSubMenuVisible;
-      } else {
-        currentPage = page;
-      }
+      currentPage = page;
     });
   }
 
@@ -48,14 +45,21 @@ class _VistaInicioState extends State<VistaInicio> {
       case DrawerSections.altaFuncionario:
         container = VistaAltaFuncionario();
         break;
-
       case DrawerSections.altaResidente:
         container = VistaAltaResidente();
         break;
       case DrawerSections.cambioContrasena:
         container = VistaCambioContrasena();
+        break;
+      case DrawerSections.salidaMedica:
+        container = VistaSalidaMedica();
+        break;
+      case DrawerSections.visitaMedica:
+        container = VistaVisitaMedicaExterna();
+        break;
       default:
         container = Container();
+        break;
     }
 
     return Scaffold(
@@ -68,7 +72,6 @@ class _VistaInicioState extends State<VistaInicio> {
         context: context,
         usuario: usuario,
         onPageSelected: onPageSelected,
-        isUsuariosSubMenuVisible: isUsuariosSubMenuVisible,
       ),
     );
   }
@@ -78,13 +81,11 @@ class MyDrawerList extends StatelessWidget {
   final BuildContext context;
   final Usuario? usuario;
   final ValueChanged<DrawerSections> onPageSelected;
-  final bool isUsuariosSubMenuVisible;
 
   MyDrawerList({
     required this.context,
     required this.usuario,
     required this.onPageSelected,
-    required this.isUsuariosSubMenuVisible,
   });
 
   @override
@@ -109,9 +110,6 @@ class MyDrawerList extends StatelessWidget {
                     size: 20, color: Colors.black),
                 title: Text("Usuarios",
                     style: TextStyle(color: Colors.black, fontSize: 16)),
-                onExpansionChanged: (expanded) {
-                  onPageSelected(DrawerSections.usuarios);
-                },
                 children: [
                   menuItem(2, "Lista de Usuarios", Icons.list,
                       DrawerSections.listaUsuarios),
@@ -121,8 +119,27 @@ class MyDrawerList extends StatelessWidget {
                       DrawerSections.altaResidente),
                 ],
               ),
-            ] else
-              ...[],
+            ],
+            if (usuario!.contieneRol("Geriatra") ||
+                usuario?.administrador == 1) ...[
+              ExpansionTile(
+                leading: Icon(Icons.badge_sharp, size: 20, color: Colors.black),
+                title: Text("Geriatra",
+                    style: TextStyle(color: Colors.black, fontSize: 16)),
+                children: [
+                  menuItem(
+                      6,
+                      "Registrar Salida Medica",
+                      Icons.emoji_transportation_outlined,
+                      DrawerSections.salidaMedica),
+                  menuItem(
+                      7,
+                      "Registrar Visita Medica Externa",
+                      Icons.medical_services_sharp,
+                      DrawerSections.visitaMedica),
+                ],
+              ),
+            ],
             menuItem(5, "Cambio de contraseña", Icons.password,
                 DrawerSections.cambioContrasena),
           ],
@@ -155,9 +172,10 @@ class MyDrawerList extends StatelessWidget {
 
 enum DrawerSections {
   inicio,
-  usuarios,
+  listaUsuarios,
   altaFuncionario,
   altaResidente,
-  listaUsuarios,
   cambioContrasena,
+  salidaMedica,
+  visitaMedica,
 }

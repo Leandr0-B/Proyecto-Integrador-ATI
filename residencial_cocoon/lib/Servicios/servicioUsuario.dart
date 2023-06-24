@@ -1,5 +1,10 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/cocinero.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/enfermero.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/geriatra.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/nutricionista.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/residente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
@@ -19,7 +24,82 @@ class ServicioUsuario {
     ci = _limpieza(ci);
     String usuario = await APIService.fetchAuth(ci, clave);
     Map<String, dynamic> jsonMap = jsonDecode(usuario);
-    return Usuario.fromJson(jsonMap);
+    Usuario usu = Usuario.fromJson(jsonMap);
+
+    print(usu);
+
+    List<dynamic> rolesJson = jsonMap['roles'];
+
+    Usuario usu2 = Usuario.sinRoles(
+        ci: usu.ci,
+        nombre: usu.nombre,
+        administrador: usu.administrador,
+        sucursales: usu.sucursales,
+        authToken: usu.getToken(),
+        tokenNotificacion: usu.tokenNotificacion);
+
+    List<Rol> roles = armarRoles(usu, rolesJson);
+    //usu.roles = roles;
+    print(usu);
+    return usu;
+  }
+
+  List<Rol> armarRoles(Usuario u, List<dynamic> roles) {
+    List<Rol> rolesList = [];
+    for (var roleJson in roles) {
+      switch (roleJson['id_rol']) {
+        case 1:
+          rolesList.add(Cocinero(
+            idRol: roleJson['id_rol'],
+            descripcion: roleJson['descripcion'],
+            usuario: u,
+          ));
+          break;
+        case 2:
+          rolesList.add(Nutricionista(
+            idRol: roleJson['id_rol'],
+            descripcion: roleJson['descripcion'],
+            usuario: u,
+          ));
+          break;
+        case 3:
+          //List<Familiar> familiaresList = [];
+          /*
+          if (json.containsKey('familiares')) {
+            List<dynamic> familiaresJson = json['familiares'];
+            familiaresList = familiaresJson
+                .map((familiarJson) => Familiar.fromJson(familiarJson))
+                .toList();
+          }
+          */
+          Rol res = Residente(
+            idRol: roleJson['id_rol'],
+            descripcion: roleJson['descripcion'],
+            usuario: u,
+          );
+          u.roles?.add(res);
+          rolesList.add(res);
+          break;
+        case 4:
+          rolesList.add(Geriatra(
+            idRol: roleJson['id_rol'],
+            descripcion: roleJson['descripcion'],
+            usuario: u,
+          ));
+          break;
+        case 5:
+          Enfermero enf = Enfermero(
+            idRol: roleJson['id_rol'],
+            descripcion: roleJson['descripcion'],
+            usuario: u,
+          );
+          rolesList.add(enf);
+          break;
+        default:
+          break;
+      }
+    }
+    return rolesList;
   }
 
   String _limpieza(String ci) {

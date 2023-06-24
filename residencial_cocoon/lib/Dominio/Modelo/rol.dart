@@ -1,19 +1,33 @@
-class Rol {
+import 'package:residencial_cocoon/Dominio/Interfaces/iRol.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+
+class Rol implements IRol {
   //Atributos
-  int _idRol;
-  String _descripcion;
+  int _idRol = 0;
+  String _descripcion = "";
+  Usuario? _usuario;
 
   //Constructores
-  Rol({required int idRol, required String descripcion})
-      : _idRol = idRol,
-        _descripcion = descripcion;
+  Rol.usuarioTest(this._usuario);
+  Rol({
+    required int idRol,
+    required String descripcion,
+    required Usuario usuario,
+  })  : _idRol = idRol,
+        _descripcion = descripcion,
+        _usuario = usuario;
 
   Rol.id(int idRol)
       : _idRol = idRol,
         _descripcion = "";
 
+  Rol.json({required int idRol, required String descripcion})
+      : _idRol = idRol,
+        _descripcion = descripcion;
+
   factory Rol.fromJson(Map<String, dynamic> json) {
-    return Rol(
+    return Rol.json(
       idRol: json['id_rol'],
       descripcion: json['descripcion'],
     );
@@ -26,14 +40,11 @@ class Rol {
   String get descripcion => _descripcion;
   set descripcion(String value) => _descripcion = value;
 
-  //Funciones
-  Map<String, dynamic> toJson() {
-    return {
-      'id_rol': _idRol,
-      'descripcion': _descripcion,
-    };
-  }
+  Usuario? get usuario => this._usuario;
 
+  set usuario(Usuario? value) => this._usuario = value;
+
+  //Funciones
   Map<String, dynamic> toIdJson() {
     return {
       'id_rol': _idRol,
@@ -45,6 +56,22 @@ class Rol {
         .cast<Map<String, dynamic>>()
         .map<Rol>((json) => Rol.fromJson(json))
         .toList();
+  }
+
+  //Interfaz
+  @override
+  bool esResidente() {
+    throw UnimplementedError();
+  }
+
+  @override
+  List<Familiar> getFamiliares() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    throw UnimplementedError();
   }
 
   //ToString

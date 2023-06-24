@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
@@ -13,6 +14,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool isLoggedIn = false;
   Usuario? usuario;
+
+  Usuario usu = Usuario.sinRoles(
+      ci: "ci",
+      nombre: "nombre",
+      administrador: 1,
+      sucursales: [],
+      authToken: "authToken",
+      tokenNotificacion: "tokenNotificacion");
+  Rol rol = Rol.id(1);
+
+  usu.roles?.add(rol);
+
+  rol.usuario = usu;
 
   final localStorage = html.window.localStorage;
   final jsonString = localStorage['usuario'];
