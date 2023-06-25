@@ -83,4 +83,9 @@ class ServicioUsuario {
     await APIService.fetchUserPass(
         actual, nueva, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
+
+  Future<void> actualizarTokenNotificaciones(String notificationToken) async {
+    await APIService.actualizarTokenNotificaciones(
+        notificationToken, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
 }

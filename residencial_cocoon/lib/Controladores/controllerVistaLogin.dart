@@ -4,12 +4,12 @@ import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 
-class ControllerUsuario {
+class ControllerVistaLogin {
   //Atributos
   Function(String mensaje) mostrarMensaje;
 
   //Constructor
-  ControllerUsuario({
+  ControllerVistaLogin({
     required this.mostrarMensaje,
   });
 

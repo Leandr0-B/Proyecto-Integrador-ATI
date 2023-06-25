@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
@@ -21,6 +22,21 @@ class VistaInicio extends StatefulWidget {
 class _VistaInicioState extends State<VistaInicio> {
   var currentPage = DrawerSections.inicio;
   Usuario? usuario;
+  ControllerVistaInicio controller = ControllerVistaInicio();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      // Aquí se puede acceder a BuildContext
+      final context = this.context;
+
+      usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
+      usuario ??= widget.usuario;
+
+      controller.inicializarFirebase(usuario);
+    });
+  }
 
   void onPageSelected(DrawerSections page) {
     setState(() {
