@@ -3,7 +3,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:universal_html/html.dart';
 
 class APIService {
@@ -77,7 +77,7 @@ class APIService {
     }
   }
 
-  static Future<void> fetchAltaUsuario(
+  static Future<void> postAltaUsuario(
       String ci,
       String nombre,
       int administrador,
@@ -114,7 +114,7 @@ class APIService {
     }
   }
 
-  static Future<void> fetchAltaUsuarioResidente(
+  static Future<void> postAltaUsuarioResidente(
       String ci,
       String nombre,
       List<Map<String, dynamic>> familiares,
@@ -166,7 +166,7 @@ class APIService {
     }
   }
 
-  static Future<void> fetchUserPass(
+  static Future<void> putUserPass(
       String actual, String nueva, String? token) async {
     final url = Uri.parse(
         'https://residencialapi.azurewebsites.net/usuario/cambiar-pass');
@@ -185,6 +185,56 @@ class APIService {
 
     if (response.statusCode != 200) {
       throw CambioContrsenaException("Contraseña actual incorrecta.");
+    }
+  }
+
+  static Future<String> fetchUsuariosSucursal(
+      String? token, int? idSucursal) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/residente/sucursal/$idSucursal');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> postSalidaMedica(
+      String? token,
+      String? ci_residente,
+      String? ci_geriatra,
+      String descripcion,
+      String fecha_desde,
+      String fecha_hasta) async {
+    //print(DateTime(fecha_desde!.year, fecha_desde!.month, fecha_desde!.day));
+    //print(DateTime(fecha_hasta!.year, fecha_hasta!.month, fecha_hasta!.day));
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/salida-medica/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci_residente': ci_residente,
+        'ci_geriatra': ci_geriatra,
+        'descripcion': descripcion,
+        'fecha_desde': fecha_desde.toString(),
+        'fecha_hasta': fecha_hasta.toString(),
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      throw SalidaMedicaException("El residente fue ingresado correctamente.");
+    } else {
+      throw Exception(errorObtenerToken);
     }
   }
 }

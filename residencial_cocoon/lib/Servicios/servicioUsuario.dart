@@ -1,6 +1,7 @@
 import 'package:residencial_cocoon/APIService/apiService.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'dart:convert';
 
@@ -50,7 +51,7 @@ class ServicioUsuario {
       List<int> selectedRoles, List<int> selectedSucursales) async {
     Usuario.validarRoles(selectedRoles);
     Usuario.validarSucursales(selectedSucursales);
-    await APIService.fetchAltaUsuario(ci, nombre, administrador, selectedRoles,
+    await APIService.postAltaUsuario(ci, nombre, administrador, selectedRoles,
         selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
@@ -60,7 +61,7 @@ class ServicioUsuario {
         familiares.map((familiar) => familiar.toJson()).toList();
     List<int?> sucursales = [];
     sucursales.add(selectedSucursal);
-    await APIService.fetchAltaUsuarioResidente(ci, nombre, familiaresJsonList,
+    await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList,
         sucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
@@ -69,7 +70,7 @@ class ServicioUsuario {
         Fachada.getInstancia()?.getUsuario()!.getToken());
 
     List<dynamic> jsonList = jsonDecode(usuarios);
-    return await Usuario.listadoJson(jsonList);
+    return Usuario.listadoJson(jsonList);
   }
 
   Future<Usuario>? obtenerUsuarioToken(String token) async {
@@ -80,7 +81,14 @@ class ServicioUsuario {
   }
 
   Future<void> cambioClave(String actual, String nueva) async {
-    await APIService.fetchUserPass(
+    await APIService.putUserPass(
         actual, nueva, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<List<Usuario>?> residentesSucursal(Sucursal? suc) async {
+    String usuarios = await APIService.fetchUsuariosSucursal(
+        Fachada.getInstancia()?.getUsuario()?.getToken(), suc?.idSucursal);
+    List<dynamic> jsonList = jsonDecode(usuarios);
+    return Usuario.listadoJsonResidentes(jsonList);
   }
 }

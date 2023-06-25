@@ -31,6 +31,12 @@ class Usuario {
     this._inactivo,
   );
 
+  Usuario.residente(
+    this._ci,
+    this._nombre,
+    this._roles,
+  );
+
   Usuario.sinRoles(this._ci, this._nombre, this._administrador,
       this._sucursales, this._authToken, this._tokenNotificacion);
 
@@ -105,6 +111,22 @@ class Usuario {
         json['inactivo'] ?? 0);
   }
 
+  factory Usuario.fromJsonListaResidente(Map<String, dynamic> json) {
+    List<Rol> rolesList = [];
+    rolesList.add(Residente.sinFamiliares(3, "Residente"));
+
+    Usuario aux = Usuario.residente(
+      json['ci'],
+      json['nombre'],
+      rolesList,
+    );
+
+    for (int i = 0; i < rolesList.length; i++) {
+      rolesList[i].usuario = aux;
+    }
+    return aux;
+  }
+
   //Get Set
   String get ci => _ci;
 
@@ -169,12 +191,12 @@ class Usuario {
         .toList();
   }
 
-  // static String listaFamiliaresToJson(List<Familiar> familiares) {
-  //   List<Map<String, dynamic>> jsonList =
-  //       familiares.map((familiar) => familiar.toJson()).toList();
-  //   String jsonString = jsonEncode(jsonList);
-  //   return jsonString.replaceAll('\\', '');
-  // }
+  static List<Usuario> listadoJsonResidentes(List<dynamic> jsonList) {
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<Usuario>((json) => Usuario.fromJsonListaResidente(json))
+        .toList();
+  }
 
   bool esResidente() {
     bool resultado = false;
