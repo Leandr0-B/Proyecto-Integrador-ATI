@@ -237,4 +237,26 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static Future<void> actualizarTokenNotificaciones(
+      String notificationToken, String? authorizationToken) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/usuario/modificar-token');
+
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'tokenNotificacion': notificationToken,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $authorizationToken'
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+          "ha ocurrido un error al actualizar el token de notificaciones.");
+    }
+  }
 }

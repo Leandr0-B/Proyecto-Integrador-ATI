@@ -14,13 +14,13 @@ class VistaLogin extends StatefulWidget {
 class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
   String _ci = '';
   String _clave = '';
-  ControllerUsuario? controller;
+  ControllerVistaLogin? controller;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerUsuario(mostrarMensaje: mostrarMensaje);
+    controller = ControllerVistaLogin(mostrarMensaje: mostrarMensaje);
   }
 
   @override

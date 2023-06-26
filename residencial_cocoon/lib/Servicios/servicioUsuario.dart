@@ -91,4 +91,9 @@ class ServicioUsuario {
     List<dynamic> jsonList = jsonDecode(usuarios);
     return Usuario.listadoJsonResidentes(jsonList);
   }
+
+  Future<void> actualizarTokenNotificaciones(String notificationToken) async {
+    await APIService.actualizarTokenNotificaciones(
+        notificationToken, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
 }

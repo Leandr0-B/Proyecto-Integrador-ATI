@@ -76,6 +76,10 @@ class Fachada {
     return await _servicioUsuario?.residentesSucursal(suc);
   }
 
+  Future<void> actualizarTokenNotificaciones(String notificationToken) async {
+    await _servicioUsuario?.actualizarTokenNotificaciones(notificationToken);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();
