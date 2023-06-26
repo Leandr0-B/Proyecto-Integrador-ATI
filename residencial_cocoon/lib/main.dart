@@ -51,12 +51,12 @@ class MainApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         VistaLogin.id: (context) => VistaLogin(),
-        VistaInicio.id: (context) => VistaInicio(usuario: usuario),
+        VistaInicio.id: (context) => VistaInicio(),
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           builder: (BuildContext context) {
-            return isLoggedIn ? VistaInicio(usuario: usuario) : VistaLogin();
+            return isLoggedIn ? VistaInicio() : VistaLogin();
           },
         );
       },

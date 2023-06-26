@@ -2,14 +2,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import '../../Firebase/firebase_options.dart';
 
 class ControllerVistaInicio {
-  String? token;
+  String? token = null;
+  IVistaInicio? _vistaInicio;
   //Atributos
 
   //Constructor
-  ControllerVistaInicio();
+  ControllerVistaInicio.empty();
+  ControllerVistaInicio(this._vistaInicio);
 
   void inicializarFirebase(Usuario? usuario) async {
     await Firebase.initializeApp(
@@ -61,5 +64,18 @@ class ControllerVistaInicio {
 
   Future<int?> obtenerCantidadNotificacionesSinLeer() async {
     return Fachada.getInstancia()?.cantidadNotifiacionesSinLeer();
+  }
+
+  Usuario? obtenerUsuario() {
+    return Fachada.getInstancia()?.getUsuario();
+  }
+
+  void escucharNotificacionEnPrimerPlano() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        _vistaInicio?.aumentarEnUnoNotificacionesSinLeer();
+        _vistaInicio?.mostrarMensaje("Has recibido una nueva notificacion");
+      }
+    });
   }
 }
