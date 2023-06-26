@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaResidente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaResidente.dart';
 
 class VistaAltaResidente extends StatefulWidget {
   @override
   _VistaAltaResidenteState createState() => _VistaAltaResidenteState();
 }
 
-class _VistaAltaResidenteState extends State<VistaAltaResidente> {
+class _VistaAltaResidenteState extends State<VistaAltaResidente>
+    implements IvistaAltaResidente {
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
@@ -92,7 +94,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                   child: Text("Seleccione la sucursal:"),
                 ),
                 FutureBuilder<List<Sucursal>?>(
-                  future: _getSucursales(),
+                  future: getSucursales(),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
@@ -253,7 +255,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
                 ElevatedButton(
                   child: Text("Crear usuario"),
                   onPressed: () {
-                    _crearUsuario();
+                    crearUsuario();
                   },
                 ),
               ],
@@ -302,7 +304,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
     });
   }
 
-  Future<void> _crearUsuario() async {
+  @override
+  Future<void> crearUsuario() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       bool? resultado = await controller?.altaUsuario(
@@ -314,15 +317,18 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
     }
   }
 
-  Future<List<Sucursal>?> _getSucursales() async {
+  @override
+  Future<List<Sucursal>?> getSucursales() async {
     return controller?.listaSucursales();
   }
 
+  @override
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  @override
   void limpiarDatos() {
     setState(() {
       _ci = '';
@@ -337,6 +343,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> {
     });
   }
 
+  @override
   void clearText() {
     fieldCi.clear();
     fieldNombre.clear();

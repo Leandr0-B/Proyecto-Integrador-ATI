@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaCambioContrasena.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaCambioContrasena.dart';
 
 class VistaCambioContrasena extends StatefulWidget {
   @override
   State<VistaCambioContrasena> createState() => _VistaCambioContrasenaState();
 }
 
-class _VistaCambioContrasenaState extends State<VistaCambioContrasena> {
+class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
+    implements IvistaCambioContrasena {
   ControllerVistaCambioContrasena? controller;
   final _formKey = GlobalKey<FormState>();
   String _contrasenaActual = "";
@@ -101,7 +103,7 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      _cambioClave(_contrasenaActual, _nuevaContrasena,
+                      cambioClave(_contrasenaActual, _nuevaContrasena,
                           _nuevaContrasenaVerif);
                     }
                   },
@@ -114,17 +116,20 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena> {
     );
   }
 
-  Future<void> _cambioClave(
+  @override
+  Future<void> cambioClave(
       String actual, String nueva, String verificacion) async {
     await controller?.cambioClave(actual, nueva, verificacion);
   }
 
+  @override
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
     ));
   }
 
+  @override
   void limpiar() {
     fieldAct.clear();
     fieldNuev.clear();

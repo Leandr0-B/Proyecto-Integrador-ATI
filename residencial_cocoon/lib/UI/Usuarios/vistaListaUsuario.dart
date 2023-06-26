@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaUsuarios.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaListaUsuario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 
 class VistaListaUsuario extends StatefulWidget {
@@ -8,7 +9,8 @@ class VistaListaUsuario extends StatefulWidget {
   _VistaListaUsuarioState createState() => _VistaListaUsuarioState();
 }
 
-class _VistaListaUsuarioState extends State<VistaListaUsuario> {
+class _VistaListaUsuarioState extends State<VistaListaUsuario>
+    implements IvistaListaUsuario {
   ControllerVistaUsuarios? controller;
 
   @override
@@ -61,12 +63,14 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> {
     );
   }
 
+  @override
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
     ));
   }
 
+  @override
   Future<List<Usuario>> obtenerUsuarios() async {
     return await controller?.obtenerUsuarios() ?? [];
   }

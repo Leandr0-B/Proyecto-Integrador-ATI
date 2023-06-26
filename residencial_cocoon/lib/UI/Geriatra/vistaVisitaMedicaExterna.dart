@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaSalidaMedica.dar
 import 'package:residencial_cocoon/Controladores/controllerVistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaVisitaMedicaExterna.dart';
 
 class VistaVisitaMedicaExterna extends StatefulWidget {
   @override
@@ -11,7 +12,8 @@ class VistaVisitaMedicaExterna extends StatefulWidget {
       _VistaVisitaMedicaExternaState();
 }
 
-class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> {
+class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
+    implements IvistaVisitaMedicaExterna {
   final _formKey = GlobalKey<FormState>();
   ControllerVistaVisitaMedicaExterna? controller;
   Usuario? selectedResidente;
@@ -96,7 +98,8 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> {
                     Column(
                       children: _residentes!.map((Usuario residente) {
                         return RadioListTile<Usuario>(
-                          title: Text(residente.nombre),
+                          title:
+                              Text(residente.nombre + " Ci: " + residente.ci),
                           value: residente,
                           groupValue: selectedResidente,
                           onChanged: (Usuario? newValue) {
@@ -155,7 +158,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> {
                       altaVisitaMedicaExt();
                     }
                   },
-                  child: Text('Guardar'),
+                  child: Text('Ingresar alta'),
                 ),
               ],
             ),
@@ -179,6 +182,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> {
     }
   }
 
+  @override
   Future<List<Sucursal>?> listaSucursales() async {
     return controller?.listaSucursales();
   }
@@ -190,21 +194,25 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> {
     });
   }
 
+  @override
   Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
     final residentes = await controller?.listaResidentes(suc);
     return residentes;
   }
 
+  @override
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  @override
   Future<void> altaVisitaMedicaExt() async {
     await controller?.altaVisitaMedicaExt(
         selectedResidente, descripcion, fecha, selectedSucursal);
   }
 
+  @override
   void limpiar() {
     setState(() {
       fieldDescripcion.clear();

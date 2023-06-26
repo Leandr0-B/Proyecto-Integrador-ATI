@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaFuncionario.dart';
 
 class VistaAltaFuncionario extends StatefulWidget {
   @override
   _VistaAltaFuncionarioState createState() => _VistaAltaFuncionarioState();
 }
 
-class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
+class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
+    implements IvistaAltaFuncionario {
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
@@ -94,7 +96,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
                   child: Text("Seleccione los roles:"),
                 ),
                 FutureBuilder<List<Rol>?>(
-                  future: _getRoles(),
+                  future: getRoles(),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Rol>?> snapshot) {
                     if (snapshot.hasData) {
@@ -134,7 +136,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
                   child: Text("Seleccione las sucursales:"),
                 ),
                 FutureBuilder<List<Sucursal>?>(
-                  future: _getSucursales(),
+                  future: getSucursales(),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
@@ -186,29 +188,34 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> {
     );
   }
 
-  Future<List<Rol>?> _getRoles() async {
+  @override
+  Future<List<Rol>?> getRoles() async {
     return controller?.listaRoles();
   }
 
-  Future<List<Sucursal>?> _getSucursales() async {
+  @override
+  Future<List<Sucursal>?> getSucursales() async {
     return controller?.listaSucursales();
   }
 
+  @override
   Future<void> altaUsuarioFuncionario(String ci, String nombre,
       int administrador, List<int> roles, List<int> sucursales) async {
     bool? resultado = await controller?.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
     if (resultado == true) {
-      _limpiarDatos();
+      limpiarDatos();
     }
   }
 
+  @override
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _limpiarDatos() {
+  @override
+  void limpiarDatos() {
     setState(() {
       selectedRoles = [];
       selectedSucursales = [];
