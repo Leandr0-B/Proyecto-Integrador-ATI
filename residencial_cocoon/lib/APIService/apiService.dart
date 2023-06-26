@@ -289,4 +289,19 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static Future<String> fetchNotificacionesSinLeer(String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/notificacion/notificaciones-no-leidas');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }

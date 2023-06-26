@@ -3,39 +3,97 @@ import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
+import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
+import 'dart:html' as html;
 
 class VistaInicio extends StatefulWidget {
   static String id = '/inicio';
-  final Usuario? usuario;
 
-  VistaInicio({this.usuario});
+  VistaInicio();
 
   @override
   _VistaInicioState createState() => _VistaInicioState();
 }
 
-class _VistaInicioState extends State<VistaInicio> {
+//Get set
+
+class _VistaInicioState extends State<VistaInicio>
+    with WidgetsBindingObserver
+    implements IVistaInicio {
   var currentPage = DrawerSections.inicio;
-  Usuario? usuario;
-  ControllerVistaInicio controller = ControllerVistaInicio();
+  Usuario? _usuario;
+  ControllerVistaInicio _controller = ControllerVistaInicio.empty();
+  Future<int?> _cantidadNotificaciones = Future.value(0);
+  bool _isPageVisible = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      // Aquí se puede acceder a BuildContext
-      final context = this.context;
+    _controller = ControllerVistaInicio(this);
+    _usuario = _controller.obtenerUsuario();
+    _controller.inicializarFirebase(_usuario);
+    _controller.escucharNotificacionEnPrimerPlano();
+    obtenerCantidadNotificacionesSinLeer();
 
-      usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
-      usuario ??= widget.usuario;
-
-      controller.inicializarFirebase(usuario);
+    // esto lo usamos para solucionar el problema de las notificaciones en segundo plano y la conexion con flutter
+    // cuando maximizas la aplicacion o regresas a la pestania, hara el chequeo de cuantas notificaciones sin leer tienes para poder
+    // actualizar la campanita
+    WidgetsBinding.instance?.addObserver(this);
+    html.document.onVisibilityChange.listen((event) {
+      setState(() {
+        _isPageVisible = _isPageVisible =
+            html.document.hidden != null ? !html.document.hidden! : true;
+      });
+      if (_isPageVisible) {
+        obtenerCantidadNotificacionesSinLeer();
+      } else {}
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // La página se ha mostrado nuevamente
+      setState(() {
+        _isPageVisible = true;
+      });
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      setState(() {
+        _isPageVisible = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void obtenerCantidadNotificacionesSinLeer() {
+    _cantidadNotificaciones =
+        _controller.obtenerCantidadNotificacionesSinLeer();
+    setState(() {});
+  }
+
+  @override
+  void aumentarEnUnoNotificacionesSinLeer() {
+    _cantidadNotificaciones =
+        _cantidadNotificaciones.then((valor) => valor! + 1);
+    setState(() {});
+  }
+
+  @override
+  void mostrarMensaje(String mensaje) {
+    final snackBar = SnackBar(content: Text(mensaje));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void onPageSelected(DrawerSections page) {
@@ -46,9 +104,6 @@ class _VistaInicioState extends State<VistaInicio> {
 
   @override
   Widget build(BuildContext context) {
-    usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
-    usuario ??= widget.usuario;
-
     Widget container;
 
     switch (currentPage) {
@@ -80,13 +135,69 @@ class _VistaInicioState extends State<VistaInicio> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(225, 183, 72, 1),
-        title: Text("Grupo Cocoon"),
+        backgroundColor: const Color.fromRGBO(225, 183, 72, 1),
+        title: const Text("Grupo Cocoon"),
+        actions: [
+          Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(right: 30, top: 5),
+                child: IconButton(
+                  iconSize: 28, // Ajusta el tamaño del ícono de notificación
+                  icon: const Icon(Icons.notifications),
+                  onPressed: () {
+                    // Acción al hacer clic en el ícono de campana
+                    onPageSelected(DrawerSections.notificaciones);
+                  },
+                ),
+              ),
+              FutureBuilder<int?>(
+                future: _cantidadNotificaciones,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final int cantidadNotificaciones = snapshot.data!;
+                    return Positioned(
+                      top: 5,
+                      right: 32,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 21,
+                          minHeight: 21,
+                        ),
+                        child: Center(
+                          child: Text(
+                            cantidadNotificaciones < 99
+                                ? cantidadNotificaciones.toString()
+                                : "99+",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Text("Error al cargar las notificaciones");
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       body: container,
       drawer: MyDrawerList(
         context: context,
-        usuario: usuario,
+        usuario: _usuario,
         onPageSelected: onPageSelected,
       ),
     );
@@ -98,7 +209,8 @@ class MyDrawerList extends StatelessWidget {
   final Usuario? usuario;
   final ValueChanged<DrawerSections> onPageSelected;
 
-  MyDrawerList({
+  const MyDrawerList({
+    super.key,
     required this.context,
     required this.usuario,
     required this.onPageSelected,
@@ -112,19 +224,19 @@ class MyDrawerList extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(color: Colors.black, width: 0.25),
                 ),
               ),
-              child: SideBarHeader(),
+              child: const SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[
               ExpansionTile(
-                leading: Icon(Icons.people_alt_outlined,
+                leading: const Icon(Icons.people_alt_outlined,
                     size: 20, color: Colors.black),
-                title: Text("Usuarios",
+                title: const Text("Usuarios",
                     style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(2, "Lista de Usuarios", Icons.list,
@@ -138,8 +250,9 @@ class MyDrawerList extends StatelessWidget {
             ],
             if (usuario!.esGeriatra() || usuario?.administrador == 1) ...[
               ExpansionTile(
-                leading: Icon(Icons.badge_sharp, size: 20, color: Colors.black),
-                title: Text("Geriatra",
+                leading: const Icon(Icons.badge_sharp,
+                    size: 20, color: Colors.black),
+                title: const Text("Geriatra",
                     style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(
@@ -176,7 +289,7 @@ class MyDrawerList extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           fontSize: 16,
         ),
@@ -193,4 +306,5 @@ enum DrawerSections {
   cambioContrasena,
   salidaMedica,
   visitaMedica,
+  notificaciones
 }

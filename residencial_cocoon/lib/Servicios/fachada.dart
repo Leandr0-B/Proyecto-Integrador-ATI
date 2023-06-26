@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
+import 'package:residencial_cocoon/Servicios/servicioNotificacion.dart';
 import 'package:residencial_cocoon/Servicios/servicioSalidas.dart';
 import 'package:residencial_cocoon/Servicios/servicioSucursal.dart';
 import 'package:residencial_cocoon/Servicios/servicioUsuario.dart';
@@ -16,6 +17,7 @@ class Fachada {
   ServicioSucursal? _servicioSucursal;
   ServicioSalidas? _servicioSalidas;
   ServicioCequeoMedico? _servicioCequeoMedico;
+  ServicioNotificacion? _servicioNotificacion;
 
   //Constructor
   Fachada._() {
@@ -23,6 +25,7 @@ class Fachada {
     _servicioSucursal = ServicioSucursal();
     _servicioSalidas = ServicioSalidas();
     _servicioCequeoMedico = ServicioCequeoMedico();
+    _servicioNotificacion = ServicioNotificacion();
   }
 
   static Fachada? getInstancia() {
@@ -97,5 +100,9 @@ class Fachada {
       Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
     await _servicioCequeoMedico?.altaVisitaMedicaExt(
         selectedResidente, descripcion, fecha);
+  }
+
+  Future<int?> cantidadNotifiacionesSinLeer() async {
+    return await _servicioNotificacion?.cantidadNotifiacionesSinLeer();
   }
 }

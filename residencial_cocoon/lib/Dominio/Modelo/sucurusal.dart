@@ -25,15 +25,6 @@ class Sucursal {
   String get direccion => _direccion;
   set direccion(String value) => _direccion = value;
 
-  //Funciones
-  Map<String, dynamic> toJson() {
-    return {
-      'id_sucursal': _idSucursal,
-      'nombre': _nombre,
-      'direccion': _direccion,
-    };
-  }
-
   static List<Sucursal> fromJsonList(List<dynamic> jsonList) {
     return jsonList
         .cast<
