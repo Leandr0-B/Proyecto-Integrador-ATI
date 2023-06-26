@@ -58,4 +58,8 @@ class ControllerVistaInicio {
       return null;
     }
   }
+
+  Future<int?> obtenerCantidadNotificacionesSinLeer() async {
+    return Fachada.getInstancia()?.cantidadNotifiacionesSinLeer();
+  }
 }

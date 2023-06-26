@@ -23,19 +23,18 @@ class _VistaInicioState extends State<VistaInicio> {
   var currentPage = DrawerSections.inicio;
   Usuario? usuario;
   ControllerVistaInicio controller = ControllerVistaInicio();
+  late Future<int?> cantidadNotificaciones;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      // Aquí se puede acceder a BuildContext
       final context = this.context;
-
       usuario = ModalRoute.of(context)?.settings.arguments as Usuario?;
       usuario ??= widget.usuario;
-
       controller.inicializarFirebase(usuario);
     });
+    cantidadNotificaciones = controller.obtenerCantidadNotificacionesSinLeer();
   }
 
   void onPageSelected(DrawerSections page) {
@@ -82,6 +81,62 @@ class _VistaInicioState extends State<VistaInicio> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(225, 183, 72, 1),
         title: Text("Grupo Cocoon"),
+        actions: [
+          Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 30, top: 5),
+                child: IconButton(
+                  iconSize: 28, // Ajusta el tamaño del ícono de notificación
+                  icon: Icon(Icons.notifications),
+                  onPressed: () {
+                    // Acción al hacer clic en el ícono de campana
+                    onPageSelected(DrawerSections.notificaciones);
+                  },
+                ),
+              ),
+              FutureBuilder<int?>(
+                future: cantidadNotificaciones,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final int cantidadNotificaciones = snapshot.data!;
+                    return Positioned(
+                      top: 5,
+                      right: 32,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 21,
+                          minHeight: 21,
+                        ),
+                        child: Center(
+                          child: Text(
+                            cantidadNotificaciones < 99
+                                ? cantidadNotificaciones.toString()
+                                : "99+",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Error al cargar las notificaciones");
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       body: container,
       drawer: MyDrawerList(
@@ -193,4 +248,5 @@ enum DrawerSections {
   cambioContrasena,
   salidaMedica,
   visitaMedica,
+  notificaciones
 }
