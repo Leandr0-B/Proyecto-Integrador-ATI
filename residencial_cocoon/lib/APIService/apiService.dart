@@ -233,7 +233,7 @@ class APIService {
     );
 
     if (response.statusCode == 200) {
-      throw SalidaMedicaException("El residente fue ingresado correctamente.");
+      throw SalidaMedicaException("Se ingreso la salida medica.");
     } else {
       throw Exception(errorObtenerToken);
     }
@@ -284,7 +284,7 @@ class APIService {
 
     if (response.statusCode == 200) {
       throw visitaMedicaExternaException(
-          "El residente fue ingresado correctamente.");
+          "Se ingreso la visita medica externa.");
     } else {
       throw Exception(errorObtenerToken);
     }
