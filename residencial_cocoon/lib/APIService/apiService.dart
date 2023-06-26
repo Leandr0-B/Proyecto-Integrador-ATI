@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
 import 'package:universal_html/html.dart';
 
 class APIService {
@@ -233,6 +234,35 @@ class APIService {
 
     if (response.statusCode == 200) {
       throw SalidaMedicaException("El residente fue ingresado correctamente.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> postVisitaMedica(String? token, String? ci_residente,
+      String? ci_geriatra, String descripcion, String fecha) async {
+    //print(DateTime(fecha_desde!.year, fecha_desde!.month, fecha_desde!.day));
+    //print(DateTime(fecha_hasta!.year, fecha_hasta!.month, fecha_hasta!.day));
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/visita-medica-externa/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci_residente': ci_residente,
+        'ci_geriatra': ci_geriatra,
+        'descripcion': descripcion,
+        'fecha': fecha.toString(),
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      throw visitaMedicaExternaException(
+          "El residente fue ingresado correctamente.");
     } else {
       throw Exception(errorObtenerToken);
     }

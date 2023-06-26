@@ -1,16 +1,16 @@
-import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 
-class ControllerVistaSalidaMedica {
+class ControllerVistaVisitaMedicaExterna {
   //Atributos
   Function(String mensaje) mostrarMensaje;
   Function() limpiar;
   List<Sucursal>? _sucursales;
 
   //Constructor
-  ControllerVistaSalidaMedica(
+  ControllerVistaVisitaMedicaExterna(
     this.mostrarMensaje,
     this.limpiar,
   );
@@ -29,19 +29,14 @@ class ControllerVistaSalidaMedica {
     }
   }
 
-  Future<void> altaSalidaMedica(
-      Usuario? selectedResidente,
-      String descripcion,
-      DateTime? fechaDesde,
-      DateTime? fechaHasta,
-      Sucursal? selectedSucursal) async {
+  Future<void> altaVisitaMedicaExt(Usuario? selectedResidente,
+      String descripcion, DateTime? fecha, Sucursal? selectedSucursal) async {
     try {
-      if (_controles(
-          fechaDesde, fechaHasta, selectedSucursal, selectedResidente)) {
-        await Fachada.getInstancia()?.altaSalidaMedica(
-            selectedResidente, descripcion, fechaDesde, fechaHasta);
+      if (_controles(fecha, selectedSucursal, selectedResidente)) {
+        await Fachada.getInstancia()
+            ?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
       }
-    } on SalidaMedicaException catch (e) {
+    } on visitaMedicaExternaException catch (e) {
       mostrarMensaje(e.toString());
       limpiar();
     } on Exception catch (e) {
@@ -49,16 +44,10 @@ class ControllerVistaSalidaMedica {
     }
   }
 
-  bool _controles(DateTime? fechaDesde, DateTime? fechaHasta,
-      Sucursal? selectedSucursal, Usuario? residenteSeleccionado) {
-    if (fechaDesde == null) {
-      mostrarMensaje("Tiene que seleccionar una fecha desde.");
-      return false;
-    } else if (fechaHasta == null) {
-      mostrarMensaje("Tiene que seleccionar una fecha hasta.");
-      return false;
-    } else if (fechaDesde.isAfter(fechaHasta)) {
-      mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
+  bool _controles(DateTime? fecha, Sucursal? selectedSucursal,
+      Usuario? residenteSeleccionado) {
+    if (fecha == null) {
+      mostrarMensaje("Tiene que seleccionar la fecha.");
       return false;
     }
     if (selectedSucursal == null) {

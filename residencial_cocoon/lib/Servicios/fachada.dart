@@ -87,4 +87,11 @@ class Fachada {
     await _servicioSalidas?.altaSalidaMedica(
         selectedResidente, descripcion, fechaDesde, fechaHasta);
   }
+
+  //Chequeo
+  Future<void> altaVisitaMedicaExt(
+      Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
+    await _servicioCequeoMedico?.altaVisitaMedicaExt(
+        selectedResidente, descripcion, fecha);
+  }
 }
