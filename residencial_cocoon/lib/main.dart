@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/residente.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';

@@ -72,8 +72,19 @@ class Fachada {
     await _servicioUsuario?.cambioClave(actual, nueva);
   }
 
+  Future<List<Usuario>?> residentesSucursal(Sucursal? suc) async {
+    return await _servicioUsuario?.residentesSucursal(suc);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();
+  }
+
+  //Salida
+  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion,
+      DateTime? fechaDesde, DateTime? fechaHasta) async {
+    await _servicioSalidas?.altaSalidaMedica(
+        selectedResidente, descripcion, fechaDesde, fechaHasta);
   }
 }
