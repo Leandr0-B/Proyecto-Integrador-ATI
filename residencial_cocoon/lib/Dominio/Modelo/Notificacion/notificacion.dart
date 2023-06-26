@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/tipoNotificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
@@ -17,9 +15,9 @@ class Notificacion {
   Notificacion(this._idNotificacion, this._titulo, this._mensaje, this._fecha,
       this._leida, this._tipoNotificacion, this._usuarioEnvia);
 
-  factory Notificacion.fromJson(Map<String, dynamic> json) {
-    return Notificacion(json['id_sucursal'], json['nombre'], json['direccion']);
-  }
+  // factory Notificacion.fromJson(Map<String, dynamic> json) {
+  //   return Notificacion(json['id_sucursal'], json['nombre'], json['direccion']);
+  // }
 
   //Get set
   int get idNotificacion => _idNotificacion;
@@ -43,12 +41,12 @@ class Notificacion {
   Usuario get usuarioEnvia => _usuarioEnvia;
   set usuarioEnvia(Usuario value) => _usuarioEnvia = value;
 
-  static List<Notificacion> fromJsonList(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Notificacion>((json) => Notificacion.fromJson(json))
-        .toList();
-  }
+  // static List<Notificacion> fromJsonList(List<dynamic> jsonList) {
+  //   return jsonList
+  //       .cast<Map<String, dynamic>>()
+  //       .map<Notificacion>((json) => Notificacion.fromJson(json))
+  //       .toList();
+  // }
 
   //ToString
   @override

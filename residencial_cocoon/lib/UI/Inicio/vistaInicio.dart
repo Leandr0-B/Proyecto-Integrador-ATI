@@ -9,7 +9,7 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:html' as html;
 
 class VistaInicio extends StatefulWidget {
   static String id = '/inicio';
@@ -22,11 +22,14 @@ class VistaInicio extends StatefulWidget {
 
 //Get set
 
-class _VistaInicioState extends State<VistaInicio> implements IVistaInicio {
+class _VistaInicioState extends State<VistaInicio>
+    with WidgetsBindingObserver
+    implements IVistaInicio {
   var currentPage = DrawerSections.inicio;
   Usuario? _usuario;
   ControllerVistaInicio _controller = ControllerVistaInicio.empty();
   Future<int?> _cantidadNotificaciones = Future.value(0);
+  bool _isPageVisible = true;
 
   @override
   void initState() {
@@ -36,6 +39,41 @@ class _VistaInicioState extends State<VistaInicio> implements IVistaInicio {
     _controller.inicializarFirebase(_usuario);
     _controller.escucharNotificacionEnPrimerPlano();
     obtenerCantidadNotificacionesSinLeer();
+
+    // esto lo usamos para solucionar el problema de las notificaciones en segundo plano y la conexion con flutter
+    // cuando maximizas la aplicacion o regresas a la pestania, hara el chequeo de cuantas notificaciones sin leer tienes para poder
+    // actualizar la campanita
+    WidgetsBinding.instance?.addObserver(this);
+    html.document.onVisibilityChange.listen((event) {
+      setState(() {
+        _isPageVisible = _isPageVisible =
+            html.document.hidden != null ? !html.document.hidden! : true;
+      });
+      if (_isPageVisible) {
+        obtenerCantidadNotificacionesSinLeer();
+      } else {}
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // La página se ha mostrado nuevamente
+      setState(() {
+        _isPageVisible = true;
+      });
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      setState(() {
+        _isPageVisible = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 
   @override
