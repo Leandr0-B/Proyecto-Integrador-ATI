@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
@@ -104,5 +105,13 @@ class Fachada {
 
   Future<int?> cantidadNotifiacionesSinLeer() async {
     return await _servicioNotificacion?.cantidadNotifiacionesSinLeer();
+  }
+
+  Future<List<Notificacion>?> obtenerUltimasNotificaciones() async {
+    return await _servicioNotificacion?.obtenerUltimasNotificaciones();
+  }
+
+  void marcarNotificacionComoLeida(Notificacion notificacion) async {
+    _servicioNotificacion?.marcarNotificacionComoLeida(notificacion);
   }
 }
