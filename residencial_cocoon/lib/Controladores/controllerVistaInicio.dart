@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import '../../Firebase/firebase_options.dart';
+import 'package:universal_html/html.dart' as html;
 
 class ControllerVistaInicio {
   String? token = null;
@@ -77,5 +78,9 @@ class ControllerVistaInicio {
         _vistaInicio?.mostrarMensaje("Has recibido una nueva notificacion");
       }
     });
+  }
+
+  void cerrarSesion() {
+    html.window.localStorage.remove('usuario');
   }
 }

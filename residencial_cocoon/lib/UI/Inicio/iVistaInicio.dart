@@ -3,4 +3,5 @@ abstract class IVistaInicio {
   void aumentarEnUnoNotificacionesSinLeer();
   void restarEnUnoNotificacionesSinLeer();
   void mostrarMensaje(String mensaje);
+  void cerrarSesion();
 }
