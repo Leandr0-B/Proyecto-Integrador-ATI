@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
+import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
@@ -208,10 +209,10 @@ class _VistaInicioState extends State<VistaInicio>
       ),
       body: container,
       drawer: MyDrawerList(
-        context: context,
-        usuario: _usuario,
-        onPageSelected: onPageSelected,
-      ),
+          context: context,
+          usuario: _usuario,
+          onPageSelected: onPageSelected,
+          cerrarSesion: cerrarSesion),
     );
   }
 
@@ -219,19 +220,29 @@ class _VistaInicioState extends State<VistaInicio>
   void notificacionActualizada(Notificacion notificacion) {
     restarEnUnoNotificacionesSinLeer();
   }
+
+  @override
+  void cerrarSesion() {
+    _controller.cerrarSesion();
+    Navigator.pushReplacementNamed(
+      context,
+      VistaLogin.id,
+    );
+  }
 }
 
 class MyDrawerList extends StatelessWidget {
   final BuildContext context;
   final Usuario? usuario;
   final ValueChanged<DrawerSections> onPageSelected;
+  final Function cerrarSesion;
 
-  const MyDrawerList({
-    super.key,
-    required this.context,
-    required this.usuario,
-    required this.onPageSelected,
-  });
+  const MyDrawerList(
+      {super.key,
+      required this.context,
+      required this.usuario,
+      required this.onPageSelected,
+      required this.cerrarSesion});
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +298,8 @@ class MyDrawerList extends StatelessWidget {
             ],
             menuItem(5, "Cambio de contraseña", Icons.password,
                 DrawerSections.cambioContrasena),
+            menuItem(
+                8, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
           ],
         ),
       ),
@@ -297,7 +310,11 @@ class MyDrawerList extends StatelessWidget {
     return ListTile(
       onTap: () {
         Navigator.pop(context);
-        onPageSelected(page);
+        if (page == DrawerSections.cerrarSesion) {
+          cerrarSesion();
+        } else {
+          onPageSelected(page);
+        }
       },
       leading: Icon(
         icon,
@@ -323,7 +340,8 @@ enum DrawerSections {
   cambioContrasena,
   salidaMedica,
   visitaMedica,
-  notificaciones
+  notificaciones,
+  cerrarSesion
 }
 
 class NotificacionActualizadaCallback {
