@@ -82,5 +82,6 @@ class ControllerVistaInicio {
 
   void cerrarSesion() {
     html.window.localStorage.remove('usuario');
+    Fachada.getInstancia()?.setUsuario(null);
   }
 }

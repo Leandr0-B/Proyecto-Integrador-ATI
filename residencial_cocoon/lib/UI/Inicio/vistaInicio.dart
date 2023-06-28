@@ -15,7 +15,7 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
 import 'dart:html' as html;
 
 class VistaInicio extends StatefulWidget {
-  static String id = '/inicio';
+  static String id = 'inicio';
 
   VistaInicio();
 
