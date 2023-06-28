@@ -24,7 +24,7 @@ void main() async {
 
   String initialRoute = isLoggedIn ? VistaInicio.id : VistaLogin.id;
 
-  setPathUrlStrategy();
+  //setPathUrlStrategy();
   runApp(MainApp(
     initialRoute: initialRoute,
     isLoggedIn: isLoggedIn,
@@ -51,7 +51,13 @@ class MainApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         VistaLogin.id: (context) => VistaLogin(),
-        VistaInicio.id: (context) => VistaInicio(),
+        VistaInicio.id: (context) {
+          if (estaAutenticado()) {
+            return VistaInicio();
+          } else {
+            return VistaLogin();
+          }
+        },
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
@@ -61,5 +67,9 @@ class MainApp extends StatelessWidget {
         );
       },
     );
+  }
+
+  bool estaAutenticado() {
+    return Fachada.getInstancia()?.getUsuario() != null;
   }
 }

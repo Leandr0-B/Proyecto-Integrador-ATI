@@ -5,7 +5,7 @@ import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
 class VistaLogin extends StatefulWidget {
-  static String id = '/login';
+  static String id = 'login';
 
   @override
   _VistaLoginState createState() => _VistaLoginState();
