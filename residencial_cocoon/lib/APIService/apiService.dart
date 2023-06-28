@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:universal_html/html.dart';
 
 class APIService {
@@ -303,5 +304,30 @@ class APIService {
     } else {
       throw Exception(errorObtenerToken);
     }
+  }
+
+  static Future<String> fetchUltimasNotificaciones(String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/notificacion/ultimas-notificaciones');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static void marcarNotificacionComoLeida(
+      Notificacion notificacion, String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/notificacion/marcar-leida/${notificacion.idNotificacion}');
+    await http.put(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
   }
 }

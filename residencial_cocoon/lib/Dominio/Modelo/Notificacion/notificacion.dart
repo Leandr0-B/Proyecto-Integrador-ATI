@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/tipoNotificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 
@@ -15,9 +16,26 @@ class Notificacion {
   Notificacion(this._idNotificacion, this._titulo, this._mensaje, this._fecha,
       this._leida, this._tipoNotificacion, this._usuarioEnvia);
 
-  // factory Notificacion.fromJson(Map<String, dynamic> json) {
-  //   return Notificacion(json['id_sucursal'], json['nombre'], json['direccion']);
-  // }
+  factory Notificacion.fromJsonVistaPrevia(Map<String, dynamic> json) {
+    Usuario usuario = Usuario.empty();
+    TipoNotificacion tipoNotificacion = TipoNotificacion.empty();
+
+    usuario.ci = json['ci_envia'];
+    usuario.nombre = json['nombre_envia'];
+
+    tipoNotificacion.idTipoNotificacion = json['id_tipo_notificacion'];
+    tipoNotificacion.nombre = json['nombre_tipo_notificacion'];
+
+    Notificacion aux = Notificacion(
+        json['id_notificacion'],
+        json['titulo'],
+        json['mensaje'],
+        DateTime.parse(json['fecha']),
+        json['leida'],
+        tipoNotificacion,
+        usuario);
+    return aux;
+  }
 
   //Get set
   int get idNotificacion => _idNotificacion;
@@ -41,12 +59,12 @@ class Notificacion {
   Usuario get usuarioEnvia => _usuarioEnvia;
   set usuarioEnvia(Usuario value) => _usuarioEnvia = value;
 
-  // static List<Notificacion> fromJsonList(List<dynamic> jsonList) {
-  //   return jsonList
-  //       .cast<Map<String, dynamic>>()
-  //       .map<Notificacion>((json) => Notificacion.fromJson(json))
-  //       .toList();
-  // }
+  static List<Notificacion> listaVistaPrevia(List<dynamic> jsonList) {
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<Notificacion>((json) => Notificacion.fromJsonVistaPrevia(json))
+        .toList();
+  }
 
   //ToString
   @override
@@ -54,11 +72,23 @@ class Notificacion {
     String retorno = "";
     retorno += "idNotificacion: $idNotificacion, ";
     retorno += "titulo: $titulo, ";
-    retorno += "_mensaje: $mensaje";
+    retorno += "mensaje: $mensaje";
     retorno += "fecha: $fecha";
     retorno += "leida: $leida";
     retorno += "tipoNotificacion: $tipoNotificacion";
     retorno += "usuarioEnvia: $usuarioEnvia";
     return retorno;
+  }
+
+  String fechaFormateada() {
+    return DateFormat('dd/MM/yyyy').format(fecha);
+  }
+
+  String nombreUsuarioQueEnvia() {
+    return "${usuarioEnvia.ci} - ${usuarioEnvia.nombre}";
+  }
+
+  void marcarNotificacionComoLeida() {
+    _leida = true;
   }
 }

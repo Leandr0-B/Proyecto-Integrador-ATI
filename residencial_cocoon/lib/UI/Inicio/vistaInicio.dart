@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
+import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
@@ -24,7 +26,7 @@ class VistaInicio extends StatefulWidget {
 
 class _VistaInicioState extends State<VistaInicio>
     with WidgetsBindingObserver
-    implements IVistaInicio {
+    implements IVistaInicio, NotificacionActualizadaCallback {
   var currentPage = DrawerSections.inicio;
   Usuario? _usuario;
   ControllerVistaInicio _controller = ControllerVistaInicio.empty();
@@ -91,6 +93,13 @@ class _VistaInicioState extends State<VistaInicio>
   }
 
   @override
+  void restarEnUnoNotificacionesSinLeer() {
+    _cantidadNotificaciones =
+        _cantidadNotificaciones.then((valor) => valor! - 1);
+    setState(() {});
+  }
+
+  @override
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -128,6 +137,9 @@ class _VistaInicioState extends State<VistaInicio>
       case DrawerSections.visitaMedica:
         container = VistaVisitaMedicaExterna();
         break;
+      case DrawerSections.notificaciones:
+        container = VistaNotificacion(this);
+        break;
       default:
         container = Container();
         break;
@@ -154,7 +166,7 @@ class _VistaInicioState extends State<VistaInicio>
               FutureBuilder<int?>(
                 future: _cantidadNotificaciones,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData && snapshot.data! > 0) {
                     final int cantidadNotificaciones = snapshot.data!;
                     return Positioned(
                       top: 5,
@@ -201,6 +213,11 @@ class _VistaInicioState extends State<VistaInicio>
         onPageSelected: onPageSelected,
       ),
     );
+  }
+
+  @override
+  void notificacionActualizada(Notificacion notificacion) {
+    restarEnUnoNotificacionesSinLeer();
   }
 }
 
@@ -307,4 +324,8 @@ enum DrawerSections {
   salidaMedica,
   visitaMedica,
   notificaciones
+}
+
+class NotificacionActualizadaCallback {
+  void notificacionActualizada(Notificacion notificacion) {}
 }
