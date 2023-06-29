@@ -114,4 +114,10 @@ class Fachada {
   void marcarNotificacionComoLeida(Notificacion notificacion) async {
     _servicioNotificacion?.marcarNotificacionComoLeida(notificacion);
   }
+
+  Future<List<Notificacion>?> obtenerNotificacionesPaginadas(
+      int page, int limit) async {
+    return await _servicioNotificacion?.obtenerNotificacionesPaginadas(
+        page, limit);
+  }
 }

@@ -31,4 +31,19 @@ class ControllerVistaNotificacion {
       }
     });
   }
+
+  Future<List<Notificacion>> obtenerNotificacionesPaginadas(
+      int page, int limit) async {
+    return await Fachada.getInstancia()
+            ?.obtenerNotificacionesPaginadas(page, limit) ??
+        [];
+  }
+
+  int calcularTotalPaginas(int itemsPerPage) {
+    int totalNotificaciones = 8; // Obtener el número total de notificaciones
+    int totalPages = (totalNotificaciones / itemsPerPage)
+        .ceil(); // Calcular el número total de páginas
+
+    return totalPages;
+  }
 }

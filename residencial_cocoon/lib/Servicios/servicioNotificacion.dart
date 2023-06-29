@@ -31,4 +31,12 @@ class ServicioNotificacion {
     APIService.marcarNotificacionComoLeida(
         notificacion, Fachada.getInstancia()?.getUsuario()!.getToken());
   }
+
+  Future<List<Notificacion>?> obtenerNotificacionesPaginadas(
+      int page, int limit) async {
+    String notificaciones = await APIService.obtenerNotificacionesPaginadas(
+        page, limit, Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList = jsonDecode(notificaciones);
+    return Notificacion.listaVistaPrevia(jsonList);
+  }
 }

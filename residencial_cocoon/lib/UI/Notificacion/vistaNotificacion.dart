@@ -26,12 +26,15 @@ class _VistaNotificacionState extends State<VistaNotificacion>
   Future<List<Notificacion>> _notificaciones = Future.value([]);
   ControllerVistaNotificacion _controller = ControllerVistaNotificacion.empty();
   bool _isPageVisible = true;
+  int currentPage = 1;
+  int itemsPerPage = 2;
+  int totalPages = 0;
 
   @override
   void initState() {
     super.initState();
     _controller = ControllerVistaNotificacion(this);
-    obtenerUltimasNotificaciones();
+    obtenerNotificacionesPaginadas();
     _controller.escucharNotificacionEnPrimerPlano();
 
     WidgetsBinding.instance?.addObserver(this);
@@ -41,7 +44,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
             html.document.hidden != null ? !html.document.hidden! : true;
       });
       if (_isPageVisible) {
-        obtenerUltimasNotificaciones();
+        obtenerNotificacionesPaginadas();
       } else {}
     });
   }
@@ -110,72 +113,107 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                 ),
               );
             } else {
-              return ListView.separated(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: snapshot.data!.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                      height: 16.0); // Espacio entre cada notificación
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  Notificacion notificacion = snapshot.data![index];
-                  return GestureDetector(
-                    onTap: () {
-                      marcarNotificacionComoLeida(notificacion);
-                      mostrarPopUp(notificacion);
-                    },
-                    child: SizedBox(
-                      width: 300, // Ancho deseado para las tarjetas
-                      child: Container(
-                        width: double.infinity,
-                        child: Card(
-                          color: notificacion.leida
-                              ? const Color.fromARGB(166, 201, 200, 200)
-                              : const Color.fromARGB(255, 255, 255, 255),
-                          shape: RoundedRectangleBorder(
-                            // Borde más fuerte y ancho
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: const BorderSide(
-                              color: Colors.black,
-                              width: 0.25,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  notificacion.titulo,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: snapshot.data!.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                            height: 16.0); // Espacio entre cada notificación
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        Notificacion notificacion = snapshot.data![index];
+                        return GestureDetector(
+                          onTap: () {
+                            marcarNotificacionComoLeida(notificacion);
+                            mostrarPopUp(notificacion);
+                          },
+                          child: SizedBox(
+                            width: 300, // Ancho deseado para las tarjetas
+                            child: Container(
+                              width: double.infinity,
+                              child: Card(
+                                color: notificacion.leida
+                                    ? const Color.fromARGB(166, 201, 200, 200)
+                                    : const Color.fromARGB(255, 255, 255, 255),
+                                shape: RoundedRectangleBorder(
+                                  // Borde más fuerte y ancho
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  side: const BorderSide(
+                                    color: Colors.black,
+                                    width: 0.25,
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
-                                Text(
-                                  notificacion.leida ? 'Leída' : 'Nueva!',
-                                  style: TextStyle(
-                                    color: notificacion.leida
-                                        ? Colors.black
-                                        : Colors.red,
-                                    fontWeight: FontWeight.bold,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        notificacion.titulo,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        notificacion.leida ? 'Leída' : 'Nueva!',
+                                        style: TextStyle(
+                                          color: notificacion.leida
+                                              ? Colors.black
+                                              : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
+                                        style: TextStyle(fontSize: 12.0),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
-                                Text(
-                                  'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
-                                  style: TextStyle(fontSize: 12.0),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (currentPage > 1) {
+                            setState(() {
+                              currentPage--;
+                            });
+                            obtenerNotificacionesPaginadas();
+                          }
+                        },
+                        child: Text('Anterior'),
+                      ),
+                      Text('Página $currentPage de $totalPages'),
+                      TextButton(
+                        onPressed: () {
+                          if (currentPage < totalPages) {
+                            setState(() {
+                              currentPage++;
+                            });
+                            obtenerNotificacionesPaginadas();
+                          }
+                        },
+                        child: Text('Siguiente'),
+                      ),
+                    ],
+                  ),
+                ],
               );
             }
           }
@@ -236,5 +274,12 @@ class _VistaNotificacionState extends State<VistaNotificacion>
     setState(() {
       _controller.marcarNotificacionComoLeida(notificacion);
     });
+  }
+
+  void obtenerNotificacionesPaginadas() {
+    _notificaciones =
+        _controller.obtenerNotificacionesPaginadas(currentPage, itemsPerPage);
+    totalPages = _controller.calcularTotalPaginas(itemsPerPage);
+    setState(() {});
   }
 }

@@ -330,4 +330,20 @@ class APIService {
       headers: {'Authorization': 'Bearer $token'},
     );
   }
+
+  static obtenerNotificacionesPaginadas(
+      int page, int limit, String? token) async {
+    final url = Uri.parse(
+        'http://localhost:3000/notificacion?page=$page&pageSize=$limit');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }
