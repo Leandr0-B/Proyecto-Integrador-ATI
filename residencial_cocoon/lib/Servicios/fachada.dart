@@ -1,9 +1,11 @@
 import 'package:flutter/rendering.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
+import 'package:residencial_cocoon/Servicios/servicioControl.dart';
 import 'package:residencial_cocoon/Servicios/servicioSalidas.dart';
 import 'package:residencial_cocoon/Servicios/servicioSucursal.dart';
 import 'package:residencial_cocoon/Servicios/servicioUsuario.dart';
@@ -16,6 +18,7 @@ class Fachada {
   ServicioSucursal? _servicioSucursal;
   ServicioSalidas? _servicioSalidas;
   ServicioCequeoMedico? _servicioCequeoMedico;
+  ServicioControl? _servicioControl;
 
   //Constructor
   Fachada._() {
@@ -23,6 +26,7 @@ class Fachada {
     _servicioSucursal = ServicioSucursal();
     _servicioSalidas = ServicioSalidas();
     _servicioCequeoMedico = ServicioCequeoMedico();
+    _servicioControl = ServicioControl();
   }
 
   static Fachada? getInstancia() {
@@ -97,5 +101,19 @@ class Fachada {
       Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
     await _servicioCequeoMedico?.altaVisitaMedicaExt(
         selectedResidente, descripcion, fecha);
+  }
+
+  //Control
+  Future<List<Control>?> listaControles() async {
+    return await _servicioControl?.listaControles();
+  }
+
+  Future<void> altaChequeoMedico(
+      Usuario? selectedResidente,
+      List<Control?> selectedControles,
+      DateTime? fecha,
+      String descripcion) async {
+    await _servicioControl?.altaChequeoMedico(
+        selectedResidente, selectedControles, fecha, descripcion);
   }
 }

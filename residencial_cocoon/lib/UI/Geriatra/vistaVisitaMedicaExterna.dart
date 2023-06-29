@@ -35,7 +35,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta visita médica externa',
+          'Alta Visita Médica Externa',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),

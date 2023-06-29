@@ -1,10 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:universal_html/html.dart';
 
 class APIService {
@@ -263,8 +265,6 @@ class APIService {
 
   static Future<void> postVisitaMedica(String? token, String? ci_residente,
       String? ci_geriatra, String descripcion, String fecha) async {
-    //print(DateTime(fecha_desde!.year, fecha_desde!.month, fecha_desde!.day));
-    //print(DateTime(fecha_hasta!.year, fecha_hasta!.month, fecha_hasta!.day));
     final url = Uri.parse(
         'https://residencialapi.azurewebsites.net/visita-medica-externa/crear');
 
@@ -285,6 +285,53 @@ class APIService {
     if (response.statusCode == 200) {
       throw visitaMedicaExternaException(
           "Se ingreso la visita medica externa.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<String> fetchControles(String? token) async {
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/control/lista');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> postChequeoMedico(
+      String? token,
+      String? ci_residente,
+      String? ci_geriatra,
+      String descripcion,
+      String fecha,
+      List<Map<String, dynamic>> controles) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/chequeo-medico/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci_residente': ci_residente,
+        'ci_geriatra': ci_geriatra,
+        'descripcion': descripcion,
+        'fecha': fecha.toString(),
+        'control': controles,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      throw ChequeoMedicoException("Se ingreso el chequeo médico.");
     } else {
       throw Exception(errorObtenerToken);
     }

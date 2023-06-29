@@ -34,7 +34,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta salida medica',
+          'Alta Salida Médica',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
