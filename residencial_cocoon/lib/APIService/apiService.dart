@@ -322,7 +322,7 @@ class APIService {
         'ci_geriatra': ci_geriatra,
         'descripcion': descripcion,
         'fecha': fecha.toString(),
-        'control': controles,
+        'controles': controles,
       }),
       headers: {
         'Content-Type': 'application/json',
