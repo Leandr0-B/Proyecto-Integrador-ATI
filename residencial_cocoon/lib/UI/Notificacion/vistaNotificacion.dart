@@ -188,28 +188,28 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          if (currentPage > 1) {
-                            setState(() {
-                              currentPage--;
-                            });
-                            obtenerNotificacionesPaginadas();
-                          }
-                        },
-                        child: Text('Anterior'),
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: currentPage == 1
+                            ? null
+                            : () {
+                                setState(() {
+                                  currentPage--;
+                                  obtenerNotificacionesPaginadas();
+                                });
+                              },
                       ),
-                      Text('Página $currentPage de $totalPages'),
-                      TextButton(
-                        onPressed: () {
-                          if (currentPage < totalPages) {
-                            setState(() {
-                              currentPage++;
-                            });
-                            obtenerNotificacionesPaginadas();
-                          }
-                        },
-                        child: Text('Siguiente'),
+                      Text('$currentPage/$totalPages'),
+                      IconButton(
+                        icon: Icon(Icons.arrow_forward),
+                        onPressed: currentPage == totalPages
+                            ? null
+                            : () {
+                                setState(() {
+                                  currentPage++;
+                                  obtenerNotificacionesPaginadas();
+                                });
+                              },
                       ),
                     ],
                   ),
