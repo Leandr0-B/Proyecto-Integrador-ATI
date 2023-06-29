@@ -314,10 +314,12 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   void limpiar() {
     setState(() {
       fieldDescripcion.clear();
+      fieldValor.clear();
       fecha = null;
       selectedResidente = null;
       selectedSucursal = null;
       residentesVisible = false;
+      agregarControles = false;
       _residentes = [];
       selectedControles = [];
     });
