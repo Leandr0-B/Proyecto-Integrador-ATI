@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
@@ -140,6 +141,9 @@ class _VistaInicioState extends State<VistaInicio>
         break;
       case DrawerSections.notificaciones:
         container = VistaNotificacion(this);
+        break;
+      case DrawerSections.chequeoMedico:
+        container = VistaChequeoMedico();
         break;
       default:
         container = Container();
@@ -293,6 +297,8 @@ class MyDrawerList extends StatelessWidget {
                       "Registrar Visita Medica Externa",
                       Icons.medical_services_sharp,
                       DrawerSections.visitaMedica),
+                  menuItem(8, "Registrar Chequeo Medico", Icons.fact_check,
+                      DrawerSections.chequeoMedico),
                 ],
               ),
             ],
@@ -342,6 +348,7 @@ enum DrawerSections {
   visitaMedica,
   notificaciones,
   cerrarSesion
+  chequeoMedico,
 }
 
 class NotificacionActualizadaCallback {

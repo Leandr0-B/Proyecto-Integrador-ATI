@@ -1,11 +1,13 @@
 import 'package:flutter/rendering.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
 import 'package:residencial_cocoon/Servicios/servicioNotificacion.dart';
+import 'package:residencial_cocoon/Servicios/servicioControl.dart';
 import 'package:residencial_cocoon/Servicios/servicioSalidas.dart';
 import 'package:residencial_cocoon/Servicios/servicioSucursal.dart';
 import 'package:residencial_cocoon/Servicios/servicioUsuario.dart';
@@ -19,6 +21,7 @@ class Fachada {
   ServicioSalidas? _servicioSalidas;
   ServicioCequeoMedico? _servicioCequeoMedico;
   ServicioNotificacion? _servicioNotificacion;
+  ServicioControl? _servicioControl;
 
   //Constructor
   Fachada._() {
@@ -27,6 +30,7 @@ class Fachada {
     _servicioSalidas = ServicioSalidas();
     _servicioCequeoMedico = ServicioCequeoMedico();
     _servicioNotificacion = ServicioNotificacion();
+    _servicioControl = ServicioControl();
   }
 
   static Fachada? getInstancia() {
@@ -113,5 +117,19 @@ class Fachada {
 
   void marcarNotificacionComoLeida(Notificacion notificacion) async {
     _servicioNotificacion?.marcarNotificacionComoLeida(notificacion);
+  }
+
+  //Control
+  Future<List<Control>?> listaControles() async {
+    return await _servicioControl?.listaControles();
+  }
+
+  Future<void> altaChequeoMedico(
+      Usuario? selectedResidente,
+      List<Control?> selectedControles,
+      DateTime? fecha,
+      String descripcion) async {
+    await _servicioControl?.altaChequeoMedico(
+        selectedResidente, selectedControles, fecha, descripcion);
   }
 }
