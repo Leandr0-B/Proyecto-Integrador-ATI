@@ -1,23 +1,21 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/residente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaChequeoMedico.dart';
 
 class ControllerVistaChequeoMedico {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
-  Function() limpiar;
+  IvistaChequeoMedico? _vistaChequeo;
   List<Sucursal>? _sucursales;
   List<Control>? _controles;
-  List<Control> _controlesCargados = [];
+  Sucursal? _selectedSucursal;
+  List<Usuario>? _residentes;
 
   //Constructor
-  ControllerVistaChequeoMedico(
-    this.mostrarMensaje,
-    this.limpiar,
-  );
+  ControllerVistaChequeoMedico.empty();
+  ControllerVistaChequeoMedico(this._vistaChequeo);
 
   //Funciones
   Future<List<Control>?> listaControles() async {
@@ -28,7 +26,16 @@ class ControllerVistaChequeoMedico {
   }
 
   Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
-    return await Fachada.getInstancia()?.residentesSucursal(suc);
+    if (suc != null) {
+      if (suc != _selectedSucursal) {
+        _residentes = await Fachada.getInstancia()?.residentesSucursal(suc);
+        _selectedSucursal = suc;
+        return _residentes;
+      } else {
+        return _residentes;
+      }
+    }
+    return [];
   }
 
   List<Sucursal>? listaSucursales() {
@@ -48,24 +55,24 @@ class ControllerVistaChequeoMedico {
             selectedResidente, selectedControles, fecha, descripcion);
       }
     } on ChequeoMedicoException catch (e) {
-      mostrarMensaje(e.toString());
-      limpiar();
+      _vistaChequeo?.mostrarMensaje(e.toString());
+      _vistaChequeo?.limpiar();
     } on Exception catch (e) {
-      mostrarMensaje(e.toString());
+      _vistaChequeo?.mostrarMensaje(e.toString());
     }
   }
 
   bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal,
       Usuario? residenteSeleccionado) {
     if (fecha == null) {
-      mostrarMensaje("Tiene que seleccionar la fecha.");
+      _vistaChequeo?.mostrarMensaje("Tiene que seleccionar la fecha.");
       return false;
     }
     if (selectedSucursal == null) {
-      mostrarMensaje("Tiene que seleccionar una sucursal.");
+      _vistaChequeo?.mostrarMensaje("Tiene que seleccionar una sucursal.");
       return false;
     } else if (residenteSeleccionado == null) {
-      mostrarMensaje("Tiene que seleccionar un residente.");
+      _vistaChequeo?.mostrarMensaje("Tiene que seleccionar un residente.");
       return false;
     }
     return true;
@@ -76,10 +83,11 @@ class ControllerVistaChequeoMedico {
       if (!selectedControl.contains(control)) {
         selectedControl.add(control);
       } else {
-        mostrarMensaje("Ya ingresaste el control: " + control.nombre);
+        _vistaChequeo
+            ?.mostrarMensaje("Ya ingresaste el control: " + control.nombre);
       }
     } else {
-      mostrarMensaje("Seleccione un control de la lista");
+      _vistaChequeo?.mostrarMensaje("Seleccione un control de la lista");
     }
   }
 }

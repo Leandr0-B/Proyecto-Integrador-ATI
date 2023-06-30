@@ -1,32 +1,32 @@
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/UI/Login/iVistaLogin.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 
 class ControllerVistaLogin {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
+  IVistaLogin? _vistaLogin;
 
   //Constructor
-  ControllerVistaLogin({
-    required this.mostrarMensaje,
-  });
+  ControllerVistaLogin.empty();
+  ControllerVistaLogin(this._vistaLogin);
 
   //Funciones
-  Future<Usuario?> loginUsuario(String ci, String clave) async {
+  Future<void> loginUsuario(String ci, String clave) async {
     //Hace el pasamanos del login
     Usuario? usuario;
     try {
       usuario = await Fachada.getInstancia()?.login(ci, clave);
       Fachada.getInstancia()?.setUsuario(usuario);
       _guardarUsuarioEnLocalStorage(usuario);
+      _vistaLogin?.ingreso(usuario);
     } on LoginException catch (ex) {
-      mostrarMensaje(ex.toString());
+      _vistaLogin?.mostrarMensaje(ex.toString());
     } catch (ex) {
-      mostrarMensaje(ex.toString());
+      _vistaLogin?.mostrarMensaje(ex.toString());
     }
-    return usuario;
   }
 
   void _guardarUsuarioEnLocalStorage(Usuario? usuario) {

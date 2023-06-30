@@ -16,7 +16,6 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   DateTime? fecha;
   final _formKey = GlobalKey<FormState>();
   String descripcion = '';
-  List<Usuario>? _residentes = [];
   final fieldDescripcion = TextEditingController();
   final fieldValor = TextEditingController();
   Usuario? selectedResidente;
@@ -24,14 +23,15 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   bool residentesVisible = false;
   List<Control?> selectedControles = [];
   Control? selectedControl;
-  ControllerVistaChequeoMedico? controller;
+  ControllerVistaChequeoMedico controller =
+      ControllerVistaChequeoMedico.empty();
   String valor = '';
   bool agregarControles = false;
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaChequeoMedico(mostrarMensaje, limpiar);
+    controller = ControllerVistaChequeoMedico(this);
   }
 
   @override
@@ -71,7 +71,6 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                               setState(() {
                                 selectedSucursal = newValue;
                                 residentesVisible = true;
-                                _obtenerListaResidentes();
                               });
                             },
                             controlAffinity: ListTileControlAffinity.leading,
@@ -87,28 +86,49 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                 ),
                 Column(
                   children: [
-                    if (residentesVisible &&
-                        _residentes!
-                            .isNotEmpty) // Mostrar el desplegable de residentes si es visible y hay residentes disponibles
+                    if (residentesVisible) ...[
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text("Seleccione un residente:"),
                       ),
-                    Column(
-                      children: _residentes!.map((Usuario residente) {
-                        return RadioListTile<Usuario>(
-                          title:
-                              Text(residente.nombre + " Ci: " + residente.ci),
-                          value: residente,
-                          groupValue: selectedResidente,
-                          onChanged: (Usuario? newValue) {
-                            setState(() {
-                              selectedResidente = newValue;
-                            });
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: FutureBuilder<List<Usuario>?>(
+                          future: listaResidentes(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Usuario>?> snapshot) {
+                            if (snapshot.hasData) {
+                              List<Usuario> residentes = snapshot.data!;
+                              return DropdownButton<Usuario>(
+                                value: selectedResidente,
+                                items: [
+                                  DropdownMenuItem<Usuario>(
+                                    value: null,
+                                    child: Text("Seleccione un residente"),
+                                  ),
+                                  ...residentes.map((residente) {
+                                    return DropdownMenuItem<Usuario>(
+                                      value: residente,
+                                      child: Text(residente.nombre +
+                                          ' | ' +
+                                          residente.ci),
+                                    );
+                                  }),
+                                ],
+                                onChanged: (Usuario? newValue) {
+                                  setState(() {
+                                    selectedResidente = newValue;
+                                  });
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return CircularProgressIndicator();
                           },
-                        );
-                      }).toList(),
-                    ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 SizedBox(height: 10),
@@ -290,13 +310,6 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
     }
   }
 
-  Future<void> _obtenerListaResidentes() async {
-    List<Usuario>? residentes = await listaResidentes(selectedSucursal);
-    setState(() {
-      _residentes = residentes;
-    });
-  }
-
   void _eliminarControl(int index) {
     setState(() {
       selectedControles.removeAt(index);
@@ -306,7 +319,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   void _agregarControl(Control? control, String valor) {
     setState(() {
       control?.valor = valor;
-      controller?.altaSelectedControl(control, selectedControles);
+      controller.altaSelectedControl(control, selectedControles);
     });
   }
 
@@ -320,7 +333,6 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
       selectedSucursal = null;
       residentesVisible = false;
       agregarControles = false;
-      _residentes = [];
       selectedControles = [];
     });
   }
@@ -333,22 +345,22 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
 
   @override
   Future<void> altaChequeoMedico() async {
-    await controller?.altaChequeoMedico(selectedSucursal, selectedResidente,
+    await controller.altaChequeoMedico(selectedSucursal, selectedResidente,
         selectedControles, fecha, descripcion);
   }
 
   @override
-  Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
-    return await controller?.listaResidentes(suc);
+  Future<List<Usuario>?> listaResidentes() async {
+    return await controller.listaResidentes(selectedSucursal);
   }
 
   @override
   Future<List<Sucursal>?> listaSucursales() async {
-    return await controller?.listaSucursales();
+    return await controller.listaSucursales();
   }
 
   @override
   Future<List<Control>?> listaControles() async {
-    return await controller?.listaControles();
+    return await controller.listaControles();
   }
 }

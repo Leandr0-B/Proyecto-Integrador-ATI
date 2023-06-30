@@ -2,17 +2,17 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaFuncionario.dart';
 
 class ControllerVistaAltaFuncionario {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
   List<Rol>? _roles;
   List<Sucursal>? _sucursales;
+  IvistaAltaFuncionario? _vista;
 
   //Constructor
-  ControllerVistaAltaFuncionario({
-    required this.mostrarMensaje,
-  });
+  ControllerVistaAltaFuncionario.empty();
+  ControllerVistaAltaFuncionario(this._vista);
 
   //Funciones
   Future<List<Rol>?> listaRoles() async {
@@ -29,18 +29,16 @@ class ControllerVistaAltaFuncionario {
     return this._sucursales;
   }
 
-  Future<bool> altaUsuario(String ci, String nombre, int administrador,
+  Future<void> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
     try {
       await Fachada.getInstancia()?.altaUsuario(
           ci, nombre, administrador, selectedRoles, selectedSucursales);
-      return false;
     } on AltaUsuarioException catch (ex) {
-      mostrarMensaje(ex.mensaje);
-      return true;
+      _vista?.mostrarMensaje(ex.mensaje);
+      _vista?.limpiarDatos();
     } on Exception catch (ex) {
-      mostrarMensaje(ex.toString());
-      return false;
+      _vista?.mostrarMensaje(ex.toString());
     }
   }
 }

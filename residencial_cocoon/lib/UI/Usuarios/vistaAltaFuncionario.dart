@@ -17,14 +17,15 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   int _administrador = 0;
   List<int> selectedRoles = [];
   List<int> selectedSucursales = [];
-  ControllerVistaAltaFuncionario? controller;
+  ControllerVistaAltaFuncionario controller =
+      ControllerVistaAltaFuncionario.empty();
   final fieldCi = TextEditingController();
   final fieldNombre = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaAltaFuncionario(mostrarMensaje: mostrarMensaje);
+    controller = ControllerVistaAltaFuncionario(this);
   }
 
   @override
@@ -190,22 +191,19 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
 
   @override
   Future<List<Rol>?> getRoles() async {
-    return controller?.listaRoles();
+    return controller.listaRoles();
   }
 
   @override
   Future<List<Sucursal>?> getSucursales() async {
-    return controller?.listaSucursales();
+    return controller.listaSucursales();
   }
 
   @override
   Future<void> altaUsuarioFuncionario(String ci, String nombre,
       int administrador, List<int> roles, List<int> sucursales) async {
-    bool? resultado = await controller?.altaUsuario(
+    await controller.altaUsuario(
         ci, nombre, administrador, selectedRoles, selectedSucursales);
-    if (resultado == true) {
-      limpiarDatos();
-    }
   }
 
   @override

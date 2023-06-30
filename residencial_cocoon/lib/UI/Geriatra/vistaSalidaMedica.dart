@@ -13,20 +13,19 @@ class VistaSalidaMedica extends StatefulWidget {
 class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
     implements IvistaSalidaMedica {
   final _formKey = GlobalKey<FormState>();
-  ControllerVistaSalidaMedica? controller;
+  ControllerVistaSalidaMedica controller = ControllerVistaSalidaMedica.empty();
   Usuario? selectedResidente;
   Sucursal? selectedSucursal;
   bool residentesVisible = false;
   String descripcion = '';
   DateTime? fechaDesde;
   DateTime? fechaHasta;
-  List<Usuario>? _residentes = [];
   final fieldDescripcion = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaSalidaMedica(mostrarMensaje, limpiar);
+    controller = ControllerVistaSalidaMedica(this);
   }
 
   @override
@@ -47,68 +46,83 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Align(
+                Container(
                   alignment: Alignment.centerLeft,
                   child: Text("Seleccione la sucursal:"),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: FutureBuilder<List<Sucursal>?>(
-                    future: listaSucursales(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error al cargar las sucursales');
-                      } else {
-                        List<Sucursal>? sucursales = snapshot.data;
-                        return Column(
-                          children: sucursales?.map((Sucursal sucursal) {
-                                return RadioListTile<Sucursal>(
-                                  title: Text(sucursal.nombre),
-                                  value: sucursal,
-                                  groupValue: selectedSucursal,
-                                  onChanged: (Sucursal? newValue) {
-                                    setState(() {
-                                      selectedSucursal = newValue;
-                                      residentesVisible = true;
-                                      _obtenerListaResidentes();
-                                    });
-                                  },
-                                );
-                              }).toList() ??
-                              [],
-                        );
-                      }
-                    },
-                  ),
+                FutureBuilder<List<Sucursal>?>(
+                  future: listaSucursales(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: snapshot.data!.map((sucursal) {
+                          return RadioListTile<Sucursal>(
+                            title: Text(sucursal.nombre),
+                            value: sucursal,
+                            groupValue: selectedSucursal,
+                            onChanged: (Sucursal? newValue) {
+                              setState(() {
+                                selectedSucursal = newValue;
+                                residentesVisible = true;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.only(left: 16, right: 0),
+                          );
+                        }).toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return CircularProgressIndicator();
+                  },
                 ),
-                // Mostrar el desplegable de residentes si es visible
-
                 Column(
                   children: [
-                    if (residentesVisible &&
-                        _residentes!
-                            .isNotEmpty) // Mostrar el desplegable de residentes si es visible y hay residentes disponibles
+                    if (residentesVisible) ...[
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text("Seleccione un residente:"),
                       ),
-                    Column(
-                      children: _residentes!.map((Usuario residente) {
-                        return RadioListTile<Usuario>(
-                          title:
-                              Text(residente.nombre + " Ci: " + residente.ci),
-                          value: residente,
-                          groupValue: selectedResidente,
-                          onChanged: (Usuario? newValue) {
-                            setState(() {
-                              selectedResidente = newValue;
-                            });
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: FutureBuilder<List<Usuario>?>(
+                          future: listaResidentes(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Usuario>?> snapshot) {
+                            if (snapshot.hasData) {
+                              List<Usuario> residentes = snapshot.data!;
+                              return DropdownButton<Usuario>(
+                                value: selectedResidente,
+                                items: [
+                                  DropdownMenuItem<Usuario>(
+                                    value: null,
+                                    child: Text("Seleccione un residente"),
+                                  ),
+                                  ...residentes.map((residente) {
+                                    return DropdownMenuItem<Usuario>(
+                                      value: residente,
+                                      child: Text(residente.nombre +
+                                          ' | ' +
+                                          residente.ci),
+                                    );
+                                  }),
+                                ],
+                                onChanged: (Usuario? newValue) {
+                                  setState(() {
+                                    selectedResidente = newValue;
+                                  });
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return CircularProgressIndicator();
                           },
-                        );
-                      }).toList(),
-                    ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 SizedBox(height: 10),
@@ -193,20 +207,12 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
 
   @override
   Future<List<Sucursal>?> listaSucursales() async {
-    return controller?.listaSucursales();
-  }
-
-  Future<void> _obtenerListaResidentes() async {
-    List<Usuario>? residentes = await listaResidentes(selectedSucursal);
-    setState(() {
-      _residentes = residentes;
-    });
+    return controller.listaSucursales();
   }
 
   @override
-  Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
-    final residentes = await controller?.listaResidentes(suc);
-    return residentes;
+  Future<List<Usuario>?> listaResidentes() async {
+    return await controller.listaResidentes(selectedSucursal);
   }
 
   Future<void> _selectFechaDesde(BuildContext context) async {
@@ -239,7 +245,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
 
   @override
   Future<void> altaSalidaMedica() async {
-    await controller?.altaSalidaMedica(selectedResidente, descripcion,
+    await controller.altaSalidaMedica(selectedResidente, descripcion,
         fechaDesde, fechaHasta, selectedSucursal);
   }
 
@@ -252,7 +258,6 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
       selectedResidente = null;
       selectedSucursal = null;
       residentesVisible = false;
-      _residentes = [];
     });
   }
 }
