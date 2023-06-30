@@ -13,10 +13,6 @@ class ControllerVistaNotificacion {
   ControllerVistaNotificacion.empty();
   ControllerVistaNotificacion(this._vistaNotificacion);
 
-  Future<List<Notificacion>> obtenerUltimasNotificaciones() async {
-    return await Fachada.getInstancia()?.obtenerUltimasNotificaciones() ?? [];
-  }
-
   void marcarNotificacionComoLeida(Notificacion notificacion) {
     if (notificacion.leida == false) {
       Fachada.getInstancia()?.marcarNotificacionComoLeida(notificacion);
@@ -27,8 +23,17 @@ class ControllerVistaNotificacion {
   void escucharNotificacionEnPrimerPlano() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        _vistaNotificacion?.obtenerUltimasNotificaciones();
+        _vistaNotificacion?.obtenerNotificacionesPaginadasConfiltros();
       }
     });
+  }
+
+  Future<int> calcularTotalPaginas(itemsPerPage, DateTime? desde, DateTime? hasta, String? palabras) async {
+    int totalNotificaciones = await Fachada.getInstancia()?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(desde, hasta, palabras) ?? 0;
+    return (totalNotificaciones / itemsPerPage).ceil();
+  }
+
+  Future<List<Notificacion>> obtenerNotificacionesPaginadasConFiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
+    return await Fachada.getInstancia()?.obtenerNotificacionesPaginadasConfiltros(page, limit, desde, hasta, palabras) ?? [];
   }
 }

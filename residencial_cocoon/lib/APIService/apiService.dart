@@ -37,8 +37,7 @@ class APIService {
   }
 
   static Future<String> fetchUserInfo(String token) async {
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/usuario/info');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/info');
 
     final response = await http.post(
       url,
@@ -67,8 +66,7 @@ class APIService {
   }
 
   static Future<String> fetchSucursales(String? token) async {
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/sucursal/lista');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/sucursal/lista');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -81,17 +79,10 @@ class APIService {
     }
   }
 
-  static Future<void> postAltaUsuario(
-      String ci,
-      String nombre,
-      int administrador,
-      List<int> roles,
-      List<int> sucursales,
-      String? token) async {
+  static Future<void> postAltaUsuario(String ci, String nombre, int administrador, List<int> roles, List<int> sucursales, String? token) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
 
     final response = await http.post(
       url,
@@ -103,10 +94,7 @@ class APIService {
         'sucursales': sucursales,
         'roles': roles,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 400) {
@@ -118,16 +106,10 @@ class APIService {
     }
   }
 
-  static Future<void> postAltaUsuarioResidente(
-      String ci,
-      String nombre,
-      List<Map<String, dynamic>> familiares,
-      List<int?> sucursales,
-      String? token) async {
+  static Future<void> postAltaUsuarioResidente(String ci, String nombre, List<Map<String, dynamic>> familiares, List<int?> sucursales, String? token) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
 
     final response = await http.post(
       url,
@@ -140,10 +122,7 @@ class APIService {
         'roles': [3],
         'familiares': familiares,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 400) {
@@ -156,8 +135,7 @@ class APIService {
   }
 
   static Future<String> fetchUsuarios(String? token) async {
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/usuario/lista');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/lista');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -170,10 +148,8 @@ class APIService {
     }
   }
 
-  static Future<void> putUserPass(
-      String actual, String nueva, String? token) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/usuario/cambiar-pass');
+  static Future<void> putUserPass(String actual, String nueva, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/cambiar-pass');
 
     final response = await http.put(
       url,
@@ -181,10 +157,7 @@ class APIService {
         'oldPassword': actual,
         'newPassword': nueva,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode != 200) {
@@ -192,10 +165,8 @@ class APIService {
     }
   }
 
-  static Future<String> fetchUsuariosSucursal(
-      String? token, int? idSucursal) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/residente/sucursal/$idSucursal');
+  static Future<String> fetchUsuariosSucursal(String? token, int? idSucursal) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/residente/sucursal/$idSucursal');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -208,17 +179,10 @@ class APIService {
     }
   }
 
-  static Future<void> postSalidaMedica(
-      String? token,
-      String? ci_residente,
-      String? ci_geriatra,
-      String descripcion,
-      String fecha_desde,
-      String fecha_hasta) async {
+  static Future<void> postSalidaMedica(String? token, String? ci_residente, String? ci_geriatra, String descripcion, String fecha_desde, String fecha_hasta) async {
     //print(DateTime(fecha_desde!.year, fecha_desde!.month, fecha_desde!.day));
     //print(DateTime(fecha_hasta!.year, fecha_hasta!.month, fecha_hasta!.day));
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/salida-medica/crear');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/salida-medica/crear');
 
     final response = await http.post(
       url,
@@ -229,10 +193,7 @@ class APIService {
         'fecha_desde': fecha_desde.toString(),
         'fecha_hasta': fecha_hasta.toString(),
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -242,25 +203,19 @@ class APIService {
     }
   }
 
-  static Future<void> actualizarTokenNotificaciones(
-      String notificationToken, String? authorizationToken) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/usuario/modificar-token');
+  static Future<void> actualizarTokenNotificaciones(String notificationToken, String? authorizationToken) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/modificar-token');
 
     final response = await http.put(
       url,
       body: jsonEncode({
         'tokenNotificacion': notificationToken,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $authorizationToken'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $authorizationToken'},
     );
 
     if (response.statusCode != 200) {
-      throw Exception(
-          "ha ocurrido un error al actualizar el token de notificaciones.");
+      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
     }
   }
 
@@ -277,23 +232,18 @@ class APIService {
         'descripcion': descripcion,
         'fecha': fecha.toString(),
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
-      throw visitaMedicaExternaException(
-          "Se ingreso la visita medica externa.");
+      throw visitaMedicaExternaException("Se ingreso la visita medica externa.");
     } else {
       throw Exception(errorObtenerToken);
     }
   }
 
   static Future<String> fetchNotificacionesSinLeer(String? token) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/notificacion/notificaciones-no-leidas');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/notificaciones-no-leidas');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -307,8 +257,7 @@ class APIService {
   }
 
   static Future<String> fetchUltimasNotificaciones(String? token) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/notificacion/ultimas-notificaciones');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/ultimas-notificaciones');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -321,10 +270,8 @@ class APIService {
     }
   }
 
-  static void marcarNotificacionComoLeida(
-      Notificacion notificacion, String? token) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/notificacion/marcar-leida/${notificacion.idNotificacion}');
+  static void marcarNotificacionComoLeida(Notificacion notificacion, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/marcar-leida/${notificacion.idNotificacion}');
     await http.put(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -373,6 +320,54 @@ class APIService {
 
     if (response.statusCode == 200) {
       throw ChequeoMedicoException("Se ingreso el chequeo médico.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerNotificacionesPaginadasConFiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion?page=$page&pageSize=$limit'
+        '${desde != null ? '&fechaDesde=${desde.toIso8601String()}' : ''}'
+        '${hasta != null ? '&fechaHasta=${hasta.toIso8601String()}' : ''}'
+        '${palabras != null ? '&palabrasParam=${Uri.encodeComponent(palabras)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerNotificacionesPaginadasConFiltrosCantidadTotal(DateTime? desde, DateTime? hasta, String? palabras, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/count?page=1'
+        '${desde != null ? '&fechaDesde=${desde.toIso8601String()}' : ''}'
+        '${hasta != null ? '&fechaHasta=${hasta.toIso8601String()}' : ''}'
+        '${palabras != null ? '&palabrasParam=${Uri.encodeComponent(palabras)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerNotificacionesPaginadasCantidadTotal(String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/count');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
     } else {
       throw Exception(errorObtenerToken);
     }
