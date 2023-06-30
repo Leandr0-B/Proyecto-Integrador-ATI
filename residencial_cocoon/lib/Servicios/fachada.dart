@@ -52,16 +52,12 @@ class Fachada {
     return await _servicioUsuario?.listaRoles();
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {
-    await _servicioUsuario?.altaUsuario(
-        ci, nombre, administrador, selectedRoles, selectedSucursales);
+  Future<void> altaUsuario(String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales) async {
+    await _servicioUsuario?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales);
   }
 
-  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
-      String nombre, int? selectedSucursal) async {
-    await _servicioUsuario?.altaUsuarioResidente(
-        familiares, ci, nombre, selectedSucursal);
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal) async {
+    await _servicioUsuario?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {
@@ -90,34 +86,32 @@ class Fachada {
   }
 
   //Salida
-  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion,
-      DateTime? fechaDesde, DateTime? fechaHasta) async {
-    await _servicioSalidas?.altaSalidaMedica(
-        selectedResidente, descripcion, fechaDesde, fechaHasta);
+  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion, DateTime? fechaDesde, DateTime? fechaHasta) async {
+    await _servicioSalidas?.altaSalidaMedica(selectedResidente, descripcion, fechaDesde, fechaHasta);
   }
 
   //Chequeo
-  Future<void> altaVisitaMedicaExt(
-      Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
-    await _servicioCequeoMedico?.altaVisitaMedicaExt(
-        selectedResidente, descripcion, fecha);
+  Future<void> altaVisitaMedicaExt(Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
+    await _servicioCequeoMedico?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
   }
 
   Future<int?> cantidadNotifiacionesSinLeer() async {
     return await _servicioNotificacion?.cantidadNotifiacionesSinLeer();
   }
 
-  Future<List<Notificacion>?> obtenerUltimasNotificaciones() async {
-    return await _servicioNotificacion?.obtenerUltimasNotificaciones();
-  }
-
   void marcarNotificacionComoLeida(Notificacion notificacion) async {
     _servicioNotificacion?.marcarNotificacionComoLeida(notificacion);
   }
 
-  Future<List<Notificacion>?> obtenerNotificacionesPaginadas(
-      int page, int limit) async {
-    return await _servicioNotificacion?.obtenerNotificacionesPaginadas(
-        page, limit);
+  Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
+    return await _servicioNotificacion?.obtenerNotificacionesPaginadasConfiltros(page, limit, desde, hasta, palabras);
+  }
+
+  Future<int?> obtenerNotificacionesPaginadasConFiltrosCantidadTotal(DateTime? desde, DateTime? hasta, String? palabras) async {
+    return await _servicioNotificacion?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(desde, hasta, palabras);
+  }
+
+  Future<int?> obtenerNotificacionesPaginadasCantidadTotal() async {
+    return await _servicioNotificacion?.obtenerNotificacionesPaginadasCantidadTotal();
   }
 }

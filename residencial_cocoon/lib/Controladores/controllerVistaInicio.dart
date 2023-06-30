@@ -16,8 +16,7 @@ class ControllerVistaInicio {
   ControllerVistaInicio(this._vistaInicio);
 
   void inicializarFirebase(Usuario? usuario) async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
     final messaging = FirebaseMessaging.instance;
 
@@ -32,8 +31,7 @@ class ControllerVistaInicio {
       sound: true,
     )
         .then((settings) {
-      if (settings.authorizationStatus == AuthorizationStatus.authorized &&
-          token == null) {
+      if (settings.authorizationStatus == AuthorizationStatus.authorized && token == null) {
         obtenerTokenFirebase(usuario);
       }
     }).catchError((error) {
@@ -45,14 +43,11 @@ class ControllerVistaInicio {
 
   void obtenerTokenFirebase(Usuario? usuario) async {
     final messaging = FirebaseMessaging.instance;
-    const vapidKey =
-        "BEFBbZpzZnDl-RhLiOFuppuuUb-bllW0g3skh2rzUwV2GeRpvyPxzCkibX7Wr7qz_xlE3wkCdR9cZWe4pCJszP8";
+    const vapidKey = "BEFBbZpzZnDl-RhLiOFuppuuUb-bllW0g3skh2rzUwV2GeRpvyPxzCkibX7Wr7qz_xlE3wkCdR9cZWe4pCJszP8";
 
     try {
       token = await messaging.getToken(vapidKey: vapidKey);
-      print('Token de Firebase: $token');
       if (usuario?.tokenNotificacion != token) {
-        print("hay que actualizar el token ${usuario?.tokenNotificacion}");
         usuario?.tokenNotificacion = token!;
         Fachada.getInstancia()?.actualizarTokenNotificaciones(token!);
       }
