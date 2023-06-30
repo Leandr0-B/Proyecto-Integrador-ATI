@@ -2,14 +2,16 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaResidente.dart';
 
 class ControllerVistaAltaResidente {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
   List<Sucursal>? _sucursales;
+  IvistaAltaResidente? _vistaAlta;
 
   //Constructor
-  ControllerVistaAltaResidente({required this.mostrarMensaje});
+  ControllerVistaAltaResidente.empty();
+  ControllerVistaAltaResidente(this._vistaAlta);
 
   //Funciones
   Future<List<Sucursal>?> listaSucursales() async {
@@ -19,26 +21,24 @@ class ControllerVistaAltaResidente {
     return this._sucursales;
   }
 
-  Future<bool> altaUsuario(List<Familiar> familiares, String ci, String nombre,
+  Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre,
       int? selectedSucursal) async {
     try {
       if (!_controlAltaUsuario(familiares, ci)) {
-        mostrarMensaje(
+        _vistaAlta?.mostrarMensaje(
             "El documento identificador del residente tiene que ser distinto al de los familiares.");
       } else if (!_controlPrimario(familiares)) {
-        mostrarMensaje(
+        _vistaAlta?.mostrarMensaje(
             "La lista de familiares tiene que tener por lo menos un familiar primario.");
       } else {
         await Fachada.getInstancia()
             ?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal);
       }
-      return false;
     } on AltaUsuarioException catch (ex) {
-      mostrarMensaje(ex.mensaje);
-      return true;
+      _vistaAlta?.mostrarMensaje(ex.mensaje);
+      _vistaAlta?.limpiarDatos();
     } on Exception catch (ex) {
-      mostrarMensaje(ex.toString());
-      return false;
+      _vistaAlta?.mostrarMensaje(ex.toString());
     }
   }
 
@@ -64,17 +64,28 @@ class ControllerVistaAltaResidente {
     return resultado;
   }
 
-  bool controlAltaFamiliar(Familiar familiares, List<Familiar> lista) {
-    bool resultado = true;
-    if (!familiares.esEmailValido()) {
-      mostrarMensaje("El email del familiar no tiene el formato correcto.");
-      resultado = false;
+  bool controlAltaFamiliar(Familiar familiar, List<Familiar> lista) {
+    if (!familiar.esEmailValido()) {
+      _vistaAlta?.mostrarMensaje(
+          "El email del familiar no tiene el formato correcto.");
+      return false;
     }
-    if (lista.contains(familiares)) {
-      mostrarMensaje(
+    if (lista.contains(familiar)) {
+      _vistaAlta?.mostrarMensaje(
           "Ya hay un familiar con el documento identificador ingresado.");
-      resultado = false;
+      return false;
     }
-    return resultado;
+    lista.add(familiar);
+    return true;
+  }
+
+  void eliminarFamiliar(List<Familiar> lista, int index) {
+    lista.removeAt(index);
+  }
+
+  bool mostrarPrimario(List<Familiar>? lista) {
+    return lista == null ||
+        lista!.isEmpty ||
+        lista!.every((familiar) => familiar.contactoPrimario != 1);
   }
 }

@@ -24,8 +24,6 @@ class VistaInicio extends StatefulWidget {
   _VistaInicioState createState() => _VistaInicioState();
 }
 
-//Get set
-
 class _VistaInicioState extends State<VistaInicio>
     with WidgetsBindingObserver
     implements IVistaInicio, NotificacionActualizadaCallback {
@@ -347,7 +345,7 @@ enum DrawerSections {
   salidaMedica,
   visitaMedica,
   notificaciones,
-  cerrarSesion
+  cerrarSesion,
   chequeoMedico,
 }
 

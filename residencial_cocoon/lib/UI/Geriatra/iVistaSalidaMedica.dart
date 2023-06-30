@@ -5,6 +5,6 @@ abstract class IvistaSalidaMedica {
   void mostrarMensaje(String mensaje);
   void limpiar();
   Future<void> altaSalidaMedica();
-  Future<List<Usuario>?> listaResidentes(Sucursal? suc);
+  Future<List<Usuario>?> listaResidentes();
   Future<List<Sucursal>?> listaSucursales();
 }

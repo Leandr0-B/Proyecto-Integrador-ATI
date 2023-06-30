@@ -35,6 +35,14 @@ class Sucursal {
         .toList();
   }
 
+  //Equals
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Sucursal && _idSucursal == other.idSucursal;
+  }
+
   //ToString
   @override
   String toString() {

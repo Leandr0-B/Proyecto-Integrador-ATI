@@ -4,6 +4,5 @@ abstract class IvistaAltaResidente {
   void mostrarMensaje(String mensaje);
   void limpiarDatos();
   Future<List<Sucursal>?> getSucursales();
-  clearText();
   Future<void> crearUsuario();
 }

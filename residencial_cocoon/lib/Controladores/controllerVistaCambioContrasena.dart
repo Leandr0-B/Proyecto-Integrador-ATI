@@ -1,16 +1,14 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Usuarios/iVistaCambioContrasena.dart';
 
 class ControllerVistaCambioContrasena {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
-  Function() limpiar;
+  IvistaCambioContrasena? vistaContrasena;
 
   //Constructor
-  ControllerVistaCambioContrasena({
-    required this.mostrarMensaje,
-    required this.limpiar,
-  });
+  ControllerVistaCambioContrasena(this.vistaContrasena);
+  ControllerVistaCambioContrasena.empty();
 
   //Funciones
   Future<void> cambioClave(
@@ -18,19 +16,20 @@ class ControllerVistaCambioContrasena {
     try {
       if (_controlDatos(nueva, verificacion)) {
         await Fachada.getInstancia()?.cambioClave(actual, nueva);
-        mostrarMensaje("Contraseña cambiada exitosamente");
-        limpiar();
+        vistaContrasena?.mostrarMensaje("Contraseña cambiada exitosamente");
+        vistaContrasena?.limpiar();
       }
     } on CambioContrsenaException catch (ex) {
-      mostrarMensaje(ex.toString());
+      vistaContrasena?.mostrarMensaje(ex.toString());
     } catch (ex) {
-      mostrarMensaje(ex.toString());
+      vistaContrasena?.mostrarMensaje(ex.toString());
     }
   }
 
   bool _controlDatos(String nueva, String verificacion) {
     if (nueva != verificacion) {
-      mostrarMensaje("La nueva clave tiene que ser igual en los dos campos.");
+      vistaContrasena?.mostrarMensaje(
+          "La nueva clave tiene que ser igual en los dos campos.");
       return false;
     }
     return true;

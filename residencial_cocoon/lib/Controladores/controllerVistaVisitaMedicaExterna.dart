@@ -2,22 +2,31 @@ import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaExcepti
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaVisitaMedicaExterna.dart';
 
 class ControllerVistaVisitaMedicaExterna {
   //Atributos
-  Function(String mensaje) mostrarMensaje;
-  Function() limpiar;
   List<Sucursal>? _sucursales;
+  IvistaVisitaMedicaExterna? vistaVisita;
+  Sucursal? _selectedSucursal;
+  List<Usuario>? _residentes;
 
   //Constructor
-  ControllerVistaVisitaMedicaExterna(
-    this.mostrarMensaje,
-    this.limpiar,
-  );
+  ControllerVistaVisitaMedicaExterna(this.vistaVisita);
+  ControllerVistaVisitaMedicaExterna.empty();
 
   //Funciones
   Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
-    return await Fachada.getInstancia()?.residentesSucursal(suc);
+    if (suc != null) {
+      if (suc != _selectedSucursal) {
+        _residentes = await Fachada.getInstancia()?.residentesSucursal(suc);
+        _selectedSucursal = suc;
+        return _residentes;
+      } else {
+        return _residentes;
+      }
+    }
+    return [];
   }
 
   List<Sucursal>? listaSucursales() {
@@ -25,7 +34,7 @@ class ControllerVistaVisitaMedicaExterna {
       _sucursales ??= Fachada.getInstancia()?.getUsuario()?.sucursales;
       return _sucursales;
     } catch (e) {
-      mostrarMensaje(e.toString());
+      vistaVisita?.mostrarMensaje(e.toString());
     }
   }
 
@@ -37,24 +46,24 @@ class ControllerVistaVisitaMedicaExterna {
             ?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
       }
     } on visitaMedicaExternaException catch (e) {
-      mostrarMensaje(e.toString());
-      limpiar();
+      vistaVisita?.mostrarMensaje(e.toString());
+      vistaVisita?.limpiar();
     } on Exception catch (e) {
-      mostrarMensaje(e.toString());
+      vistaVisita?.mostrarMensaje(e.toString());
     }
   }
 
   bool _controles(DateTime? fecha, Sucursal? selectedSucursal,
       Usuario? residenteSeleccionado) {
     if (fecha == null) {
-      mostrarMensaje("Tiene que seleccionar la fecha.");
+      vistaVisita?.mostrarMensaje("Tiene que seleccionar la fecha.");
       return false;
     }
     if (selectedSucursal == null) {
-      mostrarMensaje("Tiene que seleccionar una sucursal.");
+      vistaVisita?.mostrarMensaje("Tiene que seleccionar una sucursal.");
       return false;
     } else if (residenteSeleccionado == null) {
-      mostrarMensaje("Tiene que seleccionar un residente.");
+      vistaVisita?.mostrarMensaje("Tiene que seleccionar un residente.");
       return false;
     }
     return true;

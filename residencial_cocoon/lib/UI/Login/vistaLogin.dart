@@ -14,13 +14,13 @@ class VistaLogin extends StatefulWidget {
 class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
   String _ci = '';
   String _clave = '';
-  ControllerVistaLogin? controller;
+  ControllerVistaLogin controller = ControllerVistaLogin.empty();
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaLogin(mostrarMensaje: mostrarMensaje);
+    controller = ControllerVistaLogin(this);
   }
 
   @override
@@ -88,7 +88,7 @@ class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
               icon: Icon(Icons.account_box),
-              labelText: 'Cedula de identidad',
+              labelText: 'Documento identificador',
             ),
             onChanged: (value) {
               _ci = value;
@@ -165,17 +165,15 @@ class _VistaLoginState extends State<VistaLogin> implements IVistaLogin {
       _isLoading = true;
     });
 
-    Usuario? u = await controller?.loginUsuario(_ci, _clave);
-    if (u != null) {
-      ingreso(u);
-    }
+    await controller?.loginUsuario(_ci, _clave);
 
     setState(() {
       _isLoading = false;
     });
   }
 
-  void ingreso(Usuario usuario) {
+  @override
+  void ingreso(Usuario? usuario) {
     Navigator.pushReplacementNamed(
       context,
       VistaInicio.id,

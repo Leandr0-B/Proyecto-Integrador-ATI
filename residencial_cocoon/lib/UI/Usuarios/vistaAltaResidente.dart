@@ -20,7 +20,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   String _emailFamiliar = '';
   int _contactoPrimarioFamiliar = 0;
   bool _agregarContactoPrimario = false;
-  ControllerVistaAltaResidente? controller;
+  ControllerVistaAltaResidente controller =
+      ControllerVistaAltaResidente.empty();
   int? selectedSucursal;
   List<Familiar> _familiares = []; // Variable _familiares declarada aquí
   final fieldCi = TextEditingController();
@@ -33,7 +34,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaAltaResidente(mostrarMensaje: mostrarMensaje);
+    controller = ControllerVistaAltaResidente(this);
   }
 
   @override
@@ -267,9 +268,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   }
 
   bool _shouldShowContactoPrimarioCheckbox() {
-    return _familiares == null ||
-        _familiares!.isEmpty ||
-        _familiares!.every((familiar) => familiar.contactoPrimario != 1);
+    return controller.mostrarPrimario(_familiares);
   }
 
   void _agregarFamiliar(
@@ -288,9 +287,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     );
 
     setState(() {
-      bool resultado = controller!.controlAltaFamiliar(familiar, _familiares);
+      bool resultado = controller.controlAltaFamiliar(familiar, _familiares);
       if (resultado) {
-        _familiares.add(familiar);
         if (_agregarContactoPrimario) {
           _agregarContactoPrimario = false;
         }
@@ -300,7 +298,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
 
   void _eliminarFamiliar(int index) {
     setState(() {
-      _familiares.removeAt(index);
+      controller.eliminarFamiliar(_familiares, index);
     });
   }
 
@@ -308,18 +306,13 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   Future<void> crearUsuario() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      bool? resultado = await controller?.altaUsuario(
-          _familiares, _ci, _nombre, selectedSucursal);
-      if (resultado == true) {
-        limpiarDatos();
-        clearText();
-      }
+      await controller.altaUsuario(_familiares, _ci, _nombre, selectedSucursal);
     }
   }
 
   @override
   Future<List<Sucursal>?> getSucursales() async {
-    return controller?.listaSucursales();
+    return controller.listaSucursales();
   }
 
   @override
@@ -331,25 +324,15 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   @override
   void limpiarDatos() {
     setState(() {
-      _ci = '';
-      _nombre = '';
-      _ciFamiliar = '';
-      _nombreFamiliar = '';
-      _apellidoFamiliar = '';
-      _emailFamiliar = '';
+      fieldCi.clear();
+      fieldNombre.clear();
+      ciFamiliar.clear();
+      nombreFamiliar.clear();
+      apellidoFamiliar.clear();
+      emailFamiliar.clear();
       _contactoPrimarioFamiliar = 0;
       _agregarContactoPrimario = false;
       _familiares = [];
     });
-  }
-
-  @override
-  void clearText() {
-    fieldCi.clear();
-    fieldNombre.clear();
-    ciFamiliar.clear();
-    nombreFamiliar.clear();
-    apellidoFamiliar.clear();
-    emailFamiliar.clear();
   }
 }

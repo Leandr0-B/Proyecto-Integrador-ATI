@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaUsuarios.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaListaUsuario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaListaUsuario.dart';
-import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 
 class VistaListaUsuario extends StatefulWidget {
   @override
@@ -11,12 +10,12 @@ class VistaListaUsuario extends StatefulWidget {
 
 class _VistaListaUsuarioState extends State<VistaListaUsuario>
     implements IvistaListaUsuario {
-  ControllerVistaUsuarios? controller;
+  ControllerVistaListaUsuario? controller = ControllerVistaListaUsuario.empty();
 
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaUsuarios(mostrarMensaje: mostrarMensaje);
+    controller = ControllerVistaListaUsuario(this);
   }
 
   @override

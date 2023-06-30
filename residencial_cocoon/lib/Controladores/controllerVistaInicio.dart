@@ -7,14 +7,15 @@ import '../../Firebase/firebase_options.dart';
 import 'package:universal_html/html.dart' as html;
 
 class ControllerVistaInicio {
+  //Atributos
   String? token = null;
   IVistaInicio? _vistaInicio;
-  //Atributos
 
   //Constructor
   ControllerVistaInicio.empty();
   ControllerVistaInicio(this._vistaInicio);
 
+  //Funciones
   void inicializarFirebase(Usuario? usuario) async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);

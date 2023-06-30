@@ -174,13 +174,13 @@ class Usuario {
 
   static void validarRoles(List<int> roles) {
     if (roles.isEmpty) {
-      throw AltaUsuarioException("Seleccione al menos un rol.");
+      throw Exception("Seleccione al menos un rol.");
     }
   }
 
   static void validarSucursales(List<int> sucursales) {
     if (sucursales.isEmpty) {
-      throw AltaUsuarioException("Seleccione al menos una sucursal.");
+      throw Exception("Seleccione al menos una sucursal.");
     }
   }
 

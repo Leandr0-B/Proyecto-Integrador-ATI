@@ -9,7 +9,8 @@ class VistaCambioContrasena extends StatefulWidget {
 
 class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
     implements IvistaCambioContrasena {
-  ControllerVistaCambioContrasena? controller;
+  ControllerVistaCambioContrasena controller =
+      ControllerVistaCambioContrasena.empty();
   final _formKey = GlobalKey<FormState>();
   String _contrasenaActual = "";
   String _nuevaContrasena = "";
@@ -22,8 +23,7 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
   @override
   void initState() {
     super.initState();
-    controller = ControllerVistaCambioContrasena(
-        mostrarMensaje: mostrarMensaje, limpiar: limpiar);
+    controller = ControllerVistaCambioContrasena(this);
   }
 
   @override
@@ -119,7 +119,7 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
   @override
   Future<void> cambioClave(
       String actual, String nueva, String verificacion) async {
-    await controller?.cambioClave(actual, nueva, verificacion);
+    await controller.cambioClave(actual, nueva, verificacion);
   }
 
   @override
