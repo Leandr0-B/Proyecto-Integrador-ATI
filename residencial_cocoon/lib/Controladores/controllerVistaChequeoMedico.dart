@@ -78,8 +78,10 @@ class ControllerVistaChequeoMedico {
     return true;
   }
 
-  void altaSelectedControl(Control? control, List<Control?> selectedControl) {
+  void altaSelectedControl(
+      Control? control, String valor, List<Control?> selectedControl) {
     if (control != null) {
+      control = Control.sinUnidad(control.id_control, control.nombre, valor);
       if (!selectedControl.contains(control)) {
         selectedControl.add(control);
       } else {
