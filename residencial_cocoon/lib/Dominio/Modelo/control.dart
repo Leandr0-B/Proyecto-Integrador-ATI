@@ -12,6 +12,8 @@ class Control {
     return Control(json['id_control'], json['nombre'], json['unidad']);
   }
 
+  Control.sinUnidad(this._id_control, this._nombre, this._valor);
+
   //Get Set
   int get id_control => this._id_control;
   set id_control(int value) => this._id_control = value;

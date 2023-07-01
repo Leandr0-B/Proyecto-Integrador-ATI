@@ -318,8 +318,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
 
   void _agregarControl(Control? control, String valor) {
     setState(() {
-      control?.valor = valor;
-      controller.altaSelectedControl(control, selectedControles);
+      controller.altaSelectedControl(control, valor, selectedControles);
     });
   }
 
