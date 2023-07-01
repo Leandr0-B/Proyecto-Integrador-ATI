@@ -1,22 +1,23 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarSalidaMedica.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
-import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarSalidaMedica.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/visitaMedicaExterna.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarVisitaMedicaExterna.dart';
 
-class VistaVisualizarSalidaMedica extends StatefulWidget {
-  VistaVisualizarSalidaMedica();
+class VistaVisualizarVisitaMedicaExterna extends StatefulWidget {
+  VistaVisualizarVisitaMedicaExterna();
 
   @override
-  _VistaVisualizarSalidaMedicaState createState() => _VistaVisualizarSalidaMedicaState();
+  _VistaVisualizarVisitaMedicaExternaState createState() => _VistaVisualizarVisitaMedicaExternaState();
 }
 
 //Get set
 
-class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedica> implements IvistaVisualizarSalidaMedica {
-  Future<List<SalidaMedica>> _salidasMedicas = Future.value([]);
-  ControllerVistaVisualizarSalidaMedica _controller = ControllerVistaVisualizarSalidaMedica.empty();
+class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisitaMedicaExterna> implements IvistaVisualizarVisitaMedicaExterna {
+  Future<List<VisitaMedicaExterna>> _visitasMedicasExternas = Future.value([]);
+  ControllerVistaVisualizarVisitaMedicaExterna _controller = ControllerVistaVisualizarVisitaMedicaExterna.empty();
 
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
@@ -61,8 +62,8 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaVisualizarSalidaMedica(this);
-    obtenerSalidasMedicasPaginadasConfiltros();
+    _controller = ControllerVistaVisualizarVisitaMedicaExterna(this);
+    obtenerVisitaMedicaExternaPaginadasConfiltros();
   }
 
   @override
@@ -70,7 +71,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Salidas Médica',
+          'Visualizar Visitas Medicas Externas',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -154,7 +155,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerSalidasMedicasPaginadasBotonFiltrar();
+                  obtenerVisitaMedicaExternaPaginadasBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -163,7 +164,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                 onPressed: () {
                   setState(() {
                     limpiarFiltros();
-                    obtenerSalidasMedicasPaginadas();
+                    obtenerVisitaMedicaExternaPaginadas();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -172,9 +173,9 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<SalidaMedica>>(
-            future: _salidasMedicas,
-            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
+          child: FutureBuilder<List<VisitaMedicaExterna>>(
+            future: _visitasMedicasExternas,
+            builder: (BuildContext context, AsyncSnapshot<List<VisitaMedicaExterna>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -188,7 +189,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Salidas Medicas',
+                            'Aún no hay Visitas Medicas Externas',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -204,10 +205,10 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      SalidaMedica salidaMedica = snapshot.data![index];
+                      VisitaMedicaExterna visitaMedicaExterna = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(salidaMedica);
+                          mostrarPopUp(visitaMedicaExterna);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -230,7 +231,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
+                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -238,22 +239,17 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${salidaMedica.descripcion}',
+                                      'Descripcion : ${visitaMedicaExterna.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${salidaMedica.fechaDesde}',
+                                      'Fecha : ${visitaMedicaExterna.fecha}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${salidaMedica.fechaHasta}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -291,7 +287,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerSalidasMedicasPaginadasConfiltros();
+                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -303,7 +299,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerSalidasMedicasPaginadasConfiltros();
+                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -383,7 +379,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerSalidasMedicasPaginadasBotonFiltrar();
+                  obtenerVisitaMedicaExternaPaginadasBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -391,7 +387,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    obtenerSalidasMedicasPaginadas();
+                    obtenerVisitaMedicaExternaPaginadas();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -400,9 +396,9 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
           ),
         ],
         Expanded(
-          child: FutureBuilder<List<SalidaMedica>>(
-            future: _salidasMedicas,
-            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
+          child: FutureBuilder<List<VisitaMedicaExterna>>(
+            future: _visitasMedicasExternas,
+            builder: (BuildContext context, AsyncSnapshot<List<VisitaMedicaExterna>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -434,10 +430,10 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      SalidaMedica salidaMedica = snapshot.data![index];
+                      VisitaMedicaExterna visitaMedicaExterna = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(salidaMedica);
+                          mostrarPopUp(visitaMedicaExterna);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -460,7 +456,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
+                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -468,22 +464,17 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${salidaMedica.descripcion}',
+                                      'Descripcion : ${visitaMedicaExterna.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${salidaMedica.fechaDesde}',
+                                      'Fecha : ${visitaMedicaExterna.fecha}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${salidaMedica.fechaHasta}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -521,7 +512,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerSalidasMedicasPaginadasConfiltros();
+                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -533,7 +524,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerSalidasMedicasPaginadasConfiltros();
+                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -549,7 +540,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   }
 
   @override
-  void mostrarPopUp(SalidaMedica salidaMedica) {
+  void mostrarPopUp(VisitaMedicaExterna visitaMedicaExterna) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -564,27 +555,25 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
               Text(
-                'Descripcion: ${salidaMedica.descripcion}',
+                'Descripcion : ${visitaMedicaExterna.descripcion}',
                 style: const TextStyle(fontSize: 16.0),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
               Text(
-                'Fecha desde: ${salidaMedica.fechaDesde}',
+                'Fecha : ${visitaMedicaExterna.fecha}',
                 style: const TextStyle(fontSize: 14.0),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
               Text(
-                'Fecha Hasta: ${salidaMedica.fechaHasta}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),
@@ -611,28 +600,29 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   }
 
   @override
-  void obtenerSalidasMedicasPaginadasBotonFiltrar() {
+  void obtenerVisitaMedicaExternaPaginadasBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
-      obtenerSalidasMedicasPaginadasConfiltros();
+      obtenerVisitaMedicaExternaPaginadasConfiltros();
     }
   }
 
   @override
-  void obtenerSalidasMedicasPaginadasConfiltros() {
-    _salidasMedicas = _controller.obtenerSalidasMedicasPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+  void obtenerVisitaMedicaExternaPaginadasConfiltros() {
+    _visitasMedicasExternas =
+        _controller.obtenerVisitasMedicasExternasPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
   @override
-  void obtenerSalidasMedicasPaginadas() {
+  void obtenerVisitaMedicaExternaPaginadas() {
     limpiarFiltros();
-    obtenerSalidasMedicasPaginadasConfiltros();
+    obtenerVisitaMedicaExternaPaginadasConfiltros();
   }
 
   @override
@@ -642,6 +632,5 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
     _fechaHasta = null;
     _palabraClave = null;
     _ciResidente = null;
-    setState(() {});
   }
 }

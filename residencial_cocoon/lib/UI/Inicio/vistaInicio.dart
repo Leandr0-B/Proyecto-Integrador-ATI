@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarSalidaMedica.dart';
+import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
@@ -133,6 +134,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
         break;
       case DrawerSections.visitaMedica:
         container = VistaVisitaMedicaExterna();
+        break;
+      case DrawerSections.visualizarVisitaMedica:
+        container = VistaVisualizarVisitaMedicaExterna();
         break;
       case DrawerSections.notificaciones:
         container = VistaNotificacion(this);
@@ -267,7 +271,8 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(6, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
                   menuItem(7, "Visualizar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
                   menuItem(8, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
-                  menuItem(9, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
+                  menuItem(9, "Visualizar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
+                  menuItem(10, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
                 ],
               ),
             ],
@@ -316,7 +321,8 @@ enum DrawerSections {
   notificaciones,
   cerrarSesion,
   chequeoMedico,
-  visualizarSalidaMedica
+  visualizarSalidaMedica,
+  visualizarVisitaMedica
 }
 
 class NotificacionActualizadaCallback {

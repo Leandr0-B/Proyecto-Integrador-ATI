@@ -1,7 +1,4 @@
-import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarSalidaMedica.dart';
 

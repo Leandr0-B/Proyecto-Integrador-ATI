@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/visitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
 import 'package:residencial_cocoon/Servicios/servicioNotificacion.dart';
 import 'package:residencial_cocoon/Servicios/servicioControl.dart';
@@ -132,5 +133,14 @@ class Fachada {
 
   Future<int?> obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<List<VisitaMedicaExterna>?> obtenerVisitasMedicasExternasPaginadasConFiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioCequeoMedico?.obtenerVisitasMedicasExternasPaginadasConFiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioCequeoMedico?.obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 }

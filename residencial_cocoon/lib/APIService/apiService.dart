@@ -347,7 +347,7 @@ class APIService {
   }
 
   static obtenerSalidasMedicasPaginadasConFiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? ciResidente, String? palabraClave, String? token) async {
-    final url = Uri.parse('http://localhost:3000/salida-medica?page=$page&pageSize=$limit'
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/salida-medica?page=$page&pageSize=$limit'
         '${desde != null ? '&fechaDesde=${desde.toIso8601String()}' : ''}'
         '${hasta != null ? '&fechaHasta=${hasta.toIso8601String()}' : ''}'
         '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
@@ -365,7 +365,44 @@ class APIService {
   }
 
   static obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
-    final url = Uri.parse('http://localhost:3000/salida-medica/count?page=1'
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/salida-medica/count?page=1'
+        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerVisitasMedicasExternasPaginadasConFiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/visita-medica-externa?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/visita-medica-externa/count?page=1'
         '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
         '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
         '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
