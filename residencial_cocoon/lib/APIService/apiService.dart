@@ -219,10 +219,8 @@ class APIService {
     }
   }
 
-  static Future<void> postVisitaMedica(String? token, String? ci_residente,
-      String? ci_geriatra, String descripcion, String fecha) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/visita-medica-externa/crear');
+  static Future<void> postVisitaMedica(String? token, String? ci_residente, String? ci_geriatra, String descripcion, String fecha) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/visita-medica-externa/crear');
 
     final response = await http.post(
       url,
@@ -279,8 +277,7 @@ class APIService {
   }
 
   static Future<String> fetchControles(String? token) async {
-    final url =
-        Uri.parse('https://residencialapi.azurewebsites.net/control/lista');
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/control/lista');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -293,15 +290,8 @@ class APIService {
     }
   }
 
-  static Future<void> postChequeoMedico(
-      String? token,
-      String? ci_residente,
-      String? ci_geriatra,
-      String descripcion,
-      String fecha,
-      List<Map<String, dynamic>> controles) async {
-    final url = Uri.parse(
-        'https://residencialapi.azurewebsites.net/chequeo-medico/crear');
+  static Future<void> postChequeoMedico(String? token, String? ci_residente, String? ci_geriatra, String descripcion, String fecha, List<Map<String, dynamic>> controles) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/chequeo-medico/crear');
 
     final response = await http.post(
       url,
@@ -312,10 +302,7 @@ class APIService {
         'fecha': fecha.toString(),
         'controles': controles,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -359,8 +346,30 @@ class APIService {
     }
   }
 
-  static obtenerNotificacionesPaginadasCantidadTotal(String? token) async {
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/notificacion/count');
+  static obtenerSalidasMedicasPaginadasConFiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('http://localhost:3000/salida-medica?page=$page&pageSize=$limit'
+        '${desde != null ? '&fechaDesde=${desde.toIso8601String()}' : ''}'
+        '${hasta != null ? '&fechaHasta=${hasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('http://localhost:3000/salida-medica/count?page=1'
+        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},

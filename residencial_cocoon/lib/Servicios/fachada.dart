@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/servicioChequeoMedico.dart';
@@ -112,13 +113,8 @@ class Fachada {
     return await _servicioControl?.listaControles();
   }
 
-  Future<void> altaChequeoMedico(
-      Usuario? selectedResidente,
-      List<Control?> selectedControles,
-      DateTime? fecha,
-      String descripcion) async {
-    await _servicioControl?.altaChequeoMedico(
-        selectedResidente, selectedControles, fecha, descripcion);
+  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
+    await _servicioControl?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
   }
 
   Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
@@ -129,7 +125,12 @@ class Fachada {
     return await _servicioNotificacion?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(desde, hasta, palabras);
   }
 
-  Future<int?> obtenerNotificacionesPaginadasCantidadTotal() async {
-    return await _servicioNotificacion?.obtenerNotificacionesPaginadasCantidadTotal();
+  Future<List<SalidaMedica>?> obtenerSalidasMedicasPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 }
