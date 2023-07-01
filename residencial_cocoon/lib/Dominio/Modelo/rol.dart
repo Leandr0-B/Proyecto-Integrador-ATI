@@ -27,6 +27,8 @@ class Rol implements IRol {
 
   Rol.sinUsuario(this._idRol, this._descripcion);
 
+  Rol.empty();
+
   factory Rol.fromJson(Map<String, dynamic> json) {
     return Rol.json(json['id_rol'], json['descripcion']);
   }
@@ -62,6 +64,14 @@ class Rol implements IRol {
 
   set usuario(Usuario? value) => _usuario = value!;
 
+  String nombreUsuario() {
+    return usuario.nombre;
+  }
+
+  String ciUsuario() {
+    return usuario.ci;
+  }
+
   //Funciones
   Map<String, dynamic> toIdJson() {
     return {
@@ -70,10 +80,7 @@ class Rol implements IRol {
   }
 
   static List<Rol> fromJsonList(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Rol>((json) => Rol.fromJson(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Rol>((json) => Rol.fromJson(json)).toList();
   }
 
   //Equals

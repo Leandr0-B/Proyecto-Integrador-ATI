@@ -39,10 +39,4 @@ class ServicioNotificacion {
     int? total = jsonDecode(cantidadTotal)['total'];
     return total;
   }
-
-  Future<int?> obtenerNotificacionesPaginadasCantidadTotal() async {
-    String cantidadTotal = await APIService.obtenerNotificacionesPaginadasCantidadTotal(Fachada.getInstancia()?.getUsuario()!.getToken());
-    int? total = jsonDecode(cantidadTotal)['total'];
-    return total;
-  }
 }

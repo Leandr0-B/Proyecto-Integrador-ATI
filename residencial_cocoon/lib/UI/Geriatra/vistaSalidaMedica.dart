@@ -10,8 +10,7 @@ class VistaSalidaMedica extends StatefulWidget {
   State<VistaSalidaMedica> createState() => _VistaSalidaMedicaState();
 }
 
-class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
-    implements IvistaSalidaMedica {
+class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements IvistaSalidaMedica {
   final _formKey = GlobalKey<FormState>();
   ControllerVistaSalidaMedica controller = ControllerVistaSalidaMedica.empty();
   Usuario? selectedResidente;
@@ -32,7 +31,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Alta Salida Médica',
           style: TextStyle(color: Colors.black),
         ),
@@ -52,8 +51,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: listaSucursales(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
@@ -89,8 +87,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Usuario>?>(
                           future: listaResidentes(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Usuario>?> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<List<Usuario>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Usuario> residentes = snapshot.data!;
                               return DropdownButton<Usuario>(
@@ -103,9 +100,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre +
-                                          ' | ' +
-                                          residente.ci),
+                                      child: Text(residente.nombre + ' | ' + residente.ci),
                                     );
                                   }),
                                 ],
@@ -157,9 +152,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                       hintText: 'Fecha desde',
                     ),
                     child: Text(
-                      fechaDesde != null
-                          ? DateFormat('dd/MM/yyyy').format(fechaDesde!)
-                          : 'Seleccione una fecha',
+                      fechaDesde != null ? DateFormat('dd/MM/yyyy').format(fechaDesde!) : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -175,9 +168,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                       hintText: 'Fecha hasta',
                     ),
                     child: Text(
-                      fechaHasta != null
-                          ? DateFormat('dd/MM/yyyy').format(fechaHasta!)
-                          : 'Seleccione una fecha',
+                      fechaHasta != null ? DateFormat('dd/MM/yyyy').format(fechaHasta!) : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -245,8 +236,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
 
   @override
   Future<void> altaSalidaMedica() async {
-    await controller.altaSalidaMedica(selectedResidente, descripcion,
-        fechaDesde, fechaHasta, selectedSucursal);
+    await controller.altaSalidaMedica(selectedResidente, descripcion, fechaDesde, fechaHasta, selectedSucursal);
   }
 
   @override

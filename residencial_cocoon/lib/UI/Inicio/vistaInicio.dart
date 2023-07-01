@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
+import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
@@ -24,9 +25,7 @@ class VistaInicio extends StatefulWidget {
   _VistaInicioState createState() => _VistaInicioState();
 }
 
-class _VistaInicioState extends State<VistaInicio>
-    with WidgetsBindingObserver
-    implements IVistaInicio, NotificacionActualizadaCallback {
+class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver implements IVistaInicio, NotificacionActualizadaCallback {
   var currentPage = DrawerSections.inicio;
   Usuario? _usuario;
   ControllerVistaInicio _controller = ControllerVistaInicio.empty();
@@ -48,8 +47,7 @@ class _VistaInicioState extends State<VistaInicio>
     WidgetsBinding.instance?.addObserver(this);
     html.document.onVisibilityChange.listen((event) {
       setState(() {
-        _isPageVisible = _isPageVisible =
-            html.document.hidden != null ? !html.document.hidden! : true;
+        _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
       });
       if (_isPageVisible) {
         obtenerCantidadNotificacionesSinLeer();
@@ -64,8 +62,7 @@ class _VistaInicioState extends State<VistaInicio>
       setState(() {
         _isPageVisible = true;
       });
-    } else if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       setState(() {
         _isPageVisible = false;
       });
@@ -80,22 +77,19 @@ class _VistaInicioState extends State<VistaInicio>
 
   @override
   void obtenerCantidadNotificacionesSinLeer() {
-    _cantidadNotificaciones =
-        _controller.obtenerCantidadNotificacionesSinLeer();
+    _cantidadNotificaciones = _controller.obtenerCantidadNotificacionesSinLeer();
     setState(() {});
   }
 
   @override
   void aumentarEnUnoNotificacionesSinLeer() {
-    _cantidadNotificaciones =
-        _cantidadNotificaciones.then((valor) => valor! + 1);
+    _cantidadNotificaciones = _cantidadNotificaciones.then((valor) => valor! + 1);
     setState(() {});
   }
 
   @override
   void restarEnUnoNotificacionesSinLeer() {
-    _cantidadNotificaciones =
-        _cantidadNotificaciones.then((valor) => valor! - 1);
+    _cantidadNotificaciones = _cantidadNotificaciones.then((valor) => valor! - 1);
     setState(() {});
   }
 
@@ -133,6 +127,9 @@ class _VistaInicioState extends State<VistaInicio>
         break;
       case DrawerSections.salidaMedica:
         container = VistaSalidaMedica();
+        break;
+      case DrawerSections.visualizarSalidaMedica:
+        container = VistaVisualizarSalidaMedica();
         break;
       case DrawerSections.visitaMedica:
         container = VistaVisitaMedicaExterna();
@@ -186,9 +183,7 @@ class _VistaInicioState extends State<VistaInicio>
                         ),
                         child: Center(
                           child: Text(
-                            cantidadNotificaciones < 99
-                                ? cantidadNotificaciones.toString()
-                                : "99+",
+                            cantidadNotificaciones < 99 ? cantidadNotificaciones.toString() : "99+",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -210,11 +205,7 @@ class _VistaInicioState extends State<VistaInicio>
         ],
       ),
       body: container,
-      drawer: MyDrawerList(
-          context: context,
-          usuario: _usuario,
-          onPageSelected: onPageSelected,
-          cerrarSesion: cerrarSesion),
+      drawer: MyDrawerList(context: context, usuario: _usuario, onPageSelected: onPageSelected, cerrarSesion: cerrarSesion),
     );
   }
 
@@ -239,12 +230,7 @@ class MyDrawerList extends StatelessWidget {
   final ValueChanged<DrawerSections> onPageSelected;
   final Function cerrarSesion;
 
-  const MyDrawerList(
-      {super.key,
-      required this.context,
-      required this.usuario,
-      required this.onPageSelected,
-      required this.cerrarSesion});
+  const MyDrawerList({super.key, required this.context, required this.usuario, required this.onPageSelected, required this.cerrarSesion});
 
   @override
   Widget build(BuildContext context) {
@@ -264,46 +250,29 @@ class MyDrawerList extends StatelessWidget {
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario?.administrador == 1) ...[
               ExpansionTile(
-                leading: const Icon(Icons.people_alt_outlined,
-                    size: 20, color: Colors.black),
-                title: const Text("Usuarios",
-                    style: TextStyle(color: Colors.black, fontSize: 16)),
+                leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
+                title: const Text("Usuarios", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(2, "Lista de Usuarios", Icons.list,
-                      DrawerSections.listaUsuarios),
-                  menuItem(3, "Alta de Funcionario", Icons.person_add,
-                      DrawerSections.altaFuncionario),
-                  menuItem(4, "Alta de Residente", Icons.person_add,
-                      DrawerSections.altaResidente),
+                  menuItem(2, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
+                  menuItem(3, "Alta de Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
+                  menuItem(4, "Alta de Residente", Icons.person_add, DrawerSections.altaResidente),
                 ],
               ),
             ],
             if (usuario!.esGeriatra() || usuario?.administrador == 1) ...[
               ExpansionTile(
-                leading: const Icon(Icons.badge_sharp,
-                    size: 20, color: Colors.black),
-                title: const Text("Geriatra",
-                    style: TextStyle(color: Colors.black, fontSize: 16)),
+                leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
+                title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(
-                      6,
-                      "Registrar Salida Medica",
-                      Icons.emoji_transportation_outlined,
-                      DrawerSections.salidaMedica),
-                  menuItem(
-                      7,
-                      "Registrar Visita Medica Externa",
-                      Icons.medical_services_sharp,
-                      DrawerSections.visitaMedica),
-                  menuItem(8, "Registrar Chequeo Medico", Icons.fact_check,
-                      DrawerSections.chequeoMedico),
+                  menuItem(6, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
+                  menuItem(7, "Visualizar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
+                  menuItem(8, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
+                  menuItem(9, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
                 ],
               ),
             ],
-            menuItem(5, "Cambio de contraseña", Icons.password,
-                DrawerSections.cambioContrasena),
-            menuItem(
-                8, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
+            menuItem(5, "Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
+            menuItem(99, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
           ],
         ),
       ),
@@ -347,6 +316,7 @@ enum DrawerSections {
   notificaciones,
   cerrarSesion,
   chequeoMedico,
+  visualizarSalidaMedica
 }
 
 class NotificacionActualizadaCallback {

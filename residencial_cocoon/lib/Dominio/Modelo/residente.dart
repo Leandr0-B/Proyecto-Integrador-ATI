@@ -6,11 +6,11 @@ class Residente extends Rol {
   List<Familiar> _familiares = [];
 
   //Constructor
-  Residente(int idRol, String descripcion, this._familiares)
-      : super.sinUsuario(idRol, descripcion);
+  Residente(int idRol, String descripcion, this._familiares) : super.sinUsuario(idRol, descripcion);
 
-  Residente.sinFamiliares(int idRol, String descripcion)
-      : super.sinUsuario(idRol, descripcion);
+  Residente.sinFamiliares(int idRol, String descripcion) : super.sinUsuario(idRol, descripcion);
+
+  Residente.empty() : super.empty();
 
   //Funciones
   @override

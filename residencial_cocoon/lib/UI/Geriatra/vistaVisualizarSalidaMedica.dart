@@ -1,35 +1,31 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaNotificacion.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
-import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
-import 'package:residencial_cocoon/UI/Notificacion/iVistaNotificacion.dart';
-import 'dart:html' as html;
+import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarSalidaMedica.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarSalidaMedica.dart';
 
-class VistaNotificacion extends StatefulWidget {
-  NotificacionActualizadaCallback _callback = NotificacionActualizadaCallback();
-
-  VistaNotificacion(this._callback);
+class VistaVisualizarSalidaMedica extends StatefulWidget {
+  VistaVisualizarSalidaMedica();
 
   @override
-  _VistaNotificacionState createState() => _VistaNotificacionState();
+  _VistaVisualizarSalidaMedicaState createState() => _VistaVisualizarSalidaMedicaState();
 }
 
 //Get set
 
-class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindingObserver implements IVistaNotificacion {
-  Future<List<Notificacion>> _notificaciones = Future.value([]);
-  ControllerVistaNotificacion _controller = ControllerVistaNotificacion.empty();
+class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedica> implements IvistaVisualizarSalidaMedica {
+  Future<List<SalidaMedica>> _salidasMedicas = Future.value([]);
+  ControllerVistaVisualizarSalidaMedica _controller = ControllerVistaVisualizarSalidaMedica.empty();
 
-  bool _isPageVisible = true;
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
   Future<int> _cantidadDePaginas = Future.value(0);
   DateTime? _fechaDesde;
   DateTime? _fechaHasta;
   String? _palabraClave;
+  String? _ciResidente;
+
   bool _filtroExpandido = false;
 
   Future<void> selectFechaDesde(BuildContext context) async {
@@ -65,40 +61,8 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaNotificacion(this);
-    obtenerNotificacionesPaginadasConfiltros();
-    _controller.escucharNotificacionEnPrimerPlano();
-
-    WidgetsBinding.instance?.addObserver(this);
-    html.document.onVisibilityChange.listen((event) {
-      setState(() {
-        _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
-      });
-      if (_isPageVisible) {
-        // esto se rompe muchas veces es preferible que no se este ejecutando todo el tiempo
-        // obtenerNotificacionesPaginadasConfiltros();
-      } else {}
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      // La página se ha mostrado nuevamente
-      setState(() {
-        _isPageVisible = true;
-      });
-    } else if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
-      setState(() {
-        _isPageVisible = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
+    _controller = ControllerVistaVisualizarSalidaMedica(this);
+    obtenerSalidasMedicasPaginadasConfiltros();
   }
 
   @override
@@ -106,7 +70,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Notificaciones',
+          'Visualizar Salidas Médica',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -164,6 +128,19 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
               Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'Ci Residente',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _ciResidente = value;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(
                     labelText: 'Palabra clave',
                   ),
                   onChanged: (value) {
@@ -177,7 +154,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerNotificacionesPaginadasBotonFiltrar();
+                  obtenerSalidasMedicasPaginadasBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -186,7 +163,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                 onPressed: () {
                   setState(() {
                     limpiarFiltros();
-                    obtenerNotificacionesPaginadas();
+                    obtenerSalidasMedicasPaginadas();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -195,9 +172,9 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<Notificacion>>(
-            future: _notificaciones,
-            builder: (BuildContext context, AsyncSnapshot<List<Notificacion>> snapshot) {
+          child: FutureBuilder<List<SalidaMedica>>(
+            future: _salidasMedicas,
+            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -211,7 +188,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay notificaciones',
+                            'Aún no hay Salidas Medicas',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -227,18 +204,17 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      Notificacion notificacion = snapshot.data![index];
+                      SalidaMedica salidaMedica = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          marcarNotificacionComoLeida(notificacion);
-                          mostrarPopUp(notificacion);
+                          mostrarPopUp(salidaMedica);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
+                              color: const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -254,7 +230,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      notificacion.titulo,
+                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -262,16 +238,23 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      notificacion.leida ? 'Leída' : 'Nueva!',
-                                      style: TextStyle(
-                                        color: notificacion.leida ? Colors.black : Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      'Descripcion : ${salidaMedica.descripcion}',
+                                      style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
-                                      style: const TextStyle(fontSize: 12.0),
+                                      'Fecha desde: ${salidaMedica.fechaDesde}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha Hasta: ${salidaMedica.fechaHasta}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
                                 ),
@@ -308,7 +291,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerNotificacionesPaginadasConfiltros();
+                                        obtenerSalidasMedicasPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -320,7 +303,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerNotificacionesPaginadasConfiltros();
+                                        obtenerSalidasMedicasPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -374,6 +357,17 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
           const SizedBox(height: 8),
           TextFormField(
             decoration: const InputDecoration(
+              labelText: 'Ci Residente',
+            ),
+            onChanged: (value) {
+              setState(() {
+                _ciResidente = value;
+              });
+            },
+          ),
+          const SizedBox(height: 8),
+          TextFormField(
+            decoration: const InputDecoration(
               labelText: 'Palabra clave',
             ),
             onChanged: (value) {
@@ -389,7 +383,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerNotificacionesPaginadasBotonFiltrar();
+                  obtenerSalidasMedicasPaginadasBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -397,7 +391,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    obtenerNotificacionesPaginadas();
+                    obtenerSalidasMedicasPaginadas();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -406,9 +400,9 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
           ),
         ],
         Expanded(
-          child: FutureBuilder<List<Notificacion>>(
-            future: _notificaciones,
-            builder: (BuildContext context, AsyncSnapshot<List<Notificacion>> snapshot) {
+          child: FutureBuilder<List<SalidaMedica>>(
+            future: _salidasMedicas,
+            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -422,7 +416,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay notificaciones',
+                            'Aún no hay Salidas Medicas',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -440,18 +434,17 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      Notificacion notificacion = snapshot.data![index];
+                      SalidaMedica salidaMedica = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          marcarNotificacionComoLeida(notificacion);
-                          mostrarPopUp(notificacion);
+                          mostrarPopUp(salidaMedica);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
+                              color: const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -467,7 +460,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      notificacion.titulo,
+                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -475,16 +468,23 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      notificacion.leida ? 'Leída' : 'Nueva!',
-                                      style: TextStyle(
-                                        color: notificacion.leida ? Colors.black : Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      'Descripcion : ${salidaMedica.descripcion}',
+                                      style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
-                                      style: const TextStyle(fontSize: 12.0),
+                                      'Fecha desde: ${salidaMedica.fechaDesde}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha Hasta: ${salidaMedica.fechaHasta}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
                                 ),
@@ -521,7 +521,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerNotificacionesPaginadasConfiltros();
+                                        obtenerSalidasMedicasPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -533,7 +533,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerNotificacionesPaginadasConfiltros();
+                                        obtenerSalidasMedicasPaginadasConfiltros();
                                       });
                                     },
                             ),
@@ -549,7 +549,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
   }
 
   @override
-  void mostrarPopUp(Notificacion notificacion) {
+  void mostrarPopUp(SalidaMedica salidaMedica) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -564,17 +564,27 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                notificacion.titulo,
+                'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
                 style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               Text(
-                notificacion.mensaje,
+                'Descripcion: ${salidaMedica.descripcion}',
                 style: const TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 10.0),
               Text(
-                'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
+                'Fecha desde: ${salidaMedica.fechaDesde}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Fecha Hasta: ${salidaMedica.fechaHasta}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),
@@ -595,42 +605,34 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
   }
 
   @override
-  void marcarNotificacionComoLeida(notificacion) {
-    widget._callback.notificacionActualizada(notificacion);
-    setState(() {
-      _controller.marcarNotificacionComoLeida(notificacion);
-    });
-  }
-
-  @override
   void mostrarMensaje(String mensaje) {
     final snackBar = SnackBar(content: Text(mensaje));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
-  void obtenerNotificacionesPaginadasBotonFiltrar() {
+  void obtenerSalidasMedicasPaginadasBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
-      obtenerNotificacionesPaginadasConfiltros();
+      obtenerSalidasMedicasPaginadasConfiltros();
     }
   }
 
   @override
-  void obtenerNotificacionesPaginadasConfiltros() {
-    _notificaciones = _controller.obtenerNotificacionesPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
+  void obtenerSalidasMedicasPaginadasConfiltros() {
+    _salidasMedicas = _controller.obtenerSalidasMedicasPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
   @override
-  void obtenerNotificacionesPaginadas() {
+  void obtenerSalidasMedicasPaginadas() {
     limpiarFiltros();
-    obtenerNotificacionesPaginadasConfiltros();
+    obtenerSalidasMedicasPaginadasConfiltros();
   }
 
   @override
@@ -639,5 +641,6 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
+    _ciResidente = null;
   }
 }

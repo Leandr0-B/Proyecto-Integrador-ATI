@@ -7,4 +7,5 @@ abstract class IVistaNotificacion {
   void mostrarPopUp(Notificacion notificacion);
   void marcarNotificacionComoLeida(Notificacion notificacion);
   void mostrarMensaje(String mensaje);
+  void limpiarFiltros();
 }

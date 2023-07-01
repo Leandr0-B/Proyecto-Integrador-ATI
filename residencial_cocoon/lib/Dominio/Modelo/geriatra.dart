@@ -4,9 +4,9 @@ class Geriatra extends Rol {
   //Atributos
 
   //Constructor
-  Geriatra(int idRol, String descripcion)
-      : super.sinUsuario(idRol, descripcion);
+  Geriatra(int idRol, String descripcion) : super.sinUsuario(idRol, descripcion);
 
+  Geriatra.empty() : super.empty();
   //Funciones
   @override
   bool esGeriatra() {
