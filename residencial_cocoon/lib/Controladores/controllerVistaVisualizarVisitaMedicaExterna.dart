@@ -1,4 +1,3 @@
-import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/visitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarVisitaMedicaExterna.dart';
