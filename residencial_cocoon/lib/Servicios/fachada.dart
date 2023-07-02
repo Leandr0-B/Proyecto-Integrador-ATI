@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
@@ -142,5 +143,14 @@ class Fachada {
 
   Future<int?> obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioCequeoMedico?.obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<List<ChequeoMedico>?> obtenerChequeosMedicosPaginadosConFiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioCequeoMedico?.obtenerChequeosMedicosPaginadosConFiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioCequeoMedico?.obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 }

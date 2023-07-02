@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/visitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -33,5 +34,22 @@ class ServicioCequeoMedico {
         paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
     List<dynamic> jsonList = jsonDecode(visitasMedicasExternas);
     return VisitaMedicaExterna.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String cantidadTotal = await APIService.obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(
+        fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
+  }
+
+  Future<List<ChequeoMedico>?> obtenerChequeosMedicosPaginadosConFiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String cheuqueosMedicos = await APIService.obtenerChequeosMedicosPaginadosConFiltros(
+        paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList = jsonDecode(cheuqueosMedicos);
+    List<ChequeoMedico> test = ChequeoMedico.listaVistaPrevia(jsonList);
+    print("TEST ${test}");
+    return ChequeoMedico.listaVistaPrevia(jsonList);
   }
 }

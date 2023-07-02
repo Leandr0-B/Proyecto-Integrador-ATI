@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarVisitaMedicaExterna.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/visitaMedicaExterna.dart';
-import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarVisitaMedicaExterna.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarChequeoMedico.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
+import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarChequeoMedico.dart';
 
-class VistaVisualizarVisitaMedicaExterna extends StatefulWidget {
-  VistaVisualizarVisitaMedicaExterna();
+class VistaVisualizarChequeoMedico extends StatefulWidget {
+  VistaVisualizarChequeoMedico();
 
   @override
-  _VistaVisualizarVisitaMedicaExternaState createState() => _VistaVisualizarVisitaMedicaExternaState();
+  _VistaVisualizarChequeoMedicoState createState() => _VistaVisualizarChequeoMedicoState();
 }
 
 //Get set
 
-class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisitaMedicaExterna> implements IvistaVisualizarVisitaMedicaExterna {
-  Future<List<VisitaMedicaExterna>> _visitasMedicasExternas = Future.value([]);
-  ControllerVistaVisualizarVisitaMedicaExterna _controller = ControllerVistaVisualizarVisitaMedicaExterna.empty();
+class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMedico> implements IvistaVisualizarChequeoMedico {
+  Future<List<ChequeoMedico>> _chequeosMedicos = Future.value([]);
+  ControllerVistaVisualizarChequeoMedico _controller = ControllerVistaVisualizarChequeoMedico.empty();
 
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
@@ -61,8 +61,8 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaVisualizarVisitaMedicaExterna(this);
-    obtenerVisitaMedicaExternaPaginadasConfiltros();
+    _controller = ControllerVistaVisualizarChequeoMedico(this);
+    obtenerChequeosMedicosPaginadosConfiltros();
   }
 
   @override
@@ -70,7 +70,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Visitas Medicas Externas',
+          'Visualizar Chequeos Médicos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -154,7 +154,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerVisitaMedicaExternaPaginadasBotonFiltrar();
+                  obtenerChequeosMedicosPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -163,18 +163,18 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                 onPressed: () {
                   setState(() {
                     limpiarFiltros();
-                    obtenerVisitaMedicaExternaPaginadas();
+                    obtenerChequeosMedicosPaginados();
                   });
                 },
-                child: const Text('Mostrar Todas'),
+                child: const Text('Mostrar Todos'),
               ),
             ],
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<VisitaMedicaExterna>>(
-            future: _visitasMedicasExternas,
-            builder: (BuildContext context, AsyncSnapshot<List<VisitaMedicaExterna>> snapshot) {
+          child: FutureBuilder<List<ChequeoMedico>>(
+            future: _chequeosMedicos,
+            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -188,7 +188,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Visitas Medicas Externas',
+                            'Aún no hay Chequeos Médicos',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -204,10 +204,10 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      VisitaMedicaExterna visitaMedicaExterna = snapshot.data![index];
+                      ChequeoMedico chequeoMedico = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(visitaMedicaExterna);
+                          mostrarPopUp(chequeoMedico);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -230,7 +230,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -238,17 +238,23 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${visitaMedicaExterna.descripcion}',
+                                      'Descripcion : ${chequeoMedico.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    if (chequeoMedico.controles.isNotEmpty) ...[
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
+                                        style: const TextStyle(fontSize: 16.0),
+                                      ),
+                                    ],
                                     Text(
-                                      'Fecha : ${visitaMedicaExterna.fecha}',
+                                      'Fecha : ${chequeoMedico.imprimirFecha()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
+                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -286,7 +292,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
+                                        obtenerChequeosMedicosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -298,7 +304,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
+                                        obtenerChequeosMedicosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -378,7 +384,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerVisitaMedicaExternaPaginadasBotonFiltrar();
+                  obtenerChequeosMedicosPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -386,18 +392,18 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    obtenerVisitaMedicaExternaPaginadas();
+                    obtenerChequeosMedicosPaginados();
                   });
                 },
-                child: const Text('Mostrar Todas'),
+                child: const Text('Mostrar Todos'),
               ),
             ],
           ),
         ],
         Expanded(
-          child: FutureBuilder<List<VisitaMedicaExterna>>(
-            future: _visitasMedicasExternas,
-            builder: (BuildContext context, AsyncSnapshot<List<VisitaMedicaExterna>> snapshot) {
+          child: FutureBuilder<List<ChequeoMedico>>(
+            future: _chequeosMedicos,
+            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -429,10 +435,10 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      VisitaMedicaExterna visitaMedicaExterna = snapshot.data![index];
+                      ChequeoMedico chequeoMedico = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(visitaMedicaExterna);
+                          mostrarPopUp(chequeoMedico);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -455,7 +461,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -463,17 +469,23 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${visitaMedicaExterna.descripcion}',
+                                      'Descripcion : ${chequeoMedico.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    if (chequeoMedico.controles.isNotEmpty) ...[
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
+                                        style: const TextStyle(fontSize: 16.0),
+                                      ),
+                                    ],
                                     Text(
-                                      'Fecha : ${visitaMedicaExterna.fecha}',
+                                      'Fecha : ${chequeoMedico.imprimirFecha()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
+                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -511,7 +523,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
+                                        obtenerChequeosMedicosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -523,7 +535,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerVisitaMedicaExternaPaginadasConfiltros();
+                                        obtenerChequeosMedicosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -539,7 +551,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   }
 
   @override
-  void mostrarPopUp(VisitaMedicaExterna visitaMedicaExterna) {
+  void mostrarPopUp(ChequeoMedico chequeoMedico) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -554,7 +566,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -562,28 +574,24 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Descripcion : ${visitaMedicaExterna.descripcion}',
+                'Descripcion : ${chequeoMedico.descripcion}',
                 style: const TextStyle(fontSize: 16.0),
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Fecha : ${visitaMedicaExterna.fecha}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 20.0),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cerrar'),
+              if (chequeoMedico.controles.isNotEmpty) ...[
+                const SizedBox(height: 8.0),
+                Text(
+                  'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
+                  style: const TextStyle(fontSize: 16.0),
                 ),
+              ],
+              Text(
+                'Fecha : ${chequeoMedico.imprimirFecha()}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
+                style: const TextStyle(fontSize: 14.0),
               ),
             ],
           ),
@@ -599,29 +607,28 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   }
 
   @override
-  void obtenerVisitaMedicaExternaPaginadasBotonFiltrar() {
+  void obtenerChequeosMedicosPaginadosBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
-      obtenerVisitaMedicaExternaPaginadasConfiltros();
+      obtenerChequeosMedicosPaginadosConfiltros();
     }
   }
 
   @override
-  void obtenerVisitaMedicaExternaPaginadasConfiltros() {
-    _visitasMedicasExternas =
-        _controller.obtenerVisitasMedicasExternasPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+  void obtenerChequeosMedicosPaginadosConfiltros() {
+    _chequeosMedicos = _controller.obtenerChequeosMedicosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
   @override
-  void obtenerVisitaMedicaExternaPaginadas() {
+  void obtenerChequeosMedicosPaginados() {
     limpiarFiltros();
-    obtenerVisitaMedicaExternaPaginadasConfiltros();
+    obtenerChequeosMedicosPaginadosConfiltros();
   }
 
   @override

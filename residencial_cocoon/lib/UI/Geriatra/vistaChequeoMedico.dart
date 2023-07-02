@@ -11,8 +11,7 @@ class VistaChequeoMedico extends StatefulWidget {
   State<VistaChequeoMedico> createState() => _VistaChequeoMedicoState();
 }
 
-class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
-    implements IvistaChequeoMedico {
+class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements IvistaChequeoMedico {
   DateTime? fecha;
   final _formKey = GlobalKey<FormState>();
   String descripcion = '';
@@ -23,8 +22,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   bool residentesVisible = false;
   List<Control?> selectedControles = [];
   Control? selectedControl;
-  ControllerVistaChequeoMedico controller =
-      ControllerVistaChequeoMedico.empty();
+  ControllerVistaChequeoMedico controller = ControllerVistaChequeoMedico.empty();
   String valor = '';
   bool agregarControles = false;
 
@@ -58,8 +56,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: listaSucursales(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
@@ -95,8 +92,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Usuario>?>(
                           future: listaResidentes(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Usuario>?> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<List<Usuario>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Usuario> residentes = snapshot.data!;
                               return DropdownButton<Usuario>(
@@ -109,9 +105,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre +
-                                          ' | ' +
-                                          residente.ci),
+                                      child: Text(residente.nombre + ' | ' + residente.ci),
                                     );
                                   }),
                                 ],
@@ -143,9 +137,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      fecha != null
-                          ? DateFormat('dd/MM/yyyy').format(fecha!)
-                          : 'Seleccione una fecha',
+                      fecha != null ? DateFormat('dd/MM/yyyy').format(fecha!) : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -191,16 +183,14 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Control>?>(
                           future: listaControles(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Control>?> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<List<Control>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Control> controles = snapshot.data!;
                               return DropdownButton<Control>(
                                 value: selectedControl,
                                 items: [
                                   DropdownMenuItem<Control>(
-                                    value:
-                                        null, // Valor predeterminado cuando no se ha seleccionado ningún control
+                                    value: null, // Valor predeterminado cuando no se ha seleccionado ningún control
                                     child: Text("Seleccione control"),
                                   ),
                                   ...controles.map((control) {
@@ -238,8 +228,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                         ),
                       ),
                       SizedBox(height: 10),
-                      if (selectedControles != null &&
-                          selectedControles!.isNotEmpty)
+                      if (selectedControles != null && selectedControles!.isNotEmpty)
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text("Lista de controles"),
@@ -344,8 +333,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
 
   @override
   Future<void> altaChequeoMedico() async {
-    await controller.altaChequeoMedico(selectedSucursal, selectedResidente,
-        selectedControles, fecha, descripcion);
+    await controller.altaChequeoMedico(selectedSucursal, selectedResidente, selectedControles, fecha, descripcion);
   }
 
   @override

@@ -5,7 +5,6 @@ import 'package:residencial_cocoon/UI/Inicio/vistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
-import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
