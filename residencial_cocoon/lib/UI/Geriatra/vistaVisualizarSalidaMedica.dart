@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarSalidaMedica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarSalidaMedica.dart';
 
 class VistaVisualizarSalidaMedica extends StatefulWidget {
@@ -24,9 +26,9 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   DateTime? _fechaDesde;
   DateTime? _fechaHasta;
   String? _palabraClave;
-  String? _ciResidente;
-
   bool _filtroExpandido = false;
+  Usuario? usuario = Fachada.getInstancia()?.getUsuario();
+  String? _ciResidente;
 
   Future<void> selectFechaDesde(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -62,6 +64,9 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   void initState() {
     super.initState();
     _controller = ControllerVistaVisualizarSalidaMedica(this);
+    if (usuario!.esResidente() && !usuario!.esAdministrador()) {
+      _ciResidente = usuario?.ci;
+    }
     obtenerSalidasMedicasPaginadasConfiltros();
   }
 
@@ -125,19 +130,21 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                 ),
               ),
               const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Ci Residente',
+              if (!usuario!.esResidente() || usuario!.esAdministrador()) ...[
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Ci Residente',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _ciResidente = value;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      _ciResidente = value;
-                    });
-                  },
                 ),
-              ),
-              const SizedBox(width: 8),
+                const SizedBox(width: 8),
+              ],
               Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
@@ -355,17 +362,19 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
             ),
           ),
           const SizedBox(height: 8),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Ci Residente',
+          if (!usuario!.esResidente() || usuario!.esAdministrador()) ...[
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Ci Residente',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _ciResidente = value;
+                });
+              },
             ),
-            onChanged: (value) {
-              setState(() {
-                _ciResidente = value;
-              });
-            },
-          ),
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
+          ],
           TextFormField(
             decoration: const InputDecoration(
               labelText: 'Palabra clave',
@@ -641,7 +650,12 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
-    _ciResidente = null;
+
+    if (usuario!.esResidente() && !usuario!.esAdministrador()) {
+      _ciResidente = usuario?.ci;
+    } else {
+      _ciResidente = null;
+    }
     setState(() {});
   }
 }
