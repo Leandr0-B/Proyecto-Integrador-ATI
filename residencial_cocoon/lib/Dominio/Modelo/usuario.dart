@@ -209,6 +209,10 @@ class Usuario {
     return resultado;
   }
 
+  bool esAdministrador() {
+    return administrador == 1;
+  }
+
   void agregarRol(Rol rol) {
     rol.usuario = this;
     _roles.add(rol);

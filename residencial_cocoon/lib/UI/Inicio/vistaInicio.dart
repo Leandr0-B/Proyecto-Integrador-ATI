@@ -256,33 +256,44 @@ class MyDrawerList extends StatelessWidget {
               child: const SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
-            if (usuario?.administrador == 1) ...[
+            if (usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
                 title: const Text("Usuarios", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(2, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
-                  menuItem(3, "Alta de Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
-                  menuItem(4, "Alta de Residente", Icons.person_add, DrawerSections.altaResidente),
+                  menuItem(20, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
+                  menuItem(21, "Alta de Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
+                  menuItem(22, "Alta de Residente", Icons.person_add, DrawerSections.altaResidente),
                 ],
               ),
             ],
-            if (usuario!.esGeriatra() || usuario?.administrador == 1) ...[
+            if (usuario!.esGeriatra() || usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(6, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
-                  menuItem(7, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
-                  menuItem(8, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
-                  menuItem(9, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
-                  menuItem(10, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
-                  menuItem(10, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                  menuItem(41, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
+                  menuItem(42, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
+                  menuItem(43, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
+                  menuItem(44, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
+                  menuItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
+                  menuItem(46, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
                 ],
               ),
             ],
-            menuItem(5, "Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
-            menuItem(99, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
+            if (usuario!.esResidente() || usuario!.esAdministrador()) ...[
+              ExpansionTile(
+                leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
+                title: const Text("Residente", style: TextStyle(color: Colors.black, fontSize: 16)),
+                children: [
+                  menuItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
+                  menuItem(62, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
+                  menuItem(63, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                ],
+              ),
+            ],
+            menuItem(99, "Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
+            menuItem(999, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
           ],
         ),
       ),
