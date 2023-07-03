@@ -14,11 +14,20 @@ void main() async {
   final localStorage = html.window.localStorage;
   final jsonString = localStorage['usuario'];
   if (jsonString != null) {
-    isLoggedIn = true;
-    final jsonData = json.decode(jsonString);
-    String tokenUsuario = jsonData['authToken'];
-    usuario = await Fachada.getInstancia()?.obtenerUsuarioToken(tokenUsuario);
-    Fachada.getInstancia()?.setUsuario(usuario);
+    try {
+      final jsonData = json.decode(jsonString);
+      String tokenUsuario = jsonData['authToken'];
+      usuario = await Fachada.getInstancia()?.obtenerUsuarioToken(tokenUsuario);
+      isLoggedIn = true;
+      Fachada.getInstancia()?.setUsuario(usuario);
+    } on Exception catch (ex) {
+      // se borran la informacion de la local storage para que el usuario se vuelva a loguear
+      isLoggedIn = false;
+
+      // cerrar sesion
+      html.window.localStorage.remove('usuario');
+      Fachada.getInstancia()?.setUsuario(null);
+    }
   }
 
   String initialRoute = isLoggedIn ? VistaInicio.id : VistaLogin.id;

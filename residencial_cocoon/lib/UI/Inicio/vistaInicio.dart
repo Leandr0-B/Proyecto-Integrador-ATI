@@ -18,6 +18,8 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
 import 'dart:html' as html;
 
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+
 class VistaInicio extends StatefulWidget {
   static String id = 'inicio';
 
@@ -48,12 +50,14 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
     // actualizar la campanita
     WidgetsBinding.instance?.addObserver(this);
     html.document.onVisibilityChange.listen((event) {
-      setState(() {
-        _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
-      });
-      if (_isPageVisible) {
-        obtenerCantidadNotificacionesSinLeer();
-      } else {}
+      if (mounted) {
+        setState(() {
+          _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
+        });
+        if (_isPageVisible) {
+          obtenerCantidadNotificacionesSinLeer();
+        }
+      }
     });
   }
 
@@ -222,13 +226,17 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
     restarEnUnoNotificacionesSinLeer();
   }
 
+  // @override
+  // void cerrarSesion() {
+  //   _controller.cerrarSesion();
+  //   Navigator.pushReplacementNamed(
+  //     context,
+  //     VistaLogin.id,
+  //   );
+  // }
   @override
   void cerrarSesion() {
-    _controller.cerrarSesion();
-    Navigator.pushReplacementNamed(
-      context,
-      VistaLogin.id,
-    );
+    Utilidades.cerrarSesion(context);
   }
 }
 
@@ -283,7 +291,7 @@ class MyDrawerList extends StatelessWidget {
             ],
             if (usuario!.esResidente() || usuario!.esAdministrador()) ...[
               ExpansionTile(
-                leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
+                leading: const Icon(Icons.face_4, size: 20, color: Colors.black),
                 title: const Text("Residente", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),

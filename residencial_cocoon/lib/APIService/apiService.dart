@@ -12,7 +12,7 @@ import 'package:universal_html/html.dart';
 
 class APIService {
   static String errorUsuarioClave = "Usuario o Contrseña incorrectos";
-  static String errorObtenerToken = "Ha ocurrido un error al inciar Sesión";
+  static String errorObtenerToken = "Ha ocurrido un error intenta nuevamente";
 
   static Future<String> fetchAuth(String ci, String password) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
@@ -29,7 +29,7 @@ class APIService {
       final responseData = jsonDecode(response.body);
       final token = responseData['token'] as String;
       return fetchUserInfo(token);
-    } else if (response.statusCode == 401) {
+    } else if (response.statusCode == 403) {
       throw LoginException(errorUsuarioClave);
     } else {
       throw Exception(errorObtenerToken);
