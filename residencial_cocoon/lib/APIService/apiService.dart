@@ -215,7 +215,7 @@ class APIService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
+      throw Exception("ha ocurrido un error al actualizar el token de notificaciones. ${response.reasonPhrase}");
     }
   }
 

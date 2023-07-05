@@ -41,6 +41,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
     super.initState();
     _controller = ControllerVistaInicio(this);
     _usuario = _controller.obtenerUsuario();
+    print('usuario initstate inicio ${_usuario.toString()}');
     _controller.inicializarFirebase(_usuario);
     _controller.escucharNotificacionEnPrimerPlano();
     obtenerCantidadNotificacionesSinLeer();

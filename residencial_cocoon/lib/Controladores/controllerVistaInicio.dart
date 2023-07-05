@@ -32,7 +32,7 @@ class ControllerVistaInicio {
       sound: true,
     )
         .then((settings) {
-      if (settings.authorizationStatus == AuthorizationStatus.authorized && token == null) {
+      if (settings.authorizationStatus == AuthorizationStatus.authorized && token == null && usuario != null) {
         obtenerTokenFirebase(usuario);
       }
     }).catchError((error) {
