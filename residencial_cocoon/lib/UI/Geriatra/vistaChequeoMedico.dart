@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaChequeoMedico.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaChequeoMedico extends StatefulWidget {
   @override
@@ -282,7 +283,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                             _formKey.currentState!.save();
                             _agregarControl(selectedControl, valor);
                           } else {
-                            mostrarMensaje("Tiene que ingresar un valor.");
+                            mostrarMensajeError("Tiene que ingresar un valor.");
                           }
                         },
                       ),
@@ -348,8 +349,18 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
@@ -371,5 +382,10 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
   @override
   Future<List<Control>?> listaControles() async {
     return await controller.listaControles();
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

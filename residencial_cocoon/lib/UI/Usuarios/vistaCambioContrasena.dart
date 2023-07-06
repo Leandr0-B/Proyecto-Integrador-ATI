@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaCambioContrasena.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaCambioContrasena extends StatefulWidget {
   @override
@@ -126,6 +127,15 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
     ));
   }
 
@@ -134,5 +144,10 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
     fieldAct.clear();
     fieldNuev.clear();
     fieldVerif.clear();
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

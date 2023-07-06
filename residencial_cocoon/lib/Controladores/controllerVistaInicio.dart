@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
@@ -17,7 +18,8 @@ class ControllerVistaInicio {
 
   //Funciones
   void inicializarFirebase(Usuario? usuario) async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
 
     final messaging = FirebaseMessaging.instance;
 
@@ -44,7 +46,8 @@ class ControllerVistaInicio {
 
   void obtenerTokenFirebase(Usuario? usuario) async {
     final messaging = FirebaseMessaging.instance;
-    const vapidKey = "BEFBbZpzZnDl-RhLiOFuppuuUb-bllW0g3skh2rzUwV2GeRpvyPxzCkibX7Wr7qz_xlE3wkCdR9cZWe4pCJszP8";
+    const vapidKey =
+        "BEFBbZpzZnDl-RhLiOFuppuuUb-bllW0g3skh2rzUwV2GeRpvyPxzCkibX7Wr7qz_xlE3wkCdR9cZWe4pCJszP8";
 
     try {
       token = await messaging.getToken(vapidKey: vapidKey);
@@ -52,6 +55,8 @@ class ControllerVistaInicio {
         usuario?.tokenNotificacion = token!;
         Fachada.getInstancia()?.actualizarTokenNotificaciones(token!);
       }
+    } on TokenException catch (e) {
+      _cerrarSesionToken(e.toString());
     } catch (error) {
       print('Error al obtener el token de Firebase: $error');
       // Manejar el error de solicitud del token de Firebase
@@ -60,7 +65,11 @@ class ControllerVistaInicio {
   }
 
   Future<int?> obtenerCantidadNotificacionesSinLeer() async {
-    return Fachada.getInstancia()?.cantidadNotifiacionesSinLeer();
+    try {
+      return Fachada.getInstancia()?.cantidadNotifiacionesSinLeer();
+    } on TokenException catch (e) {
+      _cerrarSesionToken(e.toString());
+    }
   }
 
   Usuario? obtenerUsuario() {
@@ -83,5 +92,10 @@ class ControllerVistaInicio {
 
   void eliminarTokenNotificaciones() async {
     return Fachada.getInstancia()?.eliminarTokenNotificaciones();
+  }
+
+  void _cerrarSesionToken(String mensaje) {
+    _vistaInicio?.mostrarMensajeError(mensaje);
+    _vistaInicio?.cerrarSesion();
   }
 }

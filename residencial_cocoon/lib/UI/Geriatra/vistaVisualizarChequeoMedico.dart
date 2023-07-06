@@ -6,19 +6,24 @@ import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarChequeoMedico.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaVisualizarChequeoMedico extends StatefulWidget {
   VistaVisualizarChequeoMedico();
 
   @override
-  _VistaVisualizarChequeoMedicoState createState() => _VistaVisualizarChequeoMedicoState();
+  _VistaVisualizarChequeoMedicoState createState() =>
+      _VistaVisualizarChequeoMedicoState();
 }
 
 //Get set
 
-class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMedico> implements IvistaVisualizarChequeoMedico {
+class _VistaVisualizarChequeoMedicoState
+    extends State<VistaVisualizarChequeoMedico>
+    implements IvistaVisualizarChequeoMedico {
   Future<List<ChequeoMedico>> _chequeosMedicos = Future.value([]);
-  ControllerVistaVisualizarChequeoMedico _controller = ControllerVistaVisualizarChequeoMedico.empty();
+  ControllerVistaVisualizarChequeoMedico _controller =
+      ControllerVistaVisualizarChequeoMedico.empty();
 
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
@@ -110,7 +115,9 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
+                      _fechaDesde != null
+                          ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
+                          : 'Fecha Desde',
                     ),
                   ),
                 ),
@@ -124,7 +131,9 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
+                      _fechaHasta != null
+                          ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
+                          : 'Fecha Hasta',
                     ),
                   ),
                 ),
@@ -181,7 +190,8 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
         Expanded(
           child: FutureBuilder<List<ChequeoMedico>>(
             future: _chequeosMedicos,
-            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<List<ChequeoMedico>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -208,7 +218,8 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                     padding: const EdgeInsets.all(16.0),
                     itemCount: snapshot.data!.length,
                     separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 16.0); // Espacio entre cada notificación
+                      return const SizedBox(
+                          height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
                       ChequeoMedico chequeoMedico = snapshot.data![index];
@@ -282,12 +293,15 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future:
+                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(
+                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ??
+                      0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -331,7 +345,9 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
       children: [
         ListTile(
           title: const Text('Filtros'),
-          trailing: _filtroExpandido ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.keyboard_arrow_down),
+          trailing: _filtroExpandido
+              ? const Icon(Icons.keyboard_arrow_up)
+              : const Icon(Icons.keyboard_arrow_down),
           onTap: () {
             setState(() {
               _filtroExpandido = !_filtroExpandido;
@@ -346,7 +362,9 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
+                _fechaDesde != null
+                    ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
+                    : 'Fecha Desde',
               ),
             ),
           ),
@@ -358,7 +376,9 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
+                _fechaHasta != null
+                    ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
+                    : 'Fecha Hasta',
               ),
             ),
           ),
@@ -412,7 +432,8 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
         Expanded(
           child: FutureBuilder<List<ChequeoMedico>>(
             future: _chequeosMedicos,
-            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<List<ChequeoMedico>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -515,12 +536,15 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future:
+                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(
+                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ??
+                      0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -568,7 +592,8 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
+          width:
+              MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,15 +636,28 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
   void obtenerChequeosMedicosPaginadosBotonFiltrar() {
-    if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
+    if (_fechaDesde != null &&
+        _fechaHasta != null &&
+        _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
-    } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
+    } else if (_fechaDesde == null && _fechaHasta != null ||
+        _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
@@ -629,8 +667,15 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
 
   @override
   void obtenerChequeosMedicosPaginadosConfiltros() {
-    _chequeosMedicos = _controller.obtenerChequeosMedicosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _chequeosMedicos = _controller.obtenerChequeosMedicosPaginadosConFiltros(
+        _paginaActual,
+        _elementosPorPagina,
+        _fechaDesde,
+        _fechaHasta,
+        _ciResidente,
+        _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina,
+        _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
@@ -652,5 +697,10 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
     } else {
       _ciResidente = null;
     }
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

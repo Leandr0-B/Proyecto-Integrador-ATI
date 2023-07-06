@@ -1,4 +1,5 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -15,20 +16,26 @@ class ControllerVistaAltaResidente {
 
   //Funciones
   Future<List<Sucursal>?> listaSucursales() async {
-    if (this._sucursales == null) {
-      this._sucursales = await Fachada.getInstancia()?.listaSucursales();
+    try {
+      if (this._sucursales == null) {
+        this._sucursales = await Fachada.getInstancia()?.listaSucursales();
+      }
+      return this._sucursales;
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
     }
-    return this._sucursales;
   }
 
   Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre,
       int? selectedSucursal) async {
     try {
-      if (!_controlAltaUsuario(familiares, ci)) {
-        _vistaAlta?.mostrarMensaje(
+      if (selectedSucursal == null) {
+        _vistaAlta?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
+      } else if (!_controlAltaUsuario(familiares, ci)) {
+        _vistaAlta?.mostrarMensajeError(
             "El documento identificador del residente tiene que ser distinto al de los familiares.");
       } else if (!_controlPrimario(familiares)) {
-        _vistaAlta?.mostrarMensaje(
+        _vistaAlta?.mostrarMensajeError(
             "La lista de familiares tiene que tener por lo menos un familiar primario.");
       } else {
         await Fachada.getInstancia()
@@ -37,8 +44,10 @@ class ControllerVistaAltaResidente {
     } on AltaUsuarioException catch (ex) {
       _vistaAlta?.mostrarMensaje(ex.mensaje);
       _vistaAlta?.limpiarDatos();
+    } on TokenException catch (ex) {
+      _cerrarSesion(ex.toString());
     } on Exception catch (ex) {
-      _vistaAlta?.mostrarMensaje(ex.toString());
+      _vistaAlta?.mostrarMensajeError(ex.toString());
     }
   }
 
@@ -66,12 +75,12 @@ class ControllerVistaAltaResidente {
 
   bool controlAltaFamiliar(Familiar familiar, List<Familiar> lista) {
     if (!familiar.esEmailValido()) {
-      _vistaAlta?.mostrarMensaje(
+      _vistaAlta?.mostrarMensajeError(
           "El email del familiar no tiene el formato correcto.");
       return false;
     }
     if (lista.contains(familiar)) {
-      _vistaAlta?.mostrarMensaje(
+      _vistaAlta?.mostrarMensajeError(
           "Ya hay un familiar con el documento identificador ingresado.");
       return false;
     }
@@ -87,5 +96,10 @@ class ControllerVistaAltaResidente {
     return lista == null ||
         lista!.isEmpty ||
         lista!.every((familiar) => familiar.contactoPrimario != 1);
+  }
+
+  void _cerrarSesion(String mensaje) {
+    _vistaAlta?.mostrarMensajeError(mensaje);
+    _vistaAlta?.cerrarSesion();
   }
 }

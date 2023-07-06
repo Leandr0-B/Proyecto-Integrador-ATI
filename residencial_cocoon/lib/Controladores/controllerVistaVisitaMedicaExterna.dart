@@ -1,3 +1,4 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
@@ -17,25 +18,25 @@ class ControllerVistaVisitaMedicaExterna {
 
   //Funciones
   Future<List<Usuario>?> listaResidentes(Sucursal? suc) async {
-    if (suc != null) {
-      if (suc != _selectedSucursal) {
-        _residentes = await Fachada.getInstancia()?.residentesSucursal(suc);
-        _selectedSucursal = suc;
-        return _residentes;
-      } else {
-        return _residentes;
+    try {
+      if (suc != null) {
+        if (suc != _selectedSucursal) {
+          _residentes = await Fachada.getInstancia()?.residentesSucursal(suc);
+          _selectedSucursal = suc;
+          return _residentes;
+        } else {
+          return _residentes;
+        }
       }
+      return [];
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
     }
-    return [];
   }
 
   List<Sucursal>? listaSucursales() {
-    try {
-      _sucursales ??= Fachada.getInstancia()?.getUsuario()?.sucursales;
-      return _sucursales;
-    } catch (e) {
-      vistaVisita?.mostrarMensaje(e.toString());
-    }
+    _sucursales ??= Fachada.getInstancia()?.getUsuario()?.sucursales;
+    return _sucursales;
   }
 
   Future<void> altaVisitaMedicaExt(Usuario? selectedResidente,
@@ -48,8 +49,10 @@ class ControllerVistaVisitaMedicaExterna {
     } on visitaMedicaExternaException catch (e) {
       vistaVisita?.mostrarMensaje(e.toString());
       vistaVisita?.limpiar();
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
     } on Exception catch (e) {
-      vistaVisita?.mostrarMensaje(e.toString());
+      vistaVisita?.mostrarMensajeError(e.toString());
     }
   }
 
@@ -63,12 +66,17 @@ class ControllerVistaVisitaMedicaExterna {
       return false;
     }
     if (selectedSucursal == null) {
-      vistaVisita?.mostrarMensaje("Tiene que seleccionar una sucursal.");
+      vistaVisita?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
       return false;
     } else if (residenteSeleccionado == null) {
-      vistaVisita?.mostrarMensaje("Tiene que seleccionar un residente.");
+      vistaVisita?.mostrarMensajeError("Tiene que seleccionar un residente.");
       return false;
     }
     return true;
+  }
+
+  void _cerrarSesion(String mensaje) {
+    vistaVisita?.mostrarMensajeError(mensaje);
+    vistaVisita?.cerrarSesion();
   }
 }
