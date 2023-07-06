@@ -5,13 +5,15 @@ import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaChequeoMedico.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaChequeoMedico extends StatefulWidget {
   @override
   State<VistaChequeoMedico> createState() => _VistaChequeoMedicoState();
 }
 
-class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements IvistaChequeoMedico {
+class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
+    implements IvistaChequeoMedico {
   DateTime? fecha;
   final _formKey = GlobalKey<FormState>();
   String descripcion = '';
@@ -22,7 +24,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
   bool residentesVisible = false;
   List<Control?> selectedControles = [];
   Control? selectedControl;
-  ControllerVistaChequeoMedico controller = ControllerVistaChequeoMedico.empty();
+  ControllerVistaChequeoMedico controller =
+      ControllerVistaChequeoMedico.empty();
   String valor = '';
   bool agregarControles = false;
 
@@ -56,7 +59,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: listaSucursales(),
-                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
@@ -92,7 +96,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Usuario>?>(
                           future: listaResidentes(),
-                          builder: (BuildContext context, AsyncSnapshot<List<Usuario>?> snapshot) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Usuario>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Usuario> residentes = snapshot.data!;
                               return DropdownButton<Usuario>(
@@ -105,7 +110,9 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + ' | ' + residente.ci),
+                                      child: Text(residente.nombre +
+                                          ' | ' +
+                                          residente.ci),
                                     );
                                   }),
                                 ],
@@ -137,7 +144,9 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      fecha != null ? DateFormat('dd/MM/yyyy').format(fecha!) : 'Seleccione una fecha',
+                      fecha != null
+                          ? DateFormat('dd/MM/yyyy').format(fecha!)
+                          : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -146,20 +155,30 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                   alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción del control:"),
                 ),
-                TextFormField(
-                  controller: fieldDescripcion,
-                  onSaved: (value) {
-                    descripcion = value!;
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Descripción del control',
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese una descripcion';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: fieldDescripcion,
+                    maxLines: null,
+                    onChanged: (value) {
+                      descripcion = value;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Descripción',
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12.0,
+                      ),
+                      border: InputBorder
+                          .none, // Elimina el borde predeterminado del TextFormField
+                    ),
+                  ),
                 ),
                 SizedBox(height: 10),
                 CheckboxListTile(
@@ -183,14 +202,16 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Control>?>(
                           future: listaControles(),
-                          builder: (BuildContext context, AsyncSnapshot<List<Control>?> snapshot) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Control>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Control> controles = snapshot.data!;
                               return DropdownButton<Control>(
                                 value: selectedControl,
                                 items: [
                                   DropdownMenuItem<Control>(
-                                    value: null, // Valor predeterminado cuando no se ha seleccionado ningún control
+                                    value:
+                                        null, // Valor predeterminado cuando no se ha seleccionado ningún control
                                     child: Text("Seleccione control"),
                                   ),
                                   ...controles.map((control) {
@@ -228,7 +249,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                         ),
                       ),
                       SizedBox(height: 10),
-                      if (selectedControles != null && selectedControles!.isNotEmpty)
+                      if (selectedControles != null &&
+                          selectedControles!.isNotEmpty)
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text("Lista de controles"),
@@ -261,7 +283,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                             _formKey.currentState!.save();
                             _agregarControl(selectedControl, valor);
                           } else {
-                            mostrarMensaje("Tiene que ingresar un valor.");
+                            mostrarMensajeError("Tiene que ingresar un valor.");
                           }
                         },
                       ),
@@ -327,13 +349,24 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
   Future<void> altaChequeoMedico() async {
-    await controller.altaChequeoMedico(selectedSucursal, selectedResidente, selectedControles, fecha, descripcion);
+    await controller.altaChequeoMedico(selectedSucursal, selectedResidente,
+        selectedControles, fecha, descripcion);
   }
 
   @override
@@ -349,5 +382,10 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
   @override
   Future<List<Control>?> listaControles() async {
     return await controller.listaControles();
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

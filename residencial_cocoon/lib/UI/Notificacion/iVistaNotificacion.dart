@@ -8,4 +8,5 @@ abstract class IVistaNotificacion {
   void marcarNotificacionComoLeida(Notificacion notificacion);
   void mostrarMensaje(String mensaje);
   void limpiarFiltros();
+  void cerrarSesion();
 }

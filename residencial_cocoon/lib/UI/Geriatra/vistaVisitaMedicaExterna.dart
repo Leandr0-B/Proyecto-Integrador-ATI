@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaVisitaMedicaExte
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisitaMedicaExterna.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaVisitaMedicaExterna extends StatefulWidget {
   @override
@@ -131,20 +132,30 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                   alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción:"),
                 ),
-                TextFormField(
-                  controller: fieldDescripcion,
-                  onSaved: (value) {
-                    descripcion = value!;
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Descripción',
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese una descripcion';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: fieldDescripcion,
+                    maxLines: null,
+                    onChanged: (value) {
+                      descripcion = value;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Descripción',
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12.0,
+                      ),
+                      border: InputBorder
+                          .none, // Elimina el borde predeterminado del TextFormField
+                    ),
+                  ),
                 ),
                 SizedBox(height: 10),
                 Align(
@@ -208,8 +219,18 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
@@ -227,5 +248,10 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
       selectedSucursal = null;
       residentesVisible = false;
     });
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

@@ -29,7 +29,9 @@ class VistaInicio extends StatefulWidget {
   _VistaInicioState createState() => _VistaInicioState();
 }
 
-class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver implements IVistaInicio, NotificacionActualizadaCallback {
+class _VistaInicioState extends State<VistaInicio>
+    with WidgetsBindingObserver
+    implements IVistaInicio, NotificacionActualizadaCallback {
   var currentPage = DrawerSections.inicio;
   Usuario? _usuario;
   ControllerVistaInicio _controller = ControllerVistaInicio.empty();
@@ -41,6 +43,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
     super.initState();
     _controller = ControllerVistaInicio(this);
     _usuario = _controller.obtenerUsuario();
+    print('usuario initstate inicio ${_usuario.toString()}');
     _controller.inicializarFirebase(_usuario);
     _controller.escucharNotificacionEnPrimerPlano();
     obtenerCantidadNotificacionesSinLeer();
@@ -52,7 +55,8 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
     html.document.onVisibilityChange.listen((event) {
       if (mounted) {
         setState(() {
-          _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
+          _isPageVisible = _isPageVisible =
+              html.document.hidden != null ? !html.document.hidden! : true;
         });
         if (_isPageVisible) {
           obtenerCantidadNotificacionesSinLeer();
@@ -68,7 +72,8 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       setState(() {
         _isPageVisible = true;
       });
-    } else if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
       setState(() {
         _isPageVisible = false;
       });
@@ -83,26 +88,31 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
 
   @override
   void obtenerCantidadNotificacionesSinLeer() {
-    _cantidadNotificaciones = _controller.obtenerCantidadNotificacionesSinLeer();
+    _cantidadNotificaciones =
+        _controller.obtenerCantidadNotificacionesSinLeer();
     setState(() {});
   }
 
   @override
   void aumentarEnUnoNotificacionesSinLeer() {
-    _cantidadNotificaciones = _cantidadNotificaciones.then((valor) => valor! + 1);
+    _cantidadNotificaciones =
+        _cantidadNotificaciones.then((valor) => valor! + 1);
     setState(() {});
   }
 
   @override
   void restarEnUnoNotificacionesSinLeer() {
-    _cantidadNotificaciones = _cantidadNotificaciones.then((valor) => valor! - 1);
+    _cantidadNotificaciones =
+        _cantidadNotificaciones.then((valor) => valor! - 1);
     setState(() {});
   }
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.yellow,
+    ));
   }
 
   void onPageSelected(DrawerSections page) {
@@ -195,7 +205,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
                         ),
                         child: Center(
                           child: Text(
-                            cantidadNotificaciones < 99 ? cantidadNotificaciones.toString() : "99+",
+                            cantidadNotificaciones < 99
+                                ? cantidadNotificaciones.toString()
+                                : "99+",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -217,7 +229,11 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
         ],
       ),
       body: container,
-      drawer: MyDrawerList(context: context, usuario: _usuario, onPageSelected: onPageSelected, cerrarSesion: cerrarSesion),
+      drawer: MyDrawerList(
+          context: context,
+          usuario: _usuario,
+          onPageSelected: onPageSelected,
+          cerrarSesion: cerrarSesion),
     );
   }
 
@@ -236,7 +252,16 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
   // }
   @override
   void cerrarSesion() {
+    _controller.eliminarTokenNotificaciones();
     Utilidades.cerrarSesion(context);
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 }
 
@@ -246,7 +271,12 @@ class MyDrawerList extends StatelessWidget {
   final ValueChanged<DrawerSections> onPageSelected;
   final Function cerrarSesion;
 
-  const MyDrawerList({super.key, required this.context, required this.usuario, required this.onPageSelected, required this.cerrarSesion});
+  const MyDrawerList(
+      {super.key,
+      required this.context,
+      required this.usuario,
+      required this.onPageSelected,
+      required this.cerrarSesion});
 
   @override
   Widget build(BuildContext context) {
@@ -266,42 +296,80 @@ class MyDrawerList extends StatelessWidget {
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
             if (usuario!.esAdministrador()) ...[
               ExpansionTile(
-                leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
-                title: const Text("Usuarios", style: TextStyle(color: Colors.black, fontSize: 16)),
+                leading: const Icon(Icons.people_alt_outlined,
+                    size: 20, color: Colors.black),
+                title: const Text("Usuarios",
+                    style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(20, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
-                  menuItem(21, "Alta de Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
-                  menuItem(22, "Alta de Residente", Icons.person_add, DrawerSections.altaResidente),
+                  menuItem(20, "Lista de Usuarios", Icons.list,
+                      DrawerSections.listaUsuarios),
+                  menuItem(21, "Alta de Funcionario", Icons.person_add,
+                      DrawerSections.altaFuncionario),
+                  menuItem(22, "Alta de Residente", Icons.person_add,
+                      DrawerSections.altaResidente),
                 ],
               ),
             ],
             if (usuario!.esGeriatra() || usuario!.esAdministrador()) ...[
               ExpansionTile(
-                leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
-                title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
+                leading: const Icon(Icons.badge_sharp,
+                    size: 20, color: Colors.black),
+                title: const Text("Geriatra",
+                    style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(41, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
-                  menuItem(42, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
-                  menuItem(43, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
-                  menuItem(44, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
-                  menuItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
-                  menuItem(46, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                  menuItem(
+                      41,
+                      "Registrar Salida Medica",
+                      Icons.emoji_transportation_outlined,
+                      DrawerSections.salidaMedica),
+                  menuItem(
+                      42,
+                      "Visualizar Salidas Medicas",
+                      Icons.emoji_transportation_outlined,
+                      DrawerSections.visualizarSalidaMedica),
+                  menuItem(
+                      43,
+                      "Registrar Visita Medica Externa",
+                      Icons.medical_services_sharp,
+                      DrawerSections.visitaMedica),
+                  menuItem(
+                      44,
+                      "Visualizar Visitas Medicas Externas",
+                      Icons.medical_services_sharp,
+                      DrawerSections.visualizarVisitaMedica),
+                  menuItem(45, "Registrar Chequeo Medico", Icons.fact_check,
+                      DrawerSections.chequeoMedico),
+                  menuItem(46, "Visualizar Chequeos Medicos", Icons.fact_check,
+                      DrawerSections.visualizarChequeoMedico),
                 ],
               ),
             ],
             if (usuario!.esResidente() || usuario!.esAdministrador()) ...[
               ExpansionTile(
-                leading: const Icon(Icons.face_4, size: 20, color: Colors.black),
-                title: const Text("Residente", style: TextStyle(color: Colors.black, fontSize: 16)),
+                leading:
+                    const Icon(Icons.face_4, size: 20, color: Colors.black),
+                title: const Text("Residente",
+                    style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
-                  menuItem(62, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
-                  menuItem(63, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                  menuItem(
+                      61,
+                      "Visualizar Salidas Medicas",
+                      Icons.emoji_transportation_outlined,
+                      DrawerSections.visualizarSalidaMedica),
+                  menuItem(
+                      62,
+                      "Visualizar Visitas Medicas Externas",
+                      Icons.medical_services_sharp,
+                      DrawerSections.visualizarVisitaMedica),
+                  menuItem(63, "Visualizar Chequeos Medicos", Icons.fact_check,
+                      DrawerSections.visualizarChequeoMedico),
                 ],
               ),
             ],
-            menuItem(99, "Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
-            menuItem(999, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
+            menuItem(99, "Cambio de contraseña", Icons.password,
+                DrawerSections.cambioContrasena),
+            menuItem(
+                999, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
           ],
         ),
       ),
