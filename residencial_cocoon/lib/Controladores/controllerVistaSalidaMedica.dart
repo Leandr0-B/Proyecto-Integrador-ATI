@@ -45,8 +45,8 @@ class ControllerVistaSalidaMedica {
       DateTime? fechaHasta,
       Sucursal? selectedSucursal) async {
     try {
-      if (_controles(
-          fechaDesde, fechaHasta, selectedSucursal, selectedResidente)) {
+      if (_controles(fechaDesde, fechaHasta, selectedSucursal,
+          selectedResidente, descripcion)) {
         await Fachada.getInstancia()?.altaSalidaMedica(
             selectedResidente, descripcion, fechaDesde, fechaHasta);
       }
@@ -58,9 +58,16 @@ class ControllerVistaSalidaMedica {
     }
   }
 
-  bool _controles(DateTime? fechaDesde, DateTime? fechaHasta,
-      Sucursal? selectedSucursal, Usuario? residenteSeleccionado) {
-    if (fechaDesde == null) {
+  bool _controles(
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      Sucursal? selectedSucursal,
+      Usuario? residenteSeleccionado,
+      String descripcion) {
+    if (descripcion == null || descripcion == "") {
+      _vistaSalida?.mostrarMensaje("Tiene que ingresar una descripción.");
+      return false;
+    } else if (fechaDesde == null) {
       _vistaSalida?.mostrarMensaje("Tiene que seleccionar una fecha desde.");
       return false;
     } else if (fechaHasta == null) {

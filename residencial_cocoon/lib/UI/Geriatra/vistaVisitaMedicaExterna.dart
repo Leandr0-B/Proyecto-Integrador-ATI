@@ -131,20 +131,30 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                   alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción:"),
                 ),
-                TextFormField(
-                  controller: fieldDescripcion,
-                  onSaved: (value) {
-                    descripcion = value!;
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Descripción',
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese una descripcion';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: fieldDescripcion,
+                    maxLines: null,
+                    onChanged: (value) {
+                      descripcion = value;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Descripción',
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12.0,
+                      ),
+                      border: InputBorder
+                          .none, // Elimina el borde predeterminado del TextFormField
+                    ),
+                  ),
                 ),
                 SizedBox(height: 10),
                 Align(
