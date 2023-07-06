@@ -237,6 +237,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
   // }
   @override
   void cerrarSesion() {
+    _controller.eliminarTokenNotificaciones();
     Utilidades.cerrarSesion(context);
   }
 }

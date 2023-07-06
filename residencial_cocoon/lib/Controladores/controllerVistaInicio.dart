@@ -80,4 +80,8 @@ class ControllerVistaInicio {
     html.window.localStorage.remove('usuario');
     Fachada.getInstancia()?.setUsuario(null);
   }
+
+  void eliminarTokenNotificaciones() async {
+    return Fachada.getInstancia()?.eliminarTokenNotificaciones();
+  }
 }

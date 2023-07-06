@@ -83,4 +83,8 @@ class ServicioUsuario {
   Future<void> actualizarTokenNotificaciones(String notificationToken) async {
     await APIService.actualizarTokenNotificaciones(notificationToken, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
+
+  Future<void> eliminarTokenNotificaciones() async {
+    await APIService.eliminarTokenNotificaciones(Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
 }
