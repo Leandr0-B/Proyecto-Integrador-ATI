@@ -59,10 +59,10 @@ class ControllerVistaVisitaMedicaExterna {
   bool _controles(DateTime? fecha, Sucursal? selectedSucursal,
       Usuario? residenteSeleccionado, String descripcion) {
     if (descripcion == null || descripcion == "") {
-      vistaVisita?.mostrarMensaje("Tiene que ingresar una descripción.");
+      vistaVisita?.mostrarMensajeError("Tiene que ingresar una descripción.");
       return false;
     } else if (fecha == null) {
-      vistaVisita?.mostrarMensaje("Tiene que seleccionar la fecha.");
+      vistaVisita?.mostrarMensajeError("Tiene que seleccionar la fecha.");
       return false;
     }
     if (selectedSucursal == null) {

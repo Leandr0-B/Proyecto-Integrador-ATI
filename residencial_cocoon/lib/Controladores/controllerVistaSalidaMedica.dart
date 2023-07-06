@@ -68,10 +68,11 @@ class ControllerVistaSalidaMedica {
       Usuario? residenteSeleccionado,
       String descripcion) {
     if (descripcion == null || descripcion == "") {
-      _vistaSalida?.mostrarMensaje("Tiene que ingresar una descripción.");
+      _vistaSalida?.mostrarMensajeError("Tiene que ingresar una descripción.");
       return false;
     } else if (fechaDesde == null) {
-      _vistaSalida?.mostrarMensaje("Tiene que seleccionar una fecha desde.");
+      _vistaSalida
+          ?.mostrarMensajeError("Tiene que seleccionar una fecha desde.");
       return false;
     } else if (fechaHasta == null) {
       _vistaSalida

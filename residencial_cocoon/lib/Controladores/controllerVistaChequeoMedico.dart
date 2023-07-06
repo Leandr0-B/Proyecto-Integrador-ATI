@@ -77,10 +77,10 @@ class ControllerVistaChequeoMedico {
   bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal,
       Usuario? residenteSeleccionado, String descripcion) {
     if (descripcion == null || descripcion == "") {
-      _vistaChequeo?.mostrarMensaje("Tiene que ingresar una descripción.");
+      _vistaChequeo?.mostrarMensajeError("Tiene que ingresar una descripción.");
       return false;
     } else if (fecha == null) {
-      _vistaChequeo?.mostrarMensaje("Tiene que seleccionar la fecha.");
+      _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar la fecha.");
       return false;
     }
     if (selectedSucursal == null) {
