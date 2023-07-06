@@ -42,7 +42,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta de Residente',
+          'Registrar Residente',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
@@ -249,6 +249,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                           ),
                         ],
                       ),
+                      tileColor: familiar.contactoPrimario == 1
+                          ? Colors.yellow
+                          : null, // Resaltar el contacto primario con un color de fondo
                     );
                   },
                 ),
