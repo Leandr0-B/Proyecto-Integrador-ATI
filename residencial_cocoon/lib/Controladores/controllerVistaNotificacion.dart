@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Notificacion/iVistaNotificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
@@ -14,9 +15,13 @@ class ControllerVistaNotificacion {
   ControllerVistaNotificacion(this._vistaNotificacion);
 
   void marcarNotificacionComoLeida(Notificacion notificacion) {
-    if (notificacion.leida == false) {
-      Fachada.getInstancia()?.marcarNotificacionComoLeida(notificacion);
-      notificacion.marcarNotificacionComoLeida();
+    try {
+      if (notificacion.leida == false) {
+        Fachada.getInstancia()?.marcarNotificacionComoLeida(notificacion);
+        notificacion.marcarNotificacionComoLeida();
+      }
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
     }
   }
 
@@ -28,12 +33,35 @@ class ControllerVistaNotificacion {
     });
   }
 
-  Future<int> calcularTotalPaginas(itemsPerPage, DateTime? desde, DateTime? hasta, String? palabras) async {
-    int totalNotificaciones = await Fachada.getInstancia()?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(desde, hasta, palabras) ?? 0;
-    return (totalNotificaciones / itemsPerPage).ceil();
+  Future<int> calcularTotalPaginas(
+      itemsPerPage, DateTime? desde, DateTime? hasta, String? palabras) async {
+    try {
+      int totalNotificaciones = await Fachada.getInstancia()
+              ?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(
+                  desde, hasta, palabras) ??
+          0;
+      return (totalNotificaciones / itemsPerPage).ceil();
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+      return 0;
+    }
   }
 
-  Future<List<Notificacion>> obtenerNotificacionesPaginadasConFiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
-    return await Fachada.getInstancia()?.obtenerNotificacionesPaginadasConfiltros(page, limit, desde, hasta, palabras) ?? [];
+  Future<List<Notificacion>> obtenerNotificacionesPaginadasConFiltros(int page,
+      int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
+    try {
+      return await Fachada.getInstancia()
+              ?.obtenerNotificacionesPaginadasConfiltros(
+                  page, limit, desde, hasta, palabras) ??
+          [];
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+      return [];
+    }
+  }
+
+  void _cerrarSesion(String mensaje) {
+    _vistaNotificacion?.mostrarMensaje(mensaje);
+    _vistaNotificacion?.cerrarSesion();
   }
 }

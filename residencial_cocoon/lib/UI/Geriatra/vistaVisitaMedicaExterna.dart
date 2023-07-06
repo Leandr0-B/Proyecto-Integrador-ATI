@@ -4,6 +4,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaVisitaMedicaExte
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisitaMedicaExterna.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaVisitaMedicaExterna extends StatefulWidget {
   @override
@@ -208,8 +209,18 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
@@ -227,5 +238,10 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
       selectedSucursal = null;
       residentesVisible = false;
     });
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

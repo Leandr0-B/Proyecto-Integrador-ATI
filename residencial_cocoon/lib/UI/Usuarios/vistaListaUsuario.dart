@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaListaUsuario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaListaUsuario.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaListaUsuario extends StatefulWidget {
   @override
@@ -66,11 +67,25 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario>
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
     ));
   }
 
   @override
   Future<List<Usuario>> obtenerUsuarios() async {
     return await controller?.obtenerUsuarios() ?? [];
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }

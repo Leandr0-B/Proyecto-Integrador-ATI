@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaAltaResidente.da
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaResidente.dart';
+import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaAltaResidente extends StatefulWidget {
   @override
@@ -317,8 +318,18 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
 
   @override
   void mostrarMensaje(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  @override
+  void mostrarMensajeError(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
@@ -334,5 +345,10 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
       _agregarContactoPrimario = false;
       _familiares = [];
     });
+  }
+
+  @override
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
   }
 }
