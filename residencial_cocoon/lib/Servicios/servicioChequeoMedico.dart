@@ -48,8 +48,6 @@ class ServicioCequeoMedico {
     String cheuqueosMedicos = await APIService.obtenerChequeosMedicosPaginadosConFiltros(
         paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
     List<dynamic> jsonList = jsonDecode(cheuqueosMedicos);
-    List<ChequeoMedico> test = ChequeoMedico.listaVistaPrevia(jsonList);
-    print("TEST ${test}");
     return ChequeoMedico.listaVistaPrevia(jsonList);
   }
 }

@@ -32,7 +32,7 @@ class ControllerVistaInicio {
       sound: true,
     )
         .then((settings) {
-      if (settings.authorizationStatus == AuthorizationStatus.authorized && token == null) {
+      if (settings.authorizationStatus == AuthorizationStatus.authorized && token == null && usuario != null) {
         obtenerTokenFirebase(usuario);
       }
     }).catchError((error) {
@@ -79,5 +79,9 @@ class ControllerVistaInicio {
   void cerrarSesion() {
     html.window.localStorage.remove('usuario');
     Fachada.getInstancia()?.setUsuario(null);
+  }
+
+  void eliminarTokenNotificaciones() async {
+    return Fachada.getInstancia()?.eliminarTokenNotificaciones();
   }
 }

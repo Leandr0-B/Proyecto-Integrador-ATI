@@ -153,4 +153,8 @@ class Fachada {
   Future<int?> obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioCequeoMedico?.obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
+
+  void eliminarTokenNotificaciones() async {
+    return await _servicioUsuario?.eliminarTokenNotificaciones();
+  }
 }

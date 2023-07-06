@@ -215,7 +215,7 @@ class APIService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
+      throw Exception("ha ocurrido un error al actualizar el token de notificaciones. ${response.reasonPhrase}");
     }
   }
 
@@ -453,6 +453,19 @@ class APIService {
       return response.body;
     } else {
       throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<void> eliminarTokenNotificaciones(String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/eliminar-token');
+
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
     }
   }
 }
