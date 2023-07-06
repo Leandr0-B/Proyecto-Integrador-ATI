@@ -41,7 +41,7 @@ class ControllerVistaVisitaMedicaExterna {
   Future<void> altaVisitaMedicaExt(Usuario? selectedResidente,
       String descripcion, DateTime? fecha, Sucursal? selectedSucursal) async {
     try {
-      if (_controles(fecha, selectedSucursal, selectedResidente)) {
+      if (_controles(fecha, selectedSucursal, selectedResidente, descripcion)) {
         await Fachada.getInstancia()
             ?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
       }
@@ -54,8 +54,11 @@ class ControllerVistaVisitaMedicaExterna {
   }
 
   bool _controles(DateTime? fecha, Sucursal? selectedSucursal,
-      Usuario? residenteSeleccionado) {
-    if (fecha == null) {
+      Usuario? residenteSeleccionado, String descripcion) {
+    if (descripcion == null || descripcion == "") {
+      vistaVisita?.mostrarMensaje("Tiene que ingresar una descripción.");
+      return false;
+    } else if (fecha == null) {
       vistaVisita?.mostrarMensaje("Tiene que seleccionar la fecha.");
       return false;
     }

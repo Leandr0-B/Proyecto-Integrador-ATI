@@ -50,7 +50,8 @@ class ControllerVistaChequeoMedico {
       DateTime? fecha,
       String descripcion) async {
     try {
-      if (_controlesDatos(fecha, selectedSucursal, selectedResidente)) {
+      if (_controlesDatos(
+          fecha, selectedSucursal, selectedResidente, descripcion)) {
         await Fachada.getInstancia()?.altaChequeoMedico(
             selectedResidente, selectedControles, fecha, descripcion);
       }
@@ -63,8 +64,14 @@ class ControllerVistaChequeoMedico {
   }
 
   bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal,
-      Usuario? residenteSeleccionado) {
-    if (fecha == null) {
+      Usuario? residenteSeleccionado, String descripcion) {
+    if (descripcion == null || descripcion == "") {
+      _vistaChequeo?.mostrarMensaje("Tiene que ingresar una descripción.");
+      return false;
+    } else if (descripcion == null || descripcion == "") {
+      _vistaChequeo?.mostrarMensaje("Tiene que ingresar una descripción.");
+      return false;
+    } else if (fecha == null) {
       _vistaChequeo?.mostrarMensaje("Tiene que seleccionar la fecha.");
       return false;
     }

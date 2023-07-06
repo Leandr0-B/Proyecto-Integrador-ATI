@@ -10,7 +10,8 @@ class VistaSalidaMedica extends StatefulWidget {
   State<VistaSalidaMedica> createState() => _VistaSalidaMedicaState();
 }
 
-class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements IvistaSalidaMedica {
+class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
+    implements IvistaSalidaMedica {
   final _formKey = GlobalKey<FormState>();
   ControllerVistaSalidaMedica controller = ControllerVistaSalidaMedica.empty();
   Usuario? selectedResidente;
@@ -51,7 +52,8 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: listaSucursales(),
-                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
@@ -87,7 +89,8 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Usuario>?>(
                           future: listaResidentes(),
-                          builder: (BuildContext context, AsyncSnapshot<List<Usuario>?> snapshot) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Usuario>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Usuario> residentes = snapshot.data!;
                               return DropdownButton<Usuario>(
@@ -100,7 +103,9 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + ' | ' + residente.ci),
+                                      child: Text(residente.nombre +
+                                          ' | ' +
+                                          residente.ci),
                                     );
                                   }),
                                 ],
@@ -125,20 +130,30 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                   alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción:"),
                 ),
-                TextFormField(
-                  controller: fieldDescripcion,
-                  onSaved: (value) {
-                    descripcion = value!;
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Descripción',
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese una descripcion';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: fieldDescripcion,
+                    maxLines: null,
+                    onChanged: (value) {
+                      descripcion = value;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Descripción',
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12.0,
+                      ),
+                      border: InputBorder
+                          .none, // Elimina el borde predeterminado del TextFormField
+                    ),
+                  ),
                 ),
                 SizedBox(height: 10),
                 Align(
@@ -152,7 +167,9 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                       hintText: 'Fecha desde',
                     ),
                     child: Text(
-                      fechaDesde != null ? DateFormat('dd/MM/yyyy').format(fechaDesde!) : 'Seleccione una fecha',
+                      fechaDesde != null
+                          ? DateFormat('dd/MM/yyyy').format(fechaDesde!)
+                          : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -168,7 +185,9 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                       hintText: 'Fecha hasta',
                     ),
                     child: Text(
-                      fechaHasta != null ? DateFormat('dd/MM/yyyy').format(fechaHasta!) : 'Seleccione una fecha',
+                      fechaHasta != null
+                          ? DateFormat('dd/MM/yyyy').format(fechaHasta!)
+                          : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -236,7 +255,8 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
 
   @override
   Future<void> altaSalidaMedica() async {
-    await controller.altaSalidaMedica(selectedResidente, descripcion, fechaDesde, fechaHasta, selectedSucursal);
+    await controller.altaSalidaMedica(selectedResidente, descripcion,
+        fechaDesde, fechaHasta, selectedSucursal);
   }
 
   @override
