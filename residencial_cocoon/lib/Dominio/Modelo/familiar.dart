@@ -66,6 +66,15 @@ class Familiar {
     return regex.hasMatch(this._email);
   }
 
+  void capitalizeAll() {
+    _nombre = _capitalize(_nombre);
+    _apellido = _capitalize(_apellido);
+  }
+
+  String _capitalize(String text) {
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   //ToString
   @override
   String toString() {

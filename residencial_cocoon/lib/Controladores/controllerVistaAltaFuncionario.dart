@@ -40,6 +40,7 @@ class ControllerVistaAltaFuncionario {
 
   Future<void> altaUsuario(String ci, String nombre, int administrador,
       List<int> selectedRoles, List<int> selectedSucursales) async {
+    nombre = _capitalize(nombre);
     try {
       await Fachada.getInstancia()?.altaUsuario(
           ci, nombre, administrador, selectedRoles, selectedSucursales);
@@ -56,5 +57,9 @@ class ControllerVistaAltaFuncionario {
   void _cerrarSesion(String mensaje) {
     _vista?.mostrarMensajeError(mensaje);
     _vista?.cerrarSesion();
+  }
+
+  String _capitalize(String text) {
+    return text[0].toUpperCase() + text.substring(1);
   }
 }
