@@ -28,6 +28,7 @@ class ControllerVistaAltaResidente {
 
   Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre,
       int? selectedSucursal) async {
+    nombre = _capitalize(nombre);
     try {
       if (selectedSucursal == null) {
         _vistaAlta?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
@@ -84,7 +85,9 @@ class ControllerVistaAltaResidente {
           "Ya hay un familiar con el documento identificador ingresado.");
       return false;
     }
+    familiar.capitalizeAll();
     lista.add(familiar);
+    _vistaAlta?.limpiarDatosFamiliar();
     return true;
   }
 
@@ -101,5 +104,9 @@ class ControllerVistaAltaResidente {
   void _cerrarSesion(String mensaje) {
     _vistaAlta?.mostrarMensajeError(mensaje);
     _vistaAlta?.cerrarSesion();
+  }
+
+  String _capitalize(String text) {
+    return text[0].toUpperCase() + text.substring(1);
   }
 }

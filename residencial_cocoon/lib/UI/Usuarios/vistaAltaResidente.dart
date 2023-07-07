@@ -13,6 +13,7 @@ class VistaAltaResidente extends StatefulWidget {
 class _VistaAltaResidenteState extends State<VistaAltaResidente>
     implements IvistaAltaResidente {
   final _formKey = GlobalKey<FormState>();
+  final _familiarKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
   String _ciFamiliar = '';
@@ -43,7 +44,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta de Residente',
+          'Registrar Residente',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
@@ -129,92 +130,99 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                   alignment: Alignment.centerLeft,
                   child: Text("Familiares:"),
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Documento del familiar',
-                    hintText: 'Ingrese CI del Familiar',
-                  ),
-                  maxLength: 30,
-                  controller: ciFamiliar,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese CI del Familiar';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _ciFamiliar = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre del familiar',
-                    hintText: 'Ingrese Nombre del Familiar',
-                  ),
-                  maxLength: 100,
-                  controller: nombreFamiliar,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese Nombre del Familiar';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _nombreFamiliar = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Apellido del familiar',
-                    hintText: 'Ingrese Apellido del Familiar',
-                  ),
-                  maxLength: 100,
-                  controller: apellidoFamiliar,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese Apellido del Familiar';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _apellidoFamiliar = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Email del familiar',
-                    hintText:
-                        'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
-                  ),
-                  maxLength: 100,
-                  controller: emailFamiliar,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese Email del Familiar';
-                    }
+                Form(
+                  key: _familiarKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Documento del familiar',
+                          hintText: 'Ingrese CI del Familiar',
+                        ),
+                        maxLength: 30,
+                        controller: ciFamiliar,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese CI del Familiar';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _ciFamiliar = value!;
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Nombre del familiar',
+                          hintText: 'Ingrese Nombre del Familiar',
+                        ),
+                        maxLength: 100,
+                        controller: nombreFamiliar,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese Nombre del Familiar';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _nombreFamiliar = value!;
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Apellido del familiar',
+                          hintText: 'Ingrese Apellido del Familiar',
+                        ),
+                        maxLength: 100,
+                        controller: apellidoFamiliar,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese Apellido del Familiar';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _apellidoFamiliar = value!;
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Email del familiar',
+                          hintText:
+                              'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
+                        ),
+                        maxLength: 100,
+                        controller: emailFamiliar,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese Email del Familiar';
+                          }
 
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _emailFamiliar = value!;
-                  },
-                ),
-                if (_shouldShowContactoPrimarioCheckbox())
-                  CheckboxListTile(
-                    title: Text("Contacto primario"),
-                    value: _agregarContactoPrimario,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _agregarContactoPrimario = newValue!;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _emailFamiliar = value!;
+                        },
+                      ),
+                      if (_shouldShowContactoPrimarioCheckbox())
+                        CheckboxListTile(
+                          title: Text("Contacto primario"),
+                          value: _agregarContactoPrimario,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _agregarContactoPrimario = newValue!;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                    ],
                   ),
+                ),
                 ElevatedButton(
                   child: Text("Agregar familiar"),
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (_familiarKey.currentState!.validate()) {
+                      _familiarKey.currentState!.save();
                       _agregarFamiliar(
                         _ciFamiliar,
                         _nombreFamiliar,
@@ -242,13 +250,24 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                         children: [
                           Text(
                               '${familiar.nombre} ${familiar.apellido} ${familiar.ci}'),
-                          IconButton(
-                            icon: Icon(Icons.remove_circle),
-                            onPressed: () {
-                              _eliminarFamiliar(index);
-                            },
-                          ),
+                          if (familiar.contactoPrimario == 1)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Primario',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
                         ],
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: () {
+                          _eliminarFamiliar(index);
+                        },
                       ),
                     );
                   },
@@ -345,6 +364,14 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
       _agregarContactoPrimario = false;
       _familiares = [];
     });
+  }
+
+  @override
+  void limpiarDatosFamiliar() {
+    ciFamiliar.clear();
+    nombreFamiliar.clear();
+    apellidoFamiliar.clear();
+    emailFamiliar.clear();
   }
 
   @override
