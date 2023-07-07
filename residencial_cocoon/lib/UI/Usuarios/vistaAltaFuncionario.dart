@@ -34,7 +34,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta de Funcionario',
+          'Registrar Funcionario',
           style: TextStyle(color: Colors.black), // Cambia a tu color preferido.
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
@@ -88,90 +88,98 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                   onChanged: (newValue) {
                     setState(() {
                       _administrador = newValue! ? 1 : 0;
+                      selectedRoles = [];
+                      selectedSucursales = [];
                     });
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
-                SizedBox(height: 16.0),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Seleccione los roles:"),
-                ),
-                FutureBuilder<List<Rol>?>(
-                  future: getRoles(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Rol>?> snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: snapshot.data!
-                            .where((role) =>
-                                role.idRol !=
-                                3) // Esto excluirá el rol con id 3
-                            .map((role) => CheckboxListTile(
-                                  title: Text(role.descripcion),
-                                  value: selectedRoles.contains(role.idRol),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      if (newValue!) {
-                                        selectedRoles.add(role.idRol);
-                                      } else {
-                                        selectedRoles.remove(role.idRol);
-                                      }
-                                    });
-                                  },
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  contentPadding:
-                                      EdgeInsets.only(left: 16, right: 0),
-                                ))
-                            .toList(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
-                    return CircularProgressIndicator();
-                  },
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Seleccione las sucursales:"),
-                ),
-                FutureBuilder<List<Sucursal>?>(
-                  future: getSucursales(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Sucursal>?> snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: snapshot.data!
-                            .map((sucursal) => CheckboxListTile(
-                                  title: Text(sucursal.nombre),
-                                  value: selectedSucursales
-                                      .contains(sucursal.idSucursal),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      if (newValue!) {
-                                        selectedSucursales
-                                            .add(sucursal.idSucursal);
-                                      } else {
-                                        selectedSucursales
-                                            .remove(sucursal.idSucursal);
-                                      }
-                                    });
-                                  },
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  contentPadding:
-                                      EdgeInsets.only(left: 16, right: 0),
-                                ))
-                            .toList(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
-                    return CircularProgressIndicator();
-                  },
-                ),
+                if (_administrador == 0)
+                  Column(
+                    children: [
+                      SizedBox(height: 16.0),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Seleccione los roles:"),
+                      ),
+                      FutureBuilder<List<Rol>?>(
+                        future: getRoles(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Rol>?> snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              children: snapshot.data!
+                                  .where((role) =>
+                                      role.idRol !=
+                                      3) // Esto excluirá el rol con id 3
+                                  .map((role) => CheckboxListTile(
+                                        title: Text(role.descripcion),
+                                        value:
+                                            selectedRoles.contains(role.idRol),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            if (newValue!) {
+                                              selectedRoles.add(role.idRol);
+                                            } else {
+                                              selectedRoles.remove(role.idRol);
+                                            }
+                                          });
+                                        },
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        contentPadding:
+                                            EdgeInsets.only(left: 16, right: 0),
+                                      ))
+                                  .toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      ),
+                      SizedBox(height: 16.0),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Seleccione las sucursales:"),
+                      ),
+                      FutureBuilder<List<Sucursal>?>(
+                        future: getSucursales(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Sucursal>?> snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              children: snapshot.data!
+                                  .map((sucursal) => CheckboxListTile(
+                                        title: Text(sucursal.nombre),
+                                        value: selectedSucursales
+                                            .contains(sucursal.idSucursal),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            if (newValue!) {
+                                              selectedSucursales
+                                                  .add(sucursal.idSucursal);
+                                            } else {
+                                              selectedSucursales
+                                                  .remove(sucursal.idSucursal);
+                                            }
+                                          });
+                                        },
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        contentPadding:
+                                            EdgeInsets.only(left: 16, right: 0),
+                                      ))
+                                  .toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      ),
+                    ],
+                  ),
                 ElevatedButton(
                   child: Text("Crear funcionario"),
                   onPressed: () {

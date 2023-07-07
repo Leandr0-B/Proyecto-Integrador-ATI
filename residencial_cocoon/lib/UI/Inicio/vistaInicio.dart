@@ -303,9 +303,9 @@ class MyDrawerList extends StatelessWidget {
                 children: [
                   menuItem(20, "Lista de Usuarios", Icons.list,
                       DrawerSections.listaUsuarios),
-                  menuItem(21, "Alta de Funcionario", Icons.person_add,
+                  menuItem(21, "Registrar Funcionario", Icons.person_add,
                       DrawerSections.altaFuncionario),
-                  menuItem(22, "Alta de Residente", Icons.person_add,
+                  menuItem(22, "Registrar Residente", Icons.person_add,
                       DrawerSections.altaResidente),
                 ],
               ),
