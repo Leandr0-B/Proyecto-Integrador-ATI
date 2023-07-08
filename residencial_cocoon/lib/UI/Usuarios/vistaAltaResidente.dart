@@ -20,6 +20,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   String _nombreFamiliar = '';
   String _apellidoFamiliar = '';
   String _emailFamiliar = '';
+  String _telefono = '';
   int _contactoPrimarioFamiliar = 0;
   bool _agregarContactoPrimario = false;
   ControllerVistaAltaResidente controller =
@@ -32,6 +33,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   final nombreFamiliar = TextEditingController();
   final apellidoFamiliar = TextEditingController();
   final emailFamiliar = TextEditingController();
+  final telefonoFamiliar = TextEditingController();
 
   @override
   void initState() {
@@ -211,9 +213,36 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                           onChanged: (newValue) {
                             setState(() {
                               _agregarContactoPrimario = newValue!;
+                              telefonoFamiliar.clear();
                             });
                           },
                           controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                      if (_agregarContactoPrimario)
+                        Column(
+                          children: [
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Telefono familiar primario',
+                                hintText: 'Ingrese telefono',
+                              ),
+                              maxLength: 100,
+                              controller: telefonoFamiliar,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese el telefono.';
+                                }
+                                if (num.tryParse(value) == null) {
+                                  return 'Solo puede ingresar valores nueméricos.';
+                                }
+
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _telefono = value!;
+                              },
+                            ),
+                          ],
                         ),
                     ],
                   ),
@@ -299,12 +328,12 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     int _contactoPrimarioFamiliar,
   ) {
     Familiar familiar = Familiar(
-      _ciFamiliar,
-      _nombreFamiliar,
-      _apellidoFamiliar,
-      _emailFamiliar,
-      _agregarContactoPrimario ? 1 : 0,
-    );
+        _ciFamiliar,
+        _nombreFamiliar,
+        _apellidoFamiliar,
+        _emailFamiliar,
+        _agregarContactoPrimario ? 1 : 0,
+        _telefono);
 
     setState(() {
       bool resultado = controller.controlAltaFamiliar(familiar, _familiares);
