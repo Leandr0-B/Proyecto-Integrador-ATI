@@ -52,7 +52,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario>
                       ', Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")}';
                 }
                 return ListTile(
-                  title: Text(usuario.nombre ?? ""),
+                  title: Text((usuario.nombre + " " + usuario.apellido) ?? ""),
                   subtitle: Text(subtitleText),
                 );
               },

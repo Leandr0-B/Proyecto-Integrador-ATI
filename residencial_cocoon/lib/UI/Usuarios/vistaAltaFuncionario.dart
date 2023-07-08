@@ -15,6 +15,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
+  String _apellido = '';
   int _administrador = 0;
   List<int> selectedRoles = [];
   List<int> selectedSucursales = [];
@@ -22,6 +23,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
       ControllerVistaAltaFuncionario.empty();
   final fieldCi = TextEditingController();
   final fieldNombre = TextEditingController();
+  final fieldApellido = TextEditingController();
 
   @override
   void initState() {
@@ -73,12 +75,29 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese Nombre';
+                      return 'Por favor ingrese nombre';
                     }
                     return null;
                   },
                   onSaved: (value) {
                     _nombre = value!;
+                  },
+                ),
+                TextFormField(
+                  maxLength: 100,
+                  controller: fieldApellido,
+                  decoration: const InputDecoration(
+                    labelText: 'Apellido',
+                    hintText: 'Ingrese Apellido',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese apellido';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _apellido = value!;
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -186,7 +205,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       altaUsuarioFuncionario(_ci, _nombre, _administrador,
-                          selectedRoles, selectedSucursales);
+                          selectedRoles, selectedSucursales, _apellido);
                     }
                   },
                 ),
@@ -209,10 +228,15 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   }
 
   @override
-  Future<void> altaUsuarioFuncionario(String ci, String nombre,
-      int administrador, List<int> roles, List<int> sucursales) async {
+  Future<void> altaUsuarioFuncionario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> roles,
+      List<int> sucursales,
+      String apellido) async {
     await controller.altaUsuario(
-        ci, nombre, administrador, selectedRoles, selectedSucursales);
+        ci, nombre, administrador, selectedRoles, selectedSucursales, apellido);
   }
 
   @override
@@ -238,6 +262,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
       selectedSucursales = [];
       fieldCi.clear();
       fieldNombre.clear();
+      fieldApellido.clear();
     });
   }
 

@@ -38,12 +38,18 @@ class ControllerVistaAltaFuncionario {
     }
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {
+  Future<void> altaUsuario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> selectedRoles,
+      List<int> selectedSucursales,
+      String apellido) async {
     nombre = _capitalize(nombre);
+    apellido = _capitalize(apellido);
     try {
-      await Fachada.getInstancia()?.altaUsuario(
-          ci, nombre, administrador, selectedRoles, selectedSucursales);
+      await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador,
+          selectedRoles, selectedSucursales, apellido);
     } on AltaUsuarioException catch (ex) {
       _vista?.mostrarMensaje(ex.mensaje);
       _vista?.limpiarDatos();

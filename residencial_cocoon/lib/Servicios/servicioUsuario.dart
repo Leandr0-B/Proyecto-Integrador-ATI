@@ -45,24 +45,35 @@ class ServicioUsuario {
     return Rol.fromJsonList(jsonList);
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {
+  Future<void> altaUsuario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> selectedRoles,
+      List<int> selectedSucursales,
+      String apellido) async {
     if (administrador == 0) {
       Usuario.validarRoles(selectedRoles);
       Usuario.validarSucursales(selectedSucursales);
     }
-    await APIService.postAltaUsuario(ci, nombre, administrador, selectedRoles,
-        selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+    await APIService.postAltaUsuario(
+        ci,
+        nombre,
+        administrador,
+        selectedRoles,
+        selectedSucursales,
+        Fachada.getInstancia()?.getUsuario()?.getToken(),
+        apellido);
   }
 
   Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
-      String nombre, int? selectedSucursal) async {
+      String nombre, int? selectedSucursal, String apellido) async {
     List<Map<String, dynamic>> familiaresJsonList =
         familiares.map((familiar) => familiar.toJson()).toList();
     List<int?> sucursales = [];
     sucursales.add(selectedSucursal);
     await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList,
-        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken());
+        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {

@@ -16,6 +16,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   final _familiarKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
+  String _apellido = '';
   String _ciFamiliar = '';
   String _nombreFamiliar = '';
   String _apellidoFamiliar = '';
@@ -28,6 +29,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   List<Familiar> _familiares = []; // Variable _familiares declarada aquí
   final fieldCi = TextEditingController();
   final fieldNombre = TextEditingController();
+  final fieldApellido = TextEditingController();
   final ciFamiliar = TextEditingController();
   final nombreFamiliar = TextEditingController();
   final apellidoFamiliar = TextEditingController();
@@ -83,12 +85,29 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese Nombre';
+                      return 'Por favor ingrese nombre';
                     }
                     return null;
                   },
                   onSaved: (value) {
                     _nombre = value!;
+                  },
+                ),
+                TextFormField(
+                  maxLength: 100,
+                  controller: fieldApellido,
+                  decoration: const InputDecoration(
+                    hintText: 'Ingrese Apellido',
+                    labelText: 'Apellido residente',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese apellido';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _apellido = value!;
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -326,7 +345,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   Future<void> crearUsuario() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await controller.altaUsuario(_familiares, _ci, _nombre, selectedSucursal);
+      await controller.altaUsuario(
+          _familiares, _ci, _nombre, selectedSucursal, _apellido);
     }
   }
 
@@ -363,6 +383,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
       _contactoPrimarioFamiliar = 0;
       _agregarContactoPrimario = false;
       _familiares = [];
+      fieldApellido.clear();
     });
   }
 

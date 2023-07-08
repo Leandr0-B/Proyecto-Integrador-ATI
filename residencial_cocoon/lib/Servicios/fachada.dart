@@ -59,12 +59,21 @@ class Fachada {
     return await _servicioUsuario?.listaRoles();
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales) async {
-    await _servicioUsuario?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales);
+  Future<void> altaUsuario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> selectedRoles,
+      List<int> selectedSucursales,
+      String apellido) async {
+    await _servicioUsuario?.altaUsuario(
+        ci, nombre, administrador, selectedRoles, selectedSucursales, apellido);
   }
 
-  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal) async {
-    await _servicioUsuario?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal);
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
+      String nombre, int? selectedSucursal, String apellido) async {
+    await _servicioUsuario?.altaUsuarioResidente(
+        familiares, ci, nombre, selectedSucursal, apellido);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {
@@ -93,13 +102,17 @@ class Fachada {
   }
 
   //Salida
-  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion, DateTime? fechaDesde, DateTime? fechaHasta) async {
-    await _servicioSalidas?.altaSalidaMedica(selectedResidente, descripcion, fechaDesde, fechaHasta);
+  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion,
+      DateTime? fechaDesde, DateTime? fechaHasta) async {
+    await _servicioSalidas?.altaSalidaMedica(
+        selectedResidente, descripcion, fechaDesde, fechaHasta);
   }
 
   //Chequeo
-  Future<void> altaVisitaMedicaExt(Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
-    await _servicioCequeoMedico?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
+  Future<void> altaVisitaMedicaExt(
+      Usuario? selectedResidente, String descripcion, DateTime? fecha) async {
+    await _servicioCequeoMedico?.altaVisitaMedicaExt(
+        selectedResidente, descripcion, fecha);
   }
 
   Future<int?> cantidadNotifiacionesSinLeer() async {
@@ -115,43 +128,108 @@ class Fachada {
     return await _servicioControl?.listaControles();
   }
 
-  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
-    await _servicioControl?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
+  Future<void> altaChequeoMedico(
+      Usuario? selectedResidente,
+      List<Control?> selectedControles,
+      DateTime? fecha,
+      String descripcion) async {
+    await _servicioControl?.altaChequeoMedico(
+        selectedResidente, selectedControles, fecha, descripcion);
   }
 
-  Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
-    return await _servicioNotificacion?.obtenerNotificacionesPaginadasConfiltros(page, limit, desde, hasta, palabras);
+  Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page,
+      int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
+    return await _servicioNotificacion
+        ?.obtenerNotificacionesPaginadasConfiltros(
+            page, limit, desde, hasta, palabras);
   }
 
-  Future<int?> obtenerNotificacionesPaginadasConFiltrosCantidadTotal(DateTime? desde, DateTime? hasta, String? palabras) async {
-    return await _servicioNotificacion?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(desde, hasta, palabras);
+  Future<int?> obtenerNotificacionesPaginadasConFiltrosCantidadTotal(
+      DateTime? desde, DateTime? hasta, String? palabras) async {
+    return await _servicioNotificacion
+        ?.obtenerNotificacionesPaginadasConFiltrosCantidadTotal(
+            desde, hasta, palabras);
   }
 
   Future<List<SalidaMedica>?> obtenerSalidasMedicasPaginadasConfiltros(
-      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+      int paginaActual,
+      int elementosPorPagina,
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      String? ciResidente,
+      String? palabraClave) async {
+    return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConfiltros(
+        paginaActual,
+        elementosPorPagina,
+        fechaDesde,
+        fechaHasta,
+        ciResidente,
+        palabraClave);
   }
 
-  Future<int?> obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioSalidas?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  Future<int?> obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      String? ciResidente,
+      String? palabraClave) async {
+    return await _servicioSalidas
+        ?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(
+            fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 
-  Future<List<VisitaMedicaExterna>?> obtenerVisitasMedicasExternasPaginadasConFiltros(
-      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioCequeoMedico?.obtenerVisitasMedicasExternasPaginadasConFiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  Future<List<VisitaMedicaExterna>?>
+      obtenerVisitasMedicasExternasPaginadasConFiltros(
+          int paginaActual,
+          int elementosPorPagina,
+          DateTime? fechaDesde,
+          DateTime? fechaHasta,
+          String? ciResidente,
+          String? palabraClave) async {
+    return await _servicioCequeoMedico
+        ?.obtenerVisitasMedicasExternasPaginadasConFiltros(
+            paginaActual,
+            elementosPorPagina,
+            fechaDesde,
+            fechaHasta,
+            ciResidente,
+            palabraClave);
   }
 
-  Future<int?> obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioCequeoMedico?.obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  Future<int?> obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      String? ciResidente,
+      String? palabraClave) async {
+    return await _servicioCequeoMedico
+        ?.obtenerVisitasMedicasExternasPaginadasConFiltrosCantidadTotal(
+            fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 
   Future<List<ChequeoMedico>?> obtenerChequeosMedicosPaginadosConFiltros(
-      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioCequeoMedico?.obtenerChequeosMedicosPaginadosConFiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+      int paginaActual,
+      int elementosPorPagina,
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      String? ciResidente,
+      String? palabraClave) async {
+    return await _servicioCequeoMedico
+        ?.obtenerChequeosMedicosPaginadosConFiltros(
+            paginaActual,
+            elementosPorPagina,
+            fechaDesde,
+            fechaHasta,
+            ciResidente,
+            palabraClave);
   }
 
-  Future<int?> obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
-    return await _servicioCequeoMedico?.obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  Future<int?> obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(
+      DateTime? fechaDesde,
+      DateTime? fechaHasta,
+      String? ciResidente,
+      String? palabraClave) async {
+    return await _servicioCequeoMedico
+        ?.obtenerChequeosMedicosPaginadosConFiltrosCantidadTotal(
+            fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 
   void eliminarTokenNotificaciones() async {

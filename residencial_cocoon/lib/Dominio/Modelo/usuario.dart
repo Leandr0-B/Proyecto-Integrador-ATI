@@ -9,6 +9,7 @@ class Usuario {
   //Atributos
   String _ci = "";
   String _nombre = "";
+  String _apellido = "";
   int _administrador = 0;
   List<Rol> _roles = [];
   List<Sucursal> _sucursales = [];
@@ -19,8 +20,15 @@ class Usuario {
   // Constructores
   Usuario.empty();
 
-  Usuario(this._ci, this._nombre, this._administrador, this._roles,
-      this._sucursales, this._authToken, this._tokenNotificacion);
+  Usuario(
+      this._ci,
+      this._nombre,
+      this._administrador,
+      this._roles,
+      this._sucursales,
+      this._authToken,
+      this._tokenNotificacion,
+      this._apellido);
 
   Usuario.paraLista(
     this._ci,
@@ -29,12 +37,14 @@ class Usuario {
     this._roles,
     this._sucursales,
     this._inactivo,
+    this._apellido,
   );
 
   Usuario.residente(
     this._ci,
     this._nombre,
     this._roles,
+    this._apellido,
   );
 
   Usuario.sinRoles(this._ci, this._nombre, this._administrador,
@@ -62,7 +72,8 @@ class Usuario {
         rolesList,
         sucursalesList,
         json['authToken'],
-        json['tokenNotificacion'] ?? "");
+        json['tokenNotificacion'] ?? "",
+        json['apellido']);
 
     for (int i = 0; i < rolesList.length; i++) {
       rolesList[i].usuario = aux;
@@ -108,7 +119,8 @@ class Usuario {
         json['administrador'] ?? 0,
         rolesList,
         sucursalesList,
-        json['inactivo'] ?? 0);
+        json['inactivo'] ?? 0,
+        json['apellido']);
   }
 
   factory Usuario.fromJsonListaResidente(Map<String, dynamic> json) {
@@ -119,6 +131,7 @@ class Usuario {
       json['ci'],
       json['nombre'],
       rolesList,
+      json['apellido'],
     );
 
     for (int i = 0; i < rolesList.length; i++) {
@@ -159,6 +172,11 @@ class Usuario {
     _authToken = token;
   }
 
+  String get apellido => this._apellido;
+
+  set apellido(String value) => this._apellido = value;
+
+  //Funciones
   List<Familiar>? getfamiliares() {
     List<Familiar>? lista = [];
     for (Rol element in _roles) {
@@ -257,6 +275,7 @@ class Usuario {
     String retorno = "";
     retorno += "ci: $_ci, ";
     retorno += "nombre: $_nombre, ";
+    retorno += "apellido: $_apellido, ";
     retorno += "administrador: $_administrador, ";
     retorno += "roles: $roles, ";
     retorno += "sucursales: $sucursales, ";
