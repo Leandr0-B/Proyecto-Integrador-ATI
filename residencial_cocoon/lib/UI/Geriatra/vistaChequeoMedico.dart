@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaChequeoMedico.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VistaChequeoMedico extends StatefulWidget {
   @override
@@ -28,11 +29,14 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
       ControllerVistaChequeoMedico.empty();
   String valor = '';
   bool agregarControles = false;
+  bool _isListening = true;
+  stt.SpeechToText _speech = stt.SpeechToText();
 
   @override
   void initState() {
     super.initState();
     controller = ControllerVistaChequeoMedico(this);
+    _initializeSpeech();
   }
 
   @override
@@ -171,6 +175,10 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                     },
                     decoration: InputDecoration(
                       hintText: 'Descripción',
+                      suffixIcon: IconButton(
+                        onPressed: _toggleListening,
+                        icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                      ),
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 8.0,
                         horizontal: 12.0,
@@ -178,6 +186,12 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                       border: InputBorder
                           .none, // Elimina el borde predeterminado del TextFormField
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese una descripción';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 SizedBox(height: 10),
@@ -305,6 +319,45 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
         ),
       ),
     );
+  }
+
+  void _initializeSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _toggleListening() {
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          descripcion = result.recognizedWords;
+          fieldDescripcion.text =
+              descripcion; // Rellenar el campo de descripción con el texto reconocido
+        });
+      },
+    );
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   Future<void> _selectFecha(BuildContext context) async {
