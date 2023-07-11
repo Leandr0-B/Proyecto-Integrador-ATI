@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
@@ -232,5 +233,14 @@ class Fachada {
 
   void eliminarTokenNotificaciones() async {
     return await _servicioUsuario?.eliminarTokenNotificaciones();
+  }
+
+  //Medicamentos
+  Future<void> altaMedicamento(String nombre, String? unidad) async {
+    await _servicioMedicacion?.altaMedicamento(nombre, unidad);
+  }
+
+  Future<List<Medicamento>?> listaMedicamentos() async {
+    return await _servicioMedicacion?.listaMedicamentos();
   }
 }

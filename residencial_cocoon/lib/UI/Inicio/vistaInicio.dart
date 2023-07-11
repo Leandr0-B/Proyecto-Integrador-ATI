@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAltaMedicamento.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAsociarMedicamentoResidente.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
@@ -162,6 +164,12 @@ class _VistaInicioState extends State<VistaInicio>
       case DrawerSections.visualizarChequeoMedico:
         container = VistaVisualizarChequeoMedico();
         break;
+      case DrawerSections.altaMedicamento:
+        container = VistaAltaMedicamento();
+        break;
+      case DrawerSections.asociarMedicamento:
+        container = VistaPrescripcionMedicamento();
+        break;
       default:
         container = Container();
         break;
@@ -311,6 +319,16 @@ class MyDrawerList extends StatelessWidget {
               ),
             ],
             if (usuario!.esGeriatra() || usuario!.esAdministrador()) ...[
+              menuItem(
+                  51,
+                  "Registrar Medicamento",
+                  IconData(0xe3d9, fontFamily: 'MaterialIcons'),
+                  DrawerSections.altaMedicamento),
+              menuItem(
+                  52,
+                  "Asociar Medicamento a residente",
+                  IconData(0xf0351, fontFamily: 'MaterialIcons'),
+                  DrawerSections.asociarMedicamento),
               ExpansionTile(
                 leading: const Icon(Icons.badge_sharp,
                     size: 20, color: Colors.black),
@@ -415,7 +433,9 @@ enum DrawerSections {
   chequeoMedico,
   visualizarSalidaMedica,
   visualizarVisitaMedica,
-  visualizarChequeoMedico
+  visualizarChequeoMedico,
+  altaMedicamento,
+  asociarMedicamento,
 }
 
 class NotificacionActualizadaCallback {

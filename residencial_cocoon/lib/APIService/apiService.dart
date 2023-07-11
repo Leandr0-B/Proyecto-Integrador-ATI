@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
@@ -621,15 +622,69 @@ class APIService {
   }
 
   static Future<void> eliminarTokenNotificaciones(String? token) async {
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/eliminar-token');
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/usuario/eliminar-token');
 
     final response = await http.put(
       url,
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
     );
 
     if (response.statusCode != 200) {
-      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
+      throw Exception(
+          "ha ocurrido un error al actualizar el token de notificaciones.");
+    }
+  }
+
+  static Future<void> postMedicamento(
+    String? nombre,
+    String? unidad,
+    String? token,
+  ) async {
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/medicamento/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'nombre': nombre,
+        'unidad': unidad,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw AltaMedicamentoException(
+          "Se ingreso el medicamento correctamente.");
+    } else if (response.statusCode == 400) {
+      throw Exception("El medicamento ya existe en la base de datos.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static Future<String> fetchMedicamentos(String? token) async {
+    final url =
+        Uri.parse('https://residencialapi.azurewebsites.net/medicamento/lista');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
     }
   }
 }
