@@ -20,7 +20,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   bool residentesVisible = false;
   final fieldMedicamento = TextEditingController();
   Future<List<Medicamento>?> _medicamentos = Future.value([]);
-  //List<Medicamento>? _medicamentos = [];
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
   int _elementosPorPagina = 2;
@@ -205,10 +204,9 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   }
 
   void obtenerMedicamentosPaginadosConfiltros() {
-    setState(() {
-      _medicamentos = controller.listaMedicamentos(_paginaActual, _elementosPorPagina, selectedResidente!, _palabraClave);
-      _cantidadDePaginas = controller.calcularTotalPaginas(_elementosPorPagina, selectedResidente?.ci, _palabraClave);
-    });
+    _medicamentos = controller.listaMedicamentos(_paginaActual, _elementosPorPagina, selectedResidente!, _palabraClave);
+    _cantidadDePaginas = controller.calcularTotalPaginas(_elementosPorPagina, selectedResidente?.ci, _palabraClave);
+    setState(() {});
   }
 
   @override
@@ -230,21 +228,11 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
 
   void mostrarPopUp(Future<List<Medicamento>?> elementos) {
     final TextEditingController textFieldController = TextEditingController();
-    List<Medicamento>? lista;
-    int paginaActual = 1;
-    int cantidadDePaginas = 0;
-
     showDialog(
       context: context,
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            Future<void> obtenerMedicamentosPaginadosConfiltros() async {
-              lista = await elementos;
-              cantidadDePaginas = await _cantidadDePaginas;
-              setState(() {});
-            }
-
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -274,11 +262,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         const SizedBox(width: 8.0),
                         ElevatedButton(
                           onPressed: () {
-                            obtenerMedicamentosPaginadosTest().then((nuevaLista) {
-                              setState(() {
-                                lista = nuevaLista;
-                              });
-                            });
+                            obtenerMedicamentosPaginadosConfiltros();
                           },
                           child: const Text('Filtrar'),
                         ),
@@ -286,11 +270,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         ElevatedButton(
                           onPressed: () {
                             //limpiarFiltros();
-                            obtenerMedicamentosPaginadosTest().then((nuevaLista) {
-                              setState(() {
-                                lista = nuevaLista;
-                              });
-                            });
+                            obtenerMedicamentosPaginadosConfiltros();
                           },
                           child: const Text('Mostrar Todos'),
                         ),
@@ -306,35 +286,47 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                     ),
                     const SizedBox(height: 8.0),
                     Expanded(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: lista?.length ?? 0,
-                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          final Medicamento elemento = lista![index];
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedMedicamento = elemento;
-                              });
-                              Navigator.of(context).pop(); // Cerrar el diálogo
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 1.0,
-                                ),
-                              ),
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                elemento.toString(),
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                          );
+                      child: FutureBuilder<List<Medicamento>?>(
+                        future: _medicamentos,
+                        builder: (BuildContext context, AsyncSnapshot<List<Medicamento>?> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final List<Medicamento>? lista = snapshot.data;
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: lista?.length ?? 0,
+                              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
+                              itemBuilder: (BuildContext context, int index) {
+                                final Medicamento elemento = snapshot.data![index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedMedicamento = elemento;
+                                    });
+                                    Navigator.of(context).pop(); // Cerrar el diálogo
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.black,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      elemento.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
                     ),
@@ -351,7 +343,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FutureBuilder<int>(
-                          future: Future.value(cantidadDePaginas),
+                          future: Future.value(_cantidadDePaginas),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return const Text(''); // Muestra un mensaje de error si hay un problema al obtener cantidadDePaginas
@@ -363,23 +355,23 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                                       children: [
                                         IconButton(
                                           icon: const Icon(Icons.arrow_back),
-                                          onPressed: paginaActual == 1
+                                          onPressed: _paginaActual == 1
                                               ? null
                                               : () {
                                                   setState(() {
-                                                    paginaActual--;
+                                                    _paginaActual--;
                                                   });
                                                   obtenerMedicamentosPaginadosConfiltros();
                                                 },
                                         ),
-                                        Text('$paginaActual/$totalPagesValue'),
+                                        Text('$_paginaActual/$totalPagesValue'),
                                         IconButton(
                                           icon: const Icon(Icons.arrow_forward),
-                                          onPressed: paginaActual == totalPagesValue
+                                          onPressed: _paginaActual == totalPagesValue
                                               ? null
                                               : () {
                                                   setState(() {
-                                                    paginaActual++;
+                                                    _paginaActual++;
                                                   });
                                                   obtenerMedicamentosPaginadosConfiltros();
                                                 },
