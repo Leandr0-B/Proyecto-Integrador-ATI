@@ -68,6 +68,10 @@ class Rol implements IRol {
     return usuario.nombre;
   }
 
+  String apellidoUsuario() {
+    return usuario.apellido;
+  }
+
   String ciUsuario() {
     return usuario.ci;
   }
@@ -80,7 +84,10 @@ class Rol implements IRol {
   }
 
   static List<Rol> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.cast<Map<String, dynamic>>().map<Rol>((json) => Rol.fromJson(json)).toList();
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<Rol>((json) => Rol.fromJson(json))
+        .toList();
   }
 
   //Equals

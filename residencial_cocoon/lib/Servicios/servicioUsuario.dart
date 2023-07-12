@@ -51,7 +51,9 @@ class ServicioUsuario {
       int administrador,
       List<int> selectedRoles,
       List<int> selectedSucursales,
-      String apellido) async {
+      String apellido,
+      String telefono,
+      String email) async {
     if (administrador == 0) {
       Usuario.validarRoles(selectedRoles);
       Usuario.validarSucursales(selectedSucursales);
@@ -63,7 +65,9 @@ class ServicioUsuario {
         selectedRoles,
         selectedSucursales,
         Fachada.getInstancia()?.getUsuario()?.getToken(),
-        apellido);
+        apellido,
+        telefono,
+        email);
   }
 
   Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,

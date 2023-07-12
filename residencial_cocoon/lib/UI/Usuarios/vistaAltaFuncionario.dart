@@ -16,7 +16,9 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   String _ci = '';
   String _nombre = '';
   String _apellido = '';
+  String _telefono = '';
   int _administrador = 0;
+  String _email = '';
   List<int> selectedRoles = [];
   List<int> selectedSucursales = [];
   ControllerVistaAltaFuncionario controller =
@@ -24,6 +26,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   final fieldCi = TextEditingController();
   final fieldNombre = TextEditingController();
   final fieldApellido = TextEditingController();
+  final fieldTelefono = TextEditingController();
+  final fieldEmail = TextEditingController();
 
   @override
   void initState() {
@@ -98,6 +102,45 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                   },
                   onSaved: (value) {
                     _apellido = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Telefono ',
+                    hintText: 'Ingrese telefono',
+                  ),
+                  maxLength: 100,
+                  controller: fieldTelefono,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese el telefono.';
+                    }
+                    if (num.tryParse(value) == null) {
+                      return 'Solo puede ingresar valores nueméricos.';
+                    }
+
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _telefono = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Ingrese Email (ejemplo@ejemplo.ejem)',
+                  ),
+                  maxLength: 100,
+                  controller: fieldEmail,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese email';
+                    }
+
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _email = value!;
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -204,8 +247,15 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      altaUsuarioFuncionario(_ci, _nombre, _administrador,
-                          selectedRoles, selectedSucursales, _apellido);
+                      altaUsuarioFuncionario(
+                          _ci,
+                          _nombre,
+                          _administrador,
+                          selectedRoles,
+                          selectedSucursales,
+                          _apellido,
+                          _telefono,
+                          _email);
                     }
                   },
                 ),
@@ -234,9 +284,11 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
       int administrador,
       List<int> roles,
       List<int> sucursales,
-      String apellido) async {
-    await controller.altaUsuario(
-        ci, nombre, administrador, selectedRoles, selectedSucursales, apellido);
+      String apellido,
+      String telefono,
+      String email) async {
+    await controller.altaUsuario(ci, nombre, administrador, selectedRoles,
+        selectedSucursales, apellido, telefono, email);
   }
 
   @override
@@ -263,6 +315,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
       fieldCi.clear();
       fieldNombre.clear();
       fieldApellido.clear();
+      fieldTelefono.clear();
+      fieldEmail.clear();
     });
   }
 

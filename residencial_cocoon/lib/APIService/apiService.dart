@@ -95,7 +95,9 @@ class APIService {
       List<int> roles,
       List<int> sucursales,
       String? token,
-      String apellido) async {
+      String apellido,
+      String telefono,
+      String email) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url =
@@ -107,6 +109,8 @@ class APIService {
         'ci': ci,
         'nombre': nombre,
         'apellido': apellido,
+        'telefono': telefono,
+        'email': email,
         'password': ci,
         'administrador': administrador,
         'sucursales': sucursales,

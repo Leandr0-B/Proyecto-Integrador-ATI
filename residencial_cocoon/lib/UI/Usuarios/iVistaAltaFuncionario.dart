@@ -10,7 +10,9 @@ abstract class IvistaAltaFuncionario {
       int administrador,
       List<int> roles,
       List<int> sucursales,
-      String apellido);
+      String apellido,
+      String telefono,
+      String email);
   void limpiarDatos();
   Future<List<Sucursal>?> getSucursales();
   Future<List<Rol>?> getRoles();

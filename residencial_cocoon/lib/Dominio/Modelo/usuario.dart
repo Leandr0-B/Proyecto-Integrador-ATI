@@ -10,6 +10,8 @@ class Usuario {
   String _ci = "";
   String _nombre = "";
   String _apellido = "";
+  String _telefono = "";
+  String _email = "";
   int _administrador = 0;
   List<Rol> _roles = [];
   List<Sucursal> _sucursales = [];
@@ -28,7 +30,9 @@ class Usuario {
       this._sucursales,
       this._authToken,
       this._tokenNotificacion,
-      this._apellido);
+      this._apellido,
+      this._telefono,
+      this._email);
 
   Usuario.paraLista(
     this._ci,
@@ -38,6 +42,8 @@ class Usuario {
     this._sucursales,
     this._inactivo,
     this._apellido,
+    this._telefono,
+    this._email,
   );
 
   Usuario.residente(
@@ -73,7 +79,9 @@ class Usuario {
         sucursalesList,
         json['authToken'],
         json['tokenNotificacion'] ?? "",
-        json['apellido']);
+        json['apellido'],
+        json['telefono'],
+        json['email']);
 
     for (int i = 0; i < rolesList.length; i++) {
       rolesList[i].usuario = aux;
@@ -120,7 +128,9 @@ class Usuario {
         rolesList,
         sucursalesList,
         json['inactivo'] ?? 0,
-        json['apellido']);
+        json['apellido'],
+        json['telefono'],
+        json['email']);
   }
 
   factory Usuario.fromJsonListaResidente(Map<String, dynamic> json) {
@@ -175,6 +185,14 @@ class Usuario {
   String get apellido => this._apellido;
 
   set apellido(String value) => this._apellido = value;
+
+  String get telefono => this._telefono;
+
+  set telefono(String value) => this._telefono = value;
+
+  String get email => this._email;
+
+  set email(String value) => this._email = value;
 
   //Funciones
   List<Familiar>? getfamiliares() {
@@ -267,6 +285,15 @@ class Usuario {
   void agregarRol(Rol rol) {
     rol.usuario = this;
     _roles.add(rol);
+  }
+
+  static bool esEmailValido(String email) {
+    // Expresión regular para verificar el formato del email
+    const pattern =
+        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
+    final regex = RegExp(pattern);
+
+    return regex.hasMatch(email);
   }
 
   //ToString

@@ -249,7 +249,7 @@ class _VistaVisualizarVisitaMedicaExternaState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()} - ${visitaMedicaExterna.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -267,7 +267,7 @@ class _VistaVisualizarVisitaMedicaExternaState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
+                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -487,7 +487,7 @@ class _VistaVisualizarVisitaMedicaExternaState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                                      'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()} - ${visitaMedicaExterna.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -505,7 +505,7 @@ class _VistaVisualizarVisitaMedicaExternaState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
+                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -590,7 +590,7 @@ class _VistaVisualizarVisitaMedicaExternaState
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()}',
+                'Visita Médica Externa, Residente: ${visitaMedicaExterna.ciResidente()} - ${visitaMedicaExterna.nombreResidente()} - ${visitaMedicaExterna.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -608,7 +608,7 @@ class _VistaVisualizarVisitaMedicaExternaState
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()}',
+                'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),

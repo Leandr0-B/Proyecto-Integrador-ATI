@@ -56,6 +56,9 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario>
                       return familiar.toStringMostrar();
                     }
                   }).join(", ")}';
+                } else {
+                  subtitleText += ', telefono: ' + usuario.telefono;
+                  subtitleText += ', email: ' + usuario.email;
                 }
                 return ListTile(
                   title: Text((usuario.nombre + " " + usuario.apellido) ?? ""),
