@@ -18,12 +18,17 @@ class SalidaMedica {
     Usuario geriatraAux = Usuario.empty();
     geriatraAux.ci = json['ci_geriatra'];
     geriatraAux.nombre = json['nombre_geriatra'];
+    geriatraAux.apellido = json['apellido_geriatra'];
 
     Usuario residenteAux = Usuario.empty();
     residenteAux.ci = json['ci_residente'];
     residenteAux.nombre = json['nombre_residente'];
+    residenteAux.apellido = json['apellido_residente'];
 
-    SalidaMedica aux = SalidaMedica(json['descripcion'], DateTime.parse(json['fecha_desde']), DateTime.parse(json['fecha_hasta']));
+    SalidaMedica aux = SalidaMedica(
+        json['descripcion'],
+        DateTime.parse(json['fecha_desde']),
+        DateTime.parse(json['fecha_hasta']));
     aux.agregarGeriatra(geriatraAux);
     aux.agregarResidente(residenteAux);
     aux._id_salida_medica = json['id_salida_medica'];
@@ -45,7 +50,10 @@ class SalidaMedica {
   set fechaHasta(DateTime value) => _fecha_hasta = value;
 
   static List<SalidaMedica> listaVistaPrevia(List jsonList) {
-    return jsonList.cast<Map<String, dynamic>>().map<SalidaMedica>((json) => SalidaMedica.fromJsonVistaPrevia(json)).toList();
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<SalidaMedica>((json) => SalidaMedica.fromJsonVistaPrevia(json))
+        .toList();
   }
 
   void agregarGeriatra(Usuario geriatra) {
@@ -60,12 +68,20 @@ class SalidaMedica {
     return _residente.nombreUsuario();
   }
 
+  String apellidoResidente() {
+    return _residente.apellidoUsuario();
+  }
+
   String ciResidente() {
     return _residente.ciUsuario();
   }
 
   String nombreGeriatra() {
     return _geriatra.nombreUsuario();
+  }
+
+  String apellidoGeriatra() {
+    return _geriatra.apellidoUsuario();
   }
 
   String ciGeriatra() {

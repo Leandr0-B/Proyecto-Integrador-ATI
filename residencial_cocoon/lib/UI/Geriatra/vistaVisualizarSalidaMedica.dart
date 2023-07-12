@@ -248,7 +248,7 @@ class _VistaVisualizarSalidaMedicaState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
+                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()} - ${salidaMedica.apellidoResidente()} ',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -271,7 +271,7 @@ class _VistaVisualizarSalidaMedicaState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -490,7 +490,7 @@ class _VistaVisualizarSalidaMedicaState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
+                                      'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()} - ${salidaMedica.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -513,7 +513,7 @@ class _VistaVisualizarSalidaMedicaState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -598,7 +598,7 @@ class _VistaVisualizarSalidaMedicaState
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()}',
+                'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()} - ${salidaMedica.apellidoResidente()}',
                 style: const TextStyle(
                     fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
@@ -619,7 +619,7 @@ class _VistaVisualizarSalidaMedicaState
               ),
               const SizedBox(height: 10.0),
               Text(
-                'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()}',
+                'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),

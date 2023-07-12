@@ -25,12 +25,15 @@ class ChequeoMedico {
     Usuario geriatraAux = Usuario.empty();
     geriatraAux.ci = json['ci_geriatra'];
     geriatraAux.nombre = json['nombre_geriatra'];
+    geriatraAux.apellido = json['apellido_geriatra'];
 
     Usuario residenteAux = Usuario.empty();
     residenteAux.ci = json['ci_residente'];
     residenteAux.nombre = json['nombre_residente'];
+    residenteAux.apellido = json['apellido_residente'];
 
-    ChequeoMedico aux = ChequeoMedico(json['id_chequeo'], json['descripcion'], DateTime.parse(json['fecha']));
+    ChequeoMedico aux = ChequeoMedico(
+        json['id_chequeo'], json['descripcion'], DateTime.parse(json['fecha']));
     aux.agregarGeriatra(geriatraAux);
     aux.agregarResidente(residenteAux);
 
@@ -39,7 +42,9 @@ class ChequeoMedico {
     if (json.containsKey('controles')) {
       List<dynamic> controlesJson = json['controles'];
       if (controlesJson.isNotEmpty) {
-        controlesList = controlesJson.map((controlJson) => Control.fromJsonParaPreview(controlJson)).toList();
+        controlesList = controlesJson
+            .map((controlJson) => Control.fromJsonParaPreview(controlJson))
+            .toList();
       }
     }
     aux._controles = controlesList;
@@ -61,7 +66,10 @@ class ChequeoMedico {
   set fecha(DateTime value) => _fecha = value;
 
   static List<ChequeoMedico> listaVistaPrevia(List jsonList) {
-    return jsonList.cast<Map<String, dynamic>>().map<ChequeoMedico>((json) => ChequeoMedico.fromJsonVistaPrevia(json)).toList();
+    return jsonList
+        .cast<Map<String, dynamic>>()
+        .map<ChequeoMedico>((json) => ChequeoMedico.fromJsonVistaPrevia(json))
+        .toList();
   }
 
   void agregarGeriatra(Usuario geriatra) {
@@ -76,12 +84,20 @@ class ChequeoMedico {
     return _residente.nombreUsuario();
   }
 
+  String apellidoResidente() {
+    return _geriatra.apellidoUsuario();
+  }
+
   String ciResidente() {
     return _residente.ciUsuario();
   }
 
   String nombreGeriatra() {
     return _geriatra.nombreUsuario();
+  }
+
+  String apellidoGeriatra() {
+    return _geriatra.apellidoUsuario();
   }
 
   String ciGeriatra() {
@@ -92,7 +108,8 @@ class ChequeoMedico {
     String result = '\n';
     if (_controles.isNotEmpty) {
       for (var control in _controles) {
-        result += '${control.nombre} - Valor: ${control.valor} - Unidad: ${control.unidad}\n';
+        result +=
+            '${control.nombre} - Valor: ${control.valor} - Unidad: ${control.unidad}\n';
       }
     }
     return result;

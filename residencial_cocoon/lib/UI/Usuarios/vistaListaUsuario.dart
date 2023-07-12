@@ -49,10 +49,19 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario>
 
                 if (usuario.esResidente()) {
                   subtitleText +=
-                      ', Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")}';
+                      ', Familiares: ${usuario.getfamiliares()?.map((familiar) {
+                    if (familiar.contactoPrimario == 1) {
+                      return '${familiar.toStringMostrar()} Teléfono: ${familiar.telefono}';
+                    } else {
+                      return familiar.toStringMostrar();
+                    }
+                  }).join(", ")}';
+                } else {
+                  subtitleText += ', telefono: ' + usuario.telefono;
+                  subtitleText += ', email: ' + usuario.email;
                 }
                 return ListTile(
-                  title: Text(usuario.nombre ?? ""),
+                  title: Text((usuario.nombre + " " + usuario.apellido) ?? ""),
                   subtitle: Text(subtitleText),
                 );
               },

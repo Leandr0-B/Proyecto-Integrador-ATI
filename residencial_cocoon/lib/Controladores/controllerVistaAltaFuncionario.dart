@@ -2,6 +2,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaFuncionario.dart';
 
@@ -38,12 +39,24 @@ class ControllerVistaAltaFuncionario {
     }
   }
 
-  Future<void> altaUsuario(String ci, String nombre, int administrador,
-      List<int> selectedRoles, List<int> selectedSucursales) async {
+  Future<void> altaUsuario(
+      String ci,
+      String nombre,
+      int administrador,
+      List<int> selectedRoles,
+      List<int> selectedSucursales,
+      String apellido,
+      String telefono,
+      String email) async {
     nombre = _capitalize(nombre);
+    apellido = _capitalize(apellido);
     try {
-      await Fachada.getInstancia()?.altaUsuario(
-          ci, nombre, administrador, selectedRoles, selectedSucursales);
+      if (Usuario.esEmailValido(email)) {
+        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador,
+            selectedRoles, selectedSucursales, apellido, telefono, email);
+      } else {
+        _vista?.mostrarMensajeError("El email no tiene el formato correcto.");
+      }
     } on AltaUsuarioException catch (ex) {
       _vista?.mostrarMensaje(ex.mensaje);
       _vista?.limpiarDatos();

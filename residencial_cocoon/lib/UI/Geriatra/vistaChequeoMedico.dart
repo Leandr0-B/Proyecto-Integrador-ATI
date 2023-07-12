@@ -111,6 +111,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico>
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
                                       child: Text(residente.nombre +
+                                          " " +
+                                          residente.apellido +
                                           ' | ' +
                                           residente.ci),
                                     );

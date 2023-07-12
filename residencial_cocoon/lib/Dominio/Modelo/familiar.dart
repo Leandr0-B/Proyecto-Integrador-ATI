@@ -4,6 +4,7 @@ class Familiar {
   String _nombre = "";
   String _apellido = "";
   String _email = "";
+  String _telefono = "";
   int _contactoPrimario = 0;
 
   //Constructorres
@@ -13,6 +14,7 @@ class Familiar {
     this._apellido,
     this._email,
     this._contactoPrimario,
+    this._telefono,
   );
 
   factory Familiar.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Familiar {
       json['apellido'],
       json['email'],
       json['contacto_primario'],
+      json['telefono'],
     );
   }
 
@@ -46,6 +49,10 @@ class Familiar {
 
   set email(String value) => this._email = value;
 
+  String get telefono => this._telefono;
+
+  set telefono(String value) => this._telefono = value;
+
   //Funciones
   Map<String, dynamic> toJson() {
     return {
@@ -54,6 +61,7 @@ class Familiar {
       "apellido": _apellido,
       "email": _email,
       "contacto_primario": _contactoPrimario,
+      "telefono": _telefono,
     };
   }
 
