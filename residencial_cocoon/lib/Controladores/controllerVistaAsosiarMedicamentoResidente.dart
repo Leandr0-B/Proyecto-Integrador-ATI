@@ -35,10 +35,9 @@ class ControllerVistaPrescripcionMedicamento {
     }
   }
 
-  Future<List<Medicamento>?> listaMedicamentos() async {
+  Future<List<Medicamento>?> listaMedicamentos(int paginaActual, int elementosPorPagina, Usuario residente, String palabraClave) async {
     try {
-      return _medicamentos ??=
-          await Fachada.getInstancia()?.listaMedicamentos();
+      return _medicamentos = await Fachada.getInstancia()?.listaMedicamentos(paginaActual, elementosPorPagina, residente.ci, palabraClave);
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
     }
@@ -54,10 +53,12 @@ class ControllerVistaPrescripcionMedicamento {
     _vista?.cerrarSesion();
   }
 
-  Future<int> cantidadPaginas() {
-    if (_medicamentos != null) {
-      return _medicamentos?.length;
-    } else {
+  Future<int> calcularTotalPaginas(int elementosPorPagina, String? ciResidente, String? palabraClave) async {
+    try {
+      int totalNotificaciones = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave) ?? 0;
+      return (totalNotificaciones / elementosPorPagina).ceil();
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
       return 0;
     }
   }

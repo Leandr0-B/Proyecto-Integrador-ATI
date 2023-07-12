@@ -12,18 +12,14 @@ class VistaVisualizarSalidaMedica extends StatefulWidget {
   VistaVisualizarSalidaMedica();
 
   @override
-  _VistaVisualizarSalidaMedicaState createState() =>
-      _VistaVisualizarSalidaMedicaState();
+  _VistaVisualizarSalidaMedicaState createState() => _VistaVisualizarSalidaMedicaState();
 }
 
 //Get set
 
-class _VistaVisualizarSalidaMedicaState
-    extends State<VistaVisualizarSalidaMedica>
-    implements IvistaVisualizarSalidaMedica {
+class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedica> implements IvistaVisualizarSalidaMedica {
   Future<List<SalidaMedica>> _salidasMedicas = Future.value([]);
-  ControllerVistaVisualizarSalidaMedica _controller =
-      ControllerVistaVisualizarSalidaMedica.empty();
+  ControllerVistaVisualizarSalidaMedica _controller = ControllerVistaVisualizarSalidaMedica.empty();
 
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
@@ -115,9 +111,7 @@ class _VistaVisualizarSalidaMedicaState
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaDesde != null
-                          ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
-                          : 'Fecha Desde',
+                      _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
                     ),
                   ),
                 ),
@@ -131,9 +125,7 @@ class _VistaVisualizarSalidaMedicaState
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaHasta != null
-                          ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
-                          : 'Fecha Hasta',
+                      _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
                     ),
                   ),
                 ),
@@ -190,8 +182,7 @@ class _VistaVisualizarSalidaMedicaState
         Expanded(
           child: FutureBuilder<List<SalidaMedica>>(
             future: _salidasMedicas,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<SalidaMedica>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -218,8 +209,7 @@ class _VistaVisualizarSalidaMedicaState
                     padding: const EdgeInsets.all(16.0),
                     itemCount: snapshot.data!.length,
                     separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(
-                          height: 16.0); // Espacio entre cada notificación
+                      return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
                       SalidaMedica salidaMedica = snapshot.data![index];
@@ -292,15 +282,12 @@ class _VistaVisualizarSalidaMedicaState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future:
-                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ??
-                      0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -344,9 +331,7 @@ class _VistaVisualizarSalidaMedicaState
       children: [
         ListTile(
           title: const Text('Filtros'),
-          trailing: _filtroExpandido
-              ? const Icon(Icons.keyboard_arrow_up)
-              : const Icon(Icons.keyboard_arrow_down),
+          trailing: _filtroExpandido ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.keyboard_arrow_down),
           onTap: () {
             setState(() {
               _filtroExpandido = !_filtroExpandido;
@@ -361,9 +346,7 @@ class _VistaVisualizarSalidaMedicaState
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaDesde != null
-                    ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
-                    : 'Fecha Desde',
+                _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
               ),
             ),
           ),
@@ -375,9 +358,7 @@ class _VistaVisualizarSalidaMedicaState
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaHasta != null
-                    ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
-                    : 'Fecha Hasta',
+                _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
               ),
             ),
           ),
@@ -431,8 +412,7 @@ class _VistaVisualizarSalidaMedicaState
         Expanded(
           child: FutureBuilder<List<SalidaMedica>>(
             future: _salidasMedicas,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<SalidaMedica>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<SalidaMedica>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -534,15 +514,12 @@ class _VistaVisualizarSalidaMedicaState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future:
-                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ??
-                      0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -590,8 +567,7 @@ class _VistaVisualizarSalidaMedicaState
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Container(
-          width:
-              MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
+          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -599,8 +575,7 @@ class _VistaVisualizarSalidaMedicaState
             children: [
               Text(
                 'Salida Médica, Residente: ${salidaMedica.ciResidente()} - ${salidaMedica.nombreResidente()} - ${salidaMedica.apellidoResidente()}',
-                style: const TextStyle(
-                    fontSize: 18.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               Text(
@@ -657,12 +632,9 @@ class _VistaVisualizarSalidaMedicaState
 
   @override
   void obtenerSalidasMedicasPaginadasBotonFiltrar() {
-    if (_fechaDesde != null &&
-        _fechaHasta != null &&
-        _fechaDesde!.isAfter(_fechaHasta!)) {
+    if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
-    } else if (_fechaDesde == null && _fechaHasta != null ||
-        _fechaDesde != null && _fechaHasta == null) {
+    } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
@@ -672,15 +644,8 @@ class _VistaVisualizarSalidaMedicaState
 
   @override
   void obtenerSalidasMedicasPaginadasConfiltros() {
-    _salidasMedicas = _controller.obtenerSalidasMedicasPaginadasConFiltros(
-        _paginaActual,
-        _elementosPorPagina,
-        _fechaDesde,
-        _fechaHasta,
-        _ciResidente,
-        _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina,
-        _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _salidasMedicas = _controller.obtenerSalidasMedicasPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
