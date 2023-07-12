@@ -27,8 +27,9 @@ class ControllerVistaAltaResidente {
   }
 
   Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre,
-      int? selectedSucursal) async {
+      int? selectedSucursal, String apellido) async {
     nombre = _capitalize(nombre);
+    apellido = _capitalize(apellido);
     try {
       if (selectedSucursal == null) {
         _vistaAlta?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
@@ -39,8 +40,8 @@ class ControllerVistaAltaResidente {
         _vistaAlta?.mostrarMensajeError(
             "La lista de familiares tiene que tener por lo menos un familiar primario.");
       } else {
-        await Fachada.getInstancia()
-            ?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal);
+        await Fachada.getInstancia()?.altaUsuarioResidente(
+            familiares, ci, nombre, selectedSucursal, apellido);
       }
     } on AltaUsuarioException catch (ex) {
       _vistaAlta?.mostrarMensaje(ex.mensaje);

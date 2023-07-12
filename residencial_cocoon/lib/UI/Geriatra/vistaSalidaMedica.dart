@@ -105,6 +105,8 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica>
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
                                       child: Text(residente.nombre +
+                                          " " +
+                                          residente.apellido +
                                           ' | ' +
                                           residente.ci),
                                     );

@@ -248,7 +248,7 @@ class _VistaVisualizarChequeoMedicoState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
+                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -272,7 +272,7 @@ class _VistaVisualizarChequeoMedicoState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
+                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -491,7 +491,7 @@ class _VistaVisualizarChequeoMedicoState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
+                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -515,7 +515,7 @@ class _VistaVisualizarChequeoMedicoState
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
+                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -600,7 +600,7 @@ class _VistaVisualizarChequeoMedicoState
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()}',
+                'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -624,7 +624,7 @@ class _VistaVisualizarChequeoMedicoState
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()}',
+                'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
             ],

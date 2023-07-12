@@ -94,7 +94,10 @@ class APIService {
       int administrador,
       List<int> roles,
       List<int> sucursales,
-      String? token) async {
+      String? token,
+      String apellido,
+      String telefono,
+      String email) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url =
@@ -105,6 +108,9 @@ class APIService {
       body: jsonEncode({
         'ci': ci,
         'nombre': nombre,
+        'apellido': apellido,
+        'telefono': telefono,
+        'email': email,
         'password': ci,
         'administrador': administrador,
         'sucursales': sucursales,
@@ -134,7 +140,8 @@ class APIService {
       String nombre,
       List<Map<String, dynamic>> familiares,
       List<int?> sucursales,
-      String? token) async {
+      String? token,
+      String apellido) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url =
@@ -145,6 +152,7 @@ class APIService {
       body: jsonEncode({
         'ci': ci,
         'nombre': nombre,
+        'apellido': apellido,
         'password': ci,
         'administrador': 0,
         'sucursales': sucursales,
@@ -621,15 +629,20 @@ class APIService {
   }
 
   static Future<void> eliminarTokenNotificaciones(String? token) async {
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/eliminar-token');
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/usuario/eliminar-token');
 
     final response = await http.put(
       url,
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
     );
 
     if (response.statusCode != 200) {
-      throw Exception("ha ocurrido un error al actualizar el token de notificaciones.");
+      throw Exception(
+          "ha ocurrido un error al actualizar el token de notificaciones.");
     }
   }
 }
