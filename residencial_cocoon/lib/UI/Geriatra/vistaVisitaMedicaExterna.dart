@@ -8,15 +8,12 @@ import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaVisitaMedicaExterna extends StatefulWidget {
   @override
-  State<VistaVisitaMedicaExterna> createState() =>
-      _VistaVisitaMedicaExternaState();
+  State<VistaVisitaMedicaExterna> createState() => _VistaVisitaMedicaExternaState();
 }
 
-class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
-    implements IvistaVisitaMedicaExterna {
+class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> implements IvistaVisitaMedicaExterna {
   final _formKey = GlobalKey<FormState>();
-  ControllerVistaVisitaMedicaExterna controller =
-      ControllerVistaVisitaMedicaExterna.empty();
+  ControllerVistaVisitaMedicaExterna controller = ControllerVistaVisitaMedicaExterna.empty();
   Usuario? selectedResidente;
   Sucursal? selectedSucursal;
   bool residentesVisible = false;
@@ -54,8 +51,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: listaSucursales(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
@@ -66,6 +62,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                             onChanged: (Sucursal? newValue) {
                               setState(() {
                                 selectedSucursal = newValue;
+                                selectedResidente = null;
                                 residentesVisible = true;
                               });
                             },
@@ -91,8 +88,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                         alignment: Alignment.centerLeft,
                         child: FutureBuilder<List<Usuario>?>(
                           future: listaResidentes(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Usuario>?> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<List<Usuario>?> snapshot) {
                             if (snapshot.hasData) {
                               List<Usuario> residentes = snapshot.data!;
                               return DropdownButton<Usuario>(
@@ -105,11 +101,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre +
-                                          " " +
-                                          residente.apellido +
-                                          ' | ' +
-                                          residente.ci),
+                                      child: Text(residente.nombre + " " + residente.apellido + ' | ' + residente.ci),
                                     );
                                   }),
                                 ],
@@ -154,8 +146,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                         vertical: 8.0,
                         horizontal: 12.0,
                       ),
-                      border: InputBorder
-                          .none, // Elimina el borde predeterminado del TextFormField
+                      border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
                     ),
                   ),
                 ),
@@ -171,9 +162,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      fecha != null
-                          ? DateFormat('dd/MM/yyyy').format(fecha!)
-                          : 'Seleccione una fecha',
+                      fecha != null ? DateFormat('dd/MM/yyyy').format(fecha!) : 'Seleccione una fecha',
                     ),
                   ),
                 ),
@@ -237,8 +226,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna>
 
   @override
   Future<void> altaVisitaMedicaExt() async {
-    await controller.altaVisitaMedicaExt(
-        selectedResidente, descripcion, fecha, selectedSucursal);
+    await controller.altaVisitaMedicaExt(selectedResidente, descripcion, fecha, selectedSucursal);
   }
 
   @override
