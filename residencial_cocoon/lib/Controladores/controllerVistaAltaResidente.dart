@@ -26,22 +26,18 @@ class ControllerVistaAltaResidente {
     }
   }
 
-  Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre,
-      int? selectedSucursal, String apellido) async {
+  Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido) async {
     nombre = _capitalize(nombre);
     apellido = _capitalize(apellido);
     try {
       if (selectedSucursal == null) {
         _vistaAlta?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
       } else if (!_controlAltaUsuario(familiares, ci)) {
-        _vistaAlta?.mostrarMensajeError(
-            "El documento identificador del residente tiene que ser distinto al de los familiares.");
+        _vistaAlta?.mostrarMensajeError("El documento identificador del residente tiene que ser distinto al de los familiares.");
       } else if (!_controlPrimario(familiares)) {
-        _vistaAlta?.mostrarMensajeError(
-            "La lista de familiares tiene que tener por lo menos un familiar primario.");
+        _vistaAlta?.mostrarMensajeError("La lista de familiares tiene que tener por lo menos un familiar primario.");
       } else {
-        await Fachada.getInstancia()?.altaUsuarioResidente(
-            familiares, ci, nombre, selectedSucursal, apellido);
+        await Fachada.getInstancia()?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido);
       }
     } on AltaUsuarioException catch (ex) {
       _vistaAlta?.mostrarMensaje(ex.mensaje);
@@ -77,13 +73,11 @@ class ControllerVistaAltaResidente {
 
   bool controlAltaFamiliar(Familiar familiar, List<Familiar> lista) {
     if (!familiar.esEmailValido()) {
-      _vistaAlta?.mostrarMensajeError(
-          "El email del familiar no tiene el formato correcto.");
+      _vistaAlta?.mostrarMensajeError("El email del familiar no tiene el formato correcto.");
       return false;
     }
     if (lista.contains(familiar)) {
-      _vistaAlta?.mostrarMensajeError(
-          "Ya hay un familiar con el documento identificador ingresado.");
+      _vistaAlta?.mostrarMensajeError("Ya hay un familiar con el documento identificador ingresado.");
       return false;
     }
     familiar.capitalizeAll();
@@ -97,9 +91,7 @@ class ControllerVistaAltaResidente {
   }
 
   bool mostrarPrimario(List<Familiar>? lista) {
-    return lista == null ||
-        lista!.isEmpty ||
-        lista!.every((familiar) => familiar.contactoPrimario != 1);
+    return lista == null || lista!.isEmpty || lista!.every((familiar) => familiar.contactoPrimario != 1);
   }
 
   void _cerrarSesion(String mensaje) {
@@ -108,6 +100,13 @@ class ControllerVistaAltaResidente {
   }
 
   String _capitalize(String text) {
-    return text[0].toUpperCase() + text.substring(1);
+    List<String> words = text.split(' ');
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
+      if (word.isNotEmpty) {
+        words[i] = word[0].toUpperCase() + word.substring(1);
+      }
+    }
+    return words.join(' ');
   }
 }

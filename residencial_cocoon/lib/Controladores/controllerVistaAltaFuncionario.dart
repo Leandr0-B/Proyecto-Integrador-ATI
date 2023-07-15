@@ -40,20 +40,12 @@ class ControllerVistaAltaFuncionario {
   }
 
   Future<void> altaUsuario(
-      String ci,
-      String nombre,
-      int administrador,
-      List<int> selectedRoles,
-      List<int> selectedSucursales,
-      String apellido,
-      String telefono,
-      String email) async {
+      String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email) async {
     nombre = _capitalize(nombre);
     apellido = _capitalize(apellido);
     try {
       if (Usuario.esEmailValido(email)) {
-        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador,
-            selectedRoles, selectedSucursales, apellido, telefono, email);
+        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email);
       } else {
         _vista?.mostrarMensajeError("El email no tiene el formato correcto.");
       }
@@ -73,6 +65,13 @@ class ControllerVistaAltaFuncionario {
   }
 
   String _capitalize(String text) {
-    return text[0].toUpperCase() + text.substring(1);
+    List<String> words = text.split(' ');
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
+      if (word.isNotEmpty) {
+        words[i] = word[0].toUpperCase() + word.substring(1);
+      }
+    }
+    return words.join(' ');
   }
 }
