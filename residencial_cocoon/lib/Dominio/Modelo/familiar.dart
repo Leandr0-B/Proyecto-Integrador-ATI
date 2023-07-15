@@ -67,8 +67,7 @@ class Familiar {
 
   bool esEmailValido() {
     // Expresión regular para verificar el formato del email
-    const pattern =
-        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
+    const pattern = r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
     final regex = RegExp(pattern);
 
     return regex.hasMatch(this._email);
@@ -80,7 +79,14 @@ class Familiar {
   }
 
   String _capitalize(String text) {
-    return text[0].toUpperCase() + text.substring(1);
+    List<String> words = text.split(' ');
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
+      if (word.isNotEmpty) {
+        words[i] = word[0].toUpperCase() + word.substring(1);
+      }
+    }
+    return words.join(' ');
   }
 
   //ToString
