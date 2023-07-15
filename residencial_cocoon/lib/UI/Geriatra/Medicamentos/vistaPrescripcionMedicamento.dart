@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaAsociarMedicamentoResidente.dart';
+import 'package:intl/intl.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaAsociarMedicamentoResidente.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
-class VistaAsociarMedicamento extends StatefulWidget {
+class VistaPrescripcionMedicamento extends StatefulWidget {
   @override
-  State<VistaAsociarMedicamento> createState() => _VistaPrescripcionMedicamentoState();
+  State<VistaPrescripcionMedicamento> createState() => _VistaPrescripcionMedicamentoState();
 }
 
-class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> implements IvistaAsociarMedicamento {
-  ControllerVistaAsociarMedicamento _controller = ControllerVistaAsociarMedicamento.empty();
+class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicamento> implements IvistaPrescripcionMedicamento {
+  ControllerVistaPrescripcionMedicamento _controller = ControllerVistaPrescripcionMedicamento.empty();
   final _formKey = GlobalKey<FormState>();
   Usuario? _selectedResidente;
   Sucursal? _selectedSucursal;
   Medicamento? _selectedMedicamento;
-  bool residentesVisible = false;
+  DateTime? _fecha_desde;
+  DateTime? _fecha_hasta;
+  TimeOfDay? _hora_comienzo;
+  String _descripcion = "";
+  int _frecuencia = 0;
+  int _cantidad = 0;
+  String _palabraClave = "";
   Future<List<Medicamento>?> _medicamentos = Future.value([]);
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
-  int _stock = 0;
-  int _stockNotificacion = 0;
-  String _palabraClave = "";
-  final _fieldStock = TextEditingController();
-  final _fieldStockNotificacion = TextEditingController();
+  bool _residentesVisible = false;
+
+  final _fieldDescripcion = TextEditingController();
+  final _fieldFrecuencia = TextEditingController();
+  final _fieldCantidad = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaAsociarMedicamento(this);
+    _controller = ControllerVistaPrescripcionMedicamento(this);
   }
 
   @override
@@ -39,7 +46,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Asociar medicamento',
+          'Prescripcion medicamento',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
@@ -70,7 +77,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                               setState(() {
                                 _selectedSucursal = newValue;
                                 _selectedResidente = null;
-                                residentesVisible = true;
+                                _residentesVisible = true;
                               });
                             },
                             controlAffinity: ListTileControlAffinity.leading,
@@ -86,7 +93,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                 ),
                 Column(
                   children: [
-                    if (residentesVisible) ...[
+                    if (_residentesVisible) ...[
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text("Seleccione un residente:"),
@@ -115,6 +122,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                 onChanged: (Usuario? newValue) {
                                   setState(() {
                                     _selectedResidente = newValue;
+                                    _selectedMedicamento = null;
                                   });
                                 },
                               );
@@ -130,8 +138,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                         ElevatedButton(
                           onPressed: () {
                             _selectedMedicamento = null;
-                            _fieldStock.clear();
-                            _fieldStockNotificacion.clear();
                             obtenerMedicamentosPaginadosConfiltros();
                             mostrarPopUp(_medicamentos);
                           },
@@ -154,16 +160,50 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                             ),
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Ingrese una descripción de la prescripcion:"),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: TextFormField(
+                            controller: _fieldDescripcion,
+                            maxLines: null,
+                            onChanged: (value) {
+                              _descripcion = value;
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese una descripción.';
+                              }
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Descripción',
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 12.0,
+                              ),
+                              border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
+                            ),
+                          ),
+                        ),
                         TextFormField(
                           decoration: const InputDecoration(
-                            labelText: 'Ingrese la cantidad:',
-                            hintText: 'Cantidad de medicamento',
+                            labelText: 'Ingrese la frecuencia en horas:',
+                            hintText: 'Frecuencia de consumo en horas',
                           ),
                           maxLength: 100,
-                          controller: _fieldStock,
+                          controller: _fieldFrecuencia,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese la cantidad.';
+                              return 'Por favor ingrese la frecuencia de consumo.';
                             }
                             if (num.tryParse(value) == null) {
                               return 'Solo puede ingresar valores numéricos.';
@@ -174,19 +214,19 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                             return null;
                           },
                           onSaved: (value) {
-                            _stock = int.parse(value!);
+                            _frecuencia = int.parse(value!);
                           },
                         ),
                         TextFormField(
                           decoration: const InputDecoration(
-                            labelText: 'Ingrese la cantidad de notificación:',
-                            hintText: 'Cantidad para notificación',
+                            labelText: 'Ingrese la cantidad del consumo:',
+                            hintText: 'Cantidad del consumo del medicamento',
                           ),
                           maxLength: 100,
-                          controller: _fieldStockNotificacion,
+                          controller: _fieldCantidad,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese la cantidad para notificación.';
+                              return 'Por favor ingrese la cantidad del consumo del medicamento.';
                             }
                             if (num.tryParse(value) == null) {
                               return 'Solo puede ingresar valores numéricos.';
@@ -197,8 +237,56 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                             return null;
                           },
                           onSaved: (value) {
-                            _stockNotificacion = int.parse(value!);
+                            _cantidad = int.parse(value!);
                           },
+                        ),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Seleccione la fecha desde:"),
+                        ),
+                        InkWell(
+                          onTap: () => _selectFechaDesde(context),
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              hintText: 'Fecha',
+                            ),
+                            child: Text(
+                              _fecha_desde != null ? DateFormat('dd/MM/yyyy').format(_fecha_desde!) : 'Seleccione una fecha',
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Seleccione la fecha hasta:"),
+                        ),
+                        InkWell(
+                          onTap: () => _selectFechaHasta(context),
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              hintText: 'Fecha',
+                            ),
+                            child: Text(
+                              _fecha_hasta != null ? DateFormat('dd/MM/yyyy').format(_fecha_hasta!) : 'Seleccione una fecha',
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Seleccione la hora de comienzo:"),
+                        ),
+                        InkWell(
+                          onTap: () => _selectHora(context),
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              hintText: 'Hora',
+                            ),
+                            child: Text(
+                              _hora_comienzo != null ? _hora_comienzo!.format(context) : 'Seleccione una hora',
+                            ),
+                          ),
                         ),
                       ]
                     ],
@@ -210,7 +298,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       _selectedMedicamento = _selectedMedicamento;
-                      asociarMedicamento();
+                      registrarPrescripcion();
                     }
                   },
                   child: Text('Ingresar alta'),
@@ -224,11 +312,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   }
 
   @override
-  Future<void> asociarMedicamento() async {
-    await _controller.asociarMedicamento(_selectedMedicamento, _selectedResidente, _selectedSucursal, _stock, _stockNotificacion);
-  }
-
-  @override
   void cerrarSesion() {
     Utilidades.cerrarSesion(context);
   }
@@ -236,13 +319,27 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   @override
   void limpiar() {
     setState(() {
-      _fieldStock.clear();
-      _fieldStockNotificacion.clear();
+      _fieldCantidad.clear();
+      _fieldDescripcion.clear();
+      _fieldFrecuencia.clear();
       _selectedMedicamento = null;
       _selectedResidente = null;
       _selectedSucursal = null;
-      residentesVisible = false;
+      _residentesVisible = false;
+      _fecha_desde = null;
+      _fecha_hasta = null;
+      _hora_comienzo = null; /////////////
     });
+  }
+
+  @override
+  Future<List<Usuario>?> listaResidentes() async {
+    return await _controller.listaResidentes(_selectedSucursal);
+  }
+
+  @override
+  Future<List<Sucursal>?> listaSucursales() async {
+    return await _controller.listaSucursales();
   }
 
   @override
@@ -262,13 +359,9 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   }
 
   @override
-  Future<List<Usuario>?> listaResidentes() async {
-    return await _controller.listaResidentes(_selectedSucursal);
-  }
-
-  @override
-  Future<List<Sucursal>?> listaSucursales() async {
-    return await _controller.listaSucursales();
+  void obtenerMedicamentosPaginadosBotonFiltrar() {
+    _paginaActual = 1;
+    obtenerMedicamentosPaginadosConfiltros();
   }
 
   @override
@@ -279,9 +372,50 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   }
 
   @override
-  void obtenerMedicamentosPaginadosBotonFiltrar() {
-    _paginaActual = 1;
-    obtenerMedicamentosPaginadosConfiltros();
+  Future<void> registrarPrescripcion() async {
+    await _controller.registrarPrescripcion(
+        _selectedMedicamento, _selectedResidente, _selectedSucursal, _cantidad, _descripcion, _fecha_desde, _fecha_hasta, _frecuencia, _hora_comienzo);
+  }
+
+  Future<void> _selectFechaDesde(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fecha_desde ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (picked != null && picked != _fecha_desde) {
+      setState(() {
+        _fecha_desde = picked;
+      });
+    }
+  }
+
+  Future<void> _selectFechaHasta(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fecha_hasta ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (picked != null && picked != _fecha_hasta) {
+      setState(() {
+        _fecha_hasta = picked;
+      });
+    }
+  }
+
+  Future<void> _selectHora(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _hora_comienzo ?? TimeOfDay.now(),
+    );
+
+    if (picked != null && picked != _hora_comienzo) {
+      setState(() {
+        _hora_comienzo = picked;
+      });
+    }
   }
 
   void mostrarPopUp(Future<List<Medicamento>?> elementos) {

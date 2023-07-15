@@ -1,15 +1,20 @@
 import 'package:http/http.dart' as http;
 import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/asociarMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:universal_html/html.dart';
 
 class APIService {
@@ -585,6 +590,92 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static postAsociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, int stock, int stockNotificacion, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/asociar-medicamento');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci_residente': selectedResidente?.ci,
+        'id_medicamento': selectedMedicamento?.id_medicamento,
+        'stock': stock,
+        'stock_notificacion': stockNotificacion,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw AsociarMedicamentoException("Se asocio el medicamento al residente.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static fetchMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-asociados/${cedulaResidente}?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerMedicamentosAsociadosPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-asociados/count/${ciResidente}?page=1'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static postPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, String? geriatraCi, int cantidad, String descripcion, String fecha_desde_formateada,
+      String fecha_hasta_formateada, int frecuencia, String horaSeleccionadaString, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci_residente': selectedResidente?.ci,
+        'ci_geriatra': geriatraCi,
+        'id_medicamento': selectedMedicamento?.id_medicamento,
+        'cantidad': cantidad,
+        'descripcion': descripcion,
+        'fecha_desde': fecha_desde_formateada,
+        'fecha_hasta': fecha_hasta_formateada,
+        'frecuencia': frecuencia,
+        'hora_comienzo': horaSeleccionadaString,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw PrescripcionMedicamentoException("Se ingreso la prescripción del medicamento al residente.");
     } else {
       throw Exception(errorObtenerToken);
     }

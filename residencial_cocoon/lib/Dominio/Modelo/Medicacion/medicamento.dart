@@ -12,8 +12,7 @@ class Medicamento {
   Medicamento.json(this._id_medicamento, this._nombre, this._unidad);
 
   factory Medicamento.fromJson(Map<String, dynamic> json) {
-    return Medicamento.json(
-        json['id_medicamento'], json['nombre'], json['unidad']);
+    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad']);
   }
 
   //Get Set
@@ -31,10 +30,7 @@ class Medicamento {
 
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Medicamento>((json) => Medicamento.fromJson(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Medicamento>((json) => Medicamento.fromJson(json)).toList();
   }
 
   //Equals
@@ -48,6 +44,6 @@ class Medicamento {
   //ToString
   @override
   String toString() {
-    return _nombre;
+    return _nombre + " | Unidad: " + _unidad;
   }
 }
