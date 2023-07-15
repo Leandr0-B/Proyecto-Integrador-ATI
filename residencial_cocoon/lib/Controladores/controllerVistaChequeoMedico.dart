@@ -52,17 +52,10 @@ class ControllerVistaChequeoMedico {
     return _sucursales;
   }
 
-  Future<void> altaChequeoMedico(
-      Sucursal? selectedSucursal,
-      Usuario? selectedResidente,
-      List<Control?> selectedControles,
-      DateTime? fecha,
-      String descripcion) async {
+  Future<void> altaChequeoMedico(Sucursal? selectedSucursal, Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
     try {
-      if (_controlesDatos(
-          fecha, selectedSucursal, selectedResidente, descripcion)) {
-        await Fachada.getInstancia()?.altaChequeoMedico(
-            selectedResidente, selectedControles, fecha, descripcion);
+      if (_controlesDatos(fecha, selectedSucursal, selectedResidente, descripcion)) {
+        await Fachada.getInstancia()?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
       }
     } on ChequeoMedicoException catch (e) {
       _vistaChequeo?.mostrarMensaje(e.toString());
@@ -74,12 +67,8 @@ class ControllerVistaChequeoMedico {
     }
   }
 
-  bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal,
-      Usuario? residenteSeleccionado, String descripcion) {
-    if (descripcion == null || descripcion == "") {
-      _vistaChequeo?.mostrarMensajeError("Tiene que ingresar una descripción.");
-      return false;
-    } else if (fecha == null) {
+  bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal, Usuario? residenteSeleccionado, String descripcion) {
+    if (fecha == null) {
       _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar la fecha.");
       return false;
     }
@@ -93,15 +82,13 @@ class ControllerVistaChequeoMedico {
     return true;
   }
 
-  void altaSelectedControl(
-      Control? control, String valor, List<Control?> selectedControl) {
+  void altaSelectedControl(Control? control, String valor, List<Control?> selectedControl) {
     if (control != null) {
       control = Control.sinUnidad(control.id_control, control.nombre, valor);
       if (!selectedControl.contains(control)) {
         selectedControl.add(control);
       } else {
-        _vistaChequeo?.mostrarMensajeError(
-            "Ya ingresaste el control: " + control.nombre);
+        _vistaChequeo?.mostrarMensajeError("Ya ingresaste el control: " + control.nombre);
       }
     } else {
       _vistaChequeo?.mostrarMensajeError("Seleccione un control de la lista");
