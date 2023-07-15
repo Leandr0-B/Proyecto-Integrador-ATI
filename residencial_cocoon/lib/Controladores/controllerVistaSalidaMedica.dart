@@ -39,17 +39,10 @@ class ControllerVistaSalidaMedica {
     return _sucursales;
   }
 
-  Future<void> altaSalidaMedica(
-      Usuario? selectedResidente,
-      String descripcion,
-      DateTime? fechaDesde,
-      DateTime? fechaHasta,
-      Sucursal? selectedSucursal) async {
+  Future<void> altaSalidaMedica(Usuario? selectedResidente, String descripcion, DateTime? fechaDesde, DateTime? fechaHasta, Sucursal? selectedSucursal) async {
     try {
-      if (_controles(fechaDesde, fechaHasta, selectedSucursal,
-          selectedResidente, descripcion)) {
-        await Fachada.getInstancia()?.altaSalidaMedica(
-            selectedResidente, descripcion, fechaDesde, fechaHasta);
+      if (_controles(fechaDesde, fechaHasta, selectedSucursal, selectedResidente, descripcion)) {
+        await Fachada.getInstancia()?.altaSalidaMedica(selectedResidente, descripcion, fechaDesde, fechaHasta);
       }
     } on SalidaMedicaException catch (e) {
       _vistaSalida?.mostrarMensaje(e.toString());
@@ -61,26 +54,15 @@ class ControllerVistaSalidaMedica {
     }
   }
 
-  bool _controles(
-      DateTime? fechaDesde,
-      DateTime? fechaHasta,
-      Sucursal? selectedSucursal,
-      Usuario? residenteSeleccionado,
-      String descripcion) {
-    if (descripcion == null || descripcion == "") {
-      _vistaSalida?.mostrarMensajeError("Tiene que ingresar una descripción.");
-      return false;
-    } else if (fechaDesde == null) {
-      _vistaSalida
-          ?.mostrarMensajeError("Tiene que seleccionar una fecha desde.");
+  bool _controles(DateTime? fechaDesde, DateTime? fechaHasta, Sucursal? selectedSucursal, Usuario? residenteSeleccionado, String descripcion) {
+    if (fechaDesde == null) {
+      _vistaSalida?.mostrarMensajeError("Tiene que seleccionar una fecha desde.");
       return false;
     } else if (fechaHasta == null) {
-      _vistaSalida
-          ?.mostrarMensajeError("Tiene que seleccionar una fecha hasta.");
+      _vistaSalida?.mostrarMensajeError("Tiene que seleccionar una fecha hasta.");
       return false;
     } else if (fechaDesde.isAfter(fechaHasta)) {
-      _vistaSalida?.mostrarMensajeError(
-          "La fecha desde no puede ser mayor a la fecha hasta.");
+      _vistaSalida?.mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
       return false;
     }
     if (selectedSucursal == null) {

@@ -162,6 +162,11 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                     onChanged: (value) {
                       descripcion = value;
                     },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese una descripción.';
+                      }
+                    },
                     decoration: InputDecoration(
                       hintText: 'Descripción',
                       contentPadding: EdgeInsets.symmetric(

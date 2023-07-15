@@ -39,12 +39,10 @@ class ControllerVistaVisitaMedicaExterna {
     return _sucursales;
   }
 
-  Future<void> altaVisitaMedicaExt(Usuario? selectedResidente,
-      String descripcion, DateTime? fecha, Sucursal? selectedSucursal) async {
+  Future<void> altaVisitaMedicaExt(Usuario? selectedResidente, String descripcion, DateTime? fecha, Sucursal? selectedSucursal) async {
     try {
       if (_controles(fecha, selectedSucursal, selectedResidente, descripcion)) {
-        await Fachada.getInstancia()
-            ?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
+        await Fachada.getInstancia()?.altaVisitaMedicaExt(selectedResidente, descripcion, fecha);
       }
     } on visitaMedicaExternaException catch (e) {
       vistaVisita?.mostrarMensaje(e.toString());
@@ -56,12 +54,8 @@ class ControllerVistaVisitaMedicaExterna {
     }
   }
 
-  bool _controles(DateTime? fecha, Sucursal? selectedSucursal,
-      Usuario? residenteSeleccionado, String descripcion) {
-    if (descripcion == null || descripcion == "") {
-      vistaVisita?.mostrarMensajeError("Tiene que ingresar una descripción.");
-      return false;
-    } else if (fecha == null) {
+  bool _controles(DateTime? fecha, Sucursal? selectedSucursal, Usuario? residenteSeleccionado, String descripcion) {
+    if (fecha == null) {
       vistaVisita?.mostrarMensajeError("Tiene que seleccionar la fecha.");
       return false;
     }
