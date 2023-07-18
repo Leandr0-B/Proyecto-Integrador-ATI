@@ -3,6 +3,8 @@ class Medicamento {
   int _id_medicamento = 0;
   String _nombre = "";
   String _unidad = "";
+  int _stock = 0;
+  int _stockNotificacion = 0;
 
   //Constructor
   Medicamento(this._nombre, this._unidad);
@@ -26,11 +28,21 @@ class Medicamento {
 
   String get unidad => this._unidad;
 
-  set unidad(String value) => this.unidad = value;
+  int get stock => this._stock;
+
+  set stock(int value) => this._stock = value;
+
+  int get stockNotificacion => this._stockNotificacion;
+
+  set stockNotificacion(int value) => this._stockNotificacion = value;
 
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {
     return jsonList.cast<Map<String, dynamic>>().map<Medicamento>((json) => Medicamento.fromJson(json)).toList();
+  }
+
+  void setUnidad(String unidad) {
+    this._unidad = unidad;
   }
 
   //Equals

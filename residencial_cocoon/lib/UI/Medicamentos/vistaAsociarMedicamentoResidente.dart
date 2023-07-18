@@ -3,7 +3,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaAsociarMedicamen
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaAsociarMedicamentoResidente.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaAsociarMedicamentoResidente.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaAsociarMedicamento extends StatefulWidget {
@@ -108,7 +108,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + ' | ' + residente.ci),
+                                      child: Text(residente.nombre + " " + residente.apellido + ' | ' + residente.ci),
                                     );
                                   }),
                                 ],

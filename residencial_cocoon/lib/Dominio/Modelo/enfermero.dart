@@ -4,8 +4,9 @@ class Enfermero extends Rol {
   //Atributos
 
   //Constructor
-  Enfermero(int idRol, String descripcion)
-      : super.sinUsuario(idRol, descripcion);
+  Enfermero(int idRol, String descripcion) : super.sinUsuario(idRol, descripcion);
+
+  Enfermero.empty() : super.empty();
 
   //Funciones
   @override

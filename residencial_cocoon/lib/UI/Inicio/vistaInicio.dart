@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAltaMedicamento.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAsociarMedicamentoResidente.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaAltaMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaAsociarMedicamentoResidente.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaSalidaMedica.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisitaMedicaExterna.dart';
@@ -13,6 +13,7 @@ import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarSalidaMedica.dart'
 import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaRegistrarMedicacionPeriodica.dart';
 import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
@@ -167,6 +168,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.prescripcionMedicamento:
         container = VistaPrescripcionMedicamento();
         break;
+      case DrawerSections.medicacionPeriodica:
+        container = VistaRegistrarMedicacionPeriodica();
+        break;
       default:
         container = Container();
         break;
@@ -303,16 +307,17 @@ class MyDrawerList extends StatelessWidget {
               menuItem(51, "Registrar Medicamento", IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
               menuItem(52, "Asociar Medicamento a residente", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
               menuItem(53, "Prescripcion Medicamento", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
+              menuItem(54, "Medicación Periódica", Icons.list, DrawerSections.medicacionPeriodica),
               ExpansionTile(
                 leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(41, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
-                  menuItem(42, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
+                  menuItem(42, "Visualizar Salidas Medicas", Icons.list, DrawerSections.visualizarSalidaMedica),
                   menuItem(43, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
-                  menuItem(44, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
+                  menuItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
                   menuItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
-                  menuItem(46, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                  menuItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
                 ],
               ),
             ],
@@ -378,6 +383,7 @@ enum DrawerSections {
   altaMedicamento,
   asociarMedicamento,
   prescripcionMedicamento,
+  medicacionPeriodica,
 }
 
 class NotificacionActualizadaCallback {

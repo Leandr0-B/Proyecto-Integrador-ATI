@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/material/time.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
@@ -192,5 +193,13 @@ class Fachada {
   Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, DateTime? fecha_desde, DateTime? fecha_hasta,
       int frecuencia, TimeOfDay? hora_comienzo) async {
     await _servicioMedicacion?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, fecha_desde, fecha_hasta, frecuencia, hora_comienzo);
+  }
+
+  Future<List<RegistroMedicacionConPrescripcion>?> obtenerRegistrosMedicamentosConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {
+    return await _servicioMedicacion?.obtenerRegistrosMedicamentosConPrescripcion(fechaFiltro, ciFiltro);
+  }
+
+  Future<void> procesarMedicacion(RegistroMedicacionConPrescripcion? selectedRegistro) async {
+    await _servicioMedicacion?.procesarMedicacion(selectedRegistro);
   }
 }

@@ -2,7 +2,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.d
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaAltaMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaAltaMedicamento.dart';
 
 class ControllerVistaAltaMedicamento {
   //Atributos
@@ -35,8 +35,7 @@ class ControllerVistaAltaMedicamento {
 
   bool _controles(String? uniadad) {
     if (uniadad == null || uniadad.isEmpty) {
-      _vista?.mostrarMensajeError(
-          "Tiene que seleccionar la unidad del medicamento");
+      _vista?.mostrarMensajeError("Tiene que seleccionar la unidad del medicamento");
       return false;
     }
     return true;

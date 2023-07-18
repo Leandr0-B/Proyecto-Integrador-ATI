@@ -6,8 +6,8 @@ import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaAsociarMedicamentoResidente.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaAsociarMedicamentoResidente.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaPrescripcionMedicamento.dart';
 
 class ControllerVistaPrescripcionMedicamento {
   //Atributos
