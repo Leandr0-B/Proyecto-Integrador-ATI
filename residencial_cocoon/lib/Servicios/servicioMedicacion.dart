@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/APIService/apiService.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -58,6 +59,21 @@ class ServicioMedicacion {
     Usuario? geriatra = Fachada.getInstancia()?.getUsuario();
     await APIService.postPrescripcion(selectedMedicamento, selectedResidente, geriatra?.ci, cantidad, descripcion, fecha_desde_formateada, fecha_hasta_formateada, frecuencia,
         horaSeleccionadaString, geriatra?.getToken());
+  }
+
+  Future<List<PrescripcionDeMedicamento>> obtenerPrescripcionesMedicamentosPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String prescripcionesMedicamentos = await APIService.obtenerPrescripcionesMedicamentosPaginadosConfiltros(
+        paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(prescripcionesMedicamentos);
+    return PrescripcionDeMedicamento.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String cantidadTotal = await APIService.obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(
+        fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
   }
 
   Future<List<RegistroMedicacionConPrescripcion>> obtenerRegistrosMedicamentosConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {

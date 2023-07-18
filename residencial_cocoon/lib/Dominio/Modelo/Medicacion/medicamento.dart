@@ -29,6 +29,9 @@ class Medicamento {
   String get unidad => this._unidad;
 
   int get stock => this._stock;
+  void setUnidad(String unidad) {
+    this._unidad = unidad;
+  }
 
   set stock(int value) => this._stock = value;
 

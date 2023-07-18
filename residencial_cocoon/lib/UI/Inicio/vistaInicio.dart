@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAltaMedicamento.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaAsociarMedicamentoResidente.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/vistaVisualizarPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaAltaMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaAsociarMedicamentoResidente.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaPrescripcionMedicamento.dart';
@@ -171,6 +175,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.medicacionPeriodica:
         container = VistaRegistrarMedicacionPeriodica();
         break;
+      case DrawerSections.visualizarPrescripcionesMedicamentos:
+        container = VistaVisualizarPrescripcionMedicamento();
+        break;
       default:
         container = Container();
         break;
@@ -292,6 +299,7 @@ class MyDrawerList extends StatelessWidget {
               child: const SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
+            menuItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
             if (usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
@@ -383,6 +391,7 @@ enum DrawerSections {
   altaMedicamento,
   asociarMedicamento,
   prescripcionMedicamento,
+  visualizarPrescripcionesMedicamentos,
   medicacionPeriodica,
 }
 

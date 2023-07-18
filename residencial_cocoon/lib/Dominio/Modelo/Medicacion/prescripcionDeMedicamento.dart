@@ -12,6 +12,7 @@ class PrescripcionDeMedicamento {
   String _descripcion = "";
   DateTime _fecha_desde = DateTime(0);
   DateTime _fecha_hasta = DateTime(0);
+  DateTime _fecha_creacion = DateTime(0);
   Geriatra _geriatra = Geriatra.empty();
   int _cantidad = 0;
   int _frecuencia = 0;
@@ -28,6 +29,7 @@ class PrescripcionDeMedicamento {
     this._cantidad,
     this._frecuencia,
     this._hora_comienzo,
+    this._fecha_creacion,
   );
 
   factory PrescripcionDeMedicamento.fromJsonVistaPrevia(Map<String, dynamic> json) {
@@ -59,9 +61,10 @@ class PrescripcionDeMedicamento {
       json['descripcion'],
       DateTime.parse(json['fecha_desde']),
       DateTime.parse(json['fecha_hasta']),
-      int.parse(json['cantidad']),
-      int.parse(json['frecuencia']),
+      json['cantidad'],
+      json['frecuencia'],
       time,
+      DateTime.parse(json['fecha_creacion']),
     );
     prescripcionAux.agregarGeriatra(geriatraAux);
     prescripcionAux.agregarResidente(residenteAux);
@@ -100,6 +103,9 @@ class PrescripcionDeMedicamento {
 
   TimeOfDay get hora_comienzo => this._hora_comienzo;
   set hora_comienzo(TimeOfDay value) => this._hora_comienzo = value;
+
+  DateTime get fecha_creacion => this._fecha_creacion;
+  set fecha_creacion(DateTime value) => this._fecha_creacion = value;
 
   //Funciones
   void agregarGeriatra(Usuario geriatra) {

@@ -633,9 +633,9 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   @override
   void obtenerSalidasMedicasPaginadasBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
-      mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
+      mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
-      mostrarMensaje("Debe seleccionar ambas fechas.");
+      mostrarMensajeError("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
       obtenerSalidasMedicasPaginadasConfiltros();
