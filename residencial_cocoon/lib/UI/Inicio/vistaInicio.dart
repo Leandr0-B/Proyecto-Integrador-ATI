@@ -300,8 +300,6 @@ class MyDrawerList extends StatelessWidget {
               child: const SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
-            menuItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
-            menuItem(63, "Visualizar Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
             if (usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
@@ -312,12 +310,16 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(22, "Registrar Residente", Icons.person_add, DrawerSections.altaResidente),
                 ],
               ),
+              ExpansionTile(
+                leading: const Icon(IconData(0xe3d9, fontFamily: 'MaterialIcons'), size: 20, color: Colors.black),
+                title: const Text("Medicaciones", style: TextStyle(color: Colors.black, fontSize: 16)),
+                children: [
+                  menuItem(51, "Registrar Medicamento", IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
+                  menuItem(52, "Asociar Medicamento a residente", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
+                ],
+              ),
             ],
             if (usuario!.esGeriatra() || usuario!.esAdministrador()) ...[
-              menuItem(51, "Registrar Medicamento", IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
-              menuItem(52, "Asociar Medicamento a residente", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
-              menuItem(53, "Prescripcion Medicamento", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
-              menuItem(54, "Registro Medicación Periódica", Icons.list, DrawerSections.medicacionPeriodica),
               ExpansionTile(
                 leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
@@ -328,6 +330,17 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
                   menuItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
                   menuItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
+                  menuItem(47, "Prescripcion Medicamento", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
+                  menuItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
+                ],
+              ),
+            ],
+            if (usuario!.esEnfermero() || usuario!.esAdministrador()) ...[
+              ExpansionTile(
+                leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
+                title: const Text("Enfermero", style: TextStyle(color: Colors.black, fontSize: 16)),
+                children: [
+                  menuItem(61, "Registro Medicación Periódica", Icons.fact_check, DrawerSections.medicacionPeriodica),
                 ],
               ),
             ],
@@ -339,6 +352,8 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
                   menuItem(62, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
                   menuItem(63, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                  menuItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
+                  menuItem(63, "Visualizar Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
                 ],
               ),
             ],
