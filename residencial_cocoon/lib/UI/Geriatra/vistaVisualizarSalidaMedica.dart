@@ -36,7 +36,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
       context: context,
       initialDate: _fechaDesde ?? DateTime.now(),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
     );
 
     if (picked != null && picked != _fechaDesde) {
@@ -51,7 +51,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
       context: context,
       initialDate: _fechaHasta ?? DateTime.now(),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
     );
 
     if (picked != null && picked != _fechaHasta) {
