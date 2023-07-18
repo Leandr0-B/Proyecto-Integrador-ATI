@@ -120,7 +120,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'No hay medicaciones periodicas para el dia de hoy.',
+                            'No hay medicaciones periodicas para el día.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -293,7 +293,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'No hay medicaciones periodicas para el dia de hoy.',
+                            'No hay medicaciones periodicas para el día.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -583,7 +583,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Ingrese la cantidad administrada',
+                    labelText: 'Ingrese la cantidad administrada (0 si no se dio)',
                     hintText: 'Cantidad administrada al residente',
                   ),
                   maxLength: 100,
