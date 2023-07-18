@@ -1,6 +1,8 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/material/time.dart';
+import 'package:residencial_cocoon/APIService/apiService.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
@@ -192,5 +194,14 @@ class Fachada {
   Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, DateTime? fecha_desde, DateTime? fecha_hasta,
       int frecuencia, TimeOfDay? hora_comienzo) async {
     await _servicioMedicacion?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, fecha_desde, fecha_hasta, frecuencia, hora_comienzo);
+  }
+
+  Future<List<PrescripcionDeMedicamento>?> obtenerPrescripcionesMedicamentosPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesMedicamentosPaginadosConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 }

@@ -680,4 +680,46 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static obtenerPrescripcionesMedicamentosPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(
+      DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/count?page=1'
+        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }

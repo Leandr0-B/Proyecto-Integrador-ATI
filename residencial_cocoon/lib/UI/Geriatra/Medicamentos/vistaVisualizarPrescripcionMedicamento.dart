@@ -1,26 +1,22 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarChequeoMedico.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Geriatra/iVistaVisualizarChequeoMedico.dart';
+import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
-class VistaVisualizarChequeoMedico extends StatefulWidget {
-  VistaVisualizarChequeoMedico();
+class VistaVisualizarPrescripcionMedicamento extends StatefulWidget {
+  const VistaVisualizarPrescripcionMedicamento({super.key});
 
   @override
-  _VistaVisualizarChequeoMedicoState createState() => _VistaVisualizarChequeoMedicoState();
+  State<VistaVisualizarPrescripcionMedicamento> createState() => _VistaVisualizarPrescripcionMedicamentoState();
 }
 
-//Get set
-
-class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMedico> implements IvistaVisualizarChequeoMedico {
-  Future<List<ChequeoMedico>> _chequeosMedicos = Future.value([]);
-  ControllerVistaVisualizarChequeoMedico _controller = ControllerVistaVisualizarChequeoMedico.empty();
-
+class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizarPrescripcionMedicamento> implements IvistaVisualizarPrescripcionMedicamento {
+  Future<List<PrescripcionDeMedicamento>> _prescripcionesMedicamentos = Future.value([]);
+  ControllerVistaVisualizarPrescripcionMedicamento _controller = ControllerVistaVisualizarPrescripcionMedicamento.empty();
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
   Future<int> _cantidadDePaginas = Future.value(0);
@@ -31,44 +27,14 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
   bool _filtroExpandido = false;
   Usuario? usuario = Fachada.getInstancia()?.getUsuario();
 
-  Future<void> selectFechaDesde(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaDesde ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null && picked != _fechaDesde) {
-      setState(() {
-        _fechaDesde = picked;
-      });
-    }
-  }
-
-  Future<void> selectFechaHasta(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaHasta ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null && picked != _fechaHasta) {
-      setState(() {
-        _fechaHasta = picked;
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaVisualizarChequeoMedico(this);
+    _controller = ControllerVistaVisualizarPrescripcionMedicamento(this);
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
       _ciResidente = usuario?.ci;
     }
-    obtenerChequeosMedicosPaginadosConfiltros();
+    obtenerPrescripcionesMedicamentosPaginadosConfiltros();
   }
 
   @override
@@ -76,7 +42,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Chequeos Médicos',
+          'Visualizar Prescripciones de Medicamentos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -162,7 +128,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerChequeosMedicosPaginadosBotonFiltrar();
+                  obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -171,18 +137,18 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                 onPressed: () {
                   setState(() {
                     limpiarFiltros();
-                    obtenerChequeosMedicosPaginados();
+                    obtenerPrescripcionesMedicamentosPaginados();
                   });
                 },
-                child: const Text('Mostrar Todos'),
+                child: const Text('Mostrar Todas'),
               ),
             ],
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<ChequeoMedico>>(
-            future: _chequeosMedicos,
-            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
+          child: FutureBuilder<List<PrescripcionDeMedicamento>>(
+            future: _prescripcionesMedicamentos,
+            builder: (BuildContext context, AsyncSnapshot<List<PrescripcionDeMedicamento>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -196,7 +162,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Chequeos Médicos',
+                            'Aún no hay Prescripciones de medicamentos',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -212,10 +178,10 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      ChequeoMedico chequeoMedico = snapshot.data![index];
+                      PrescripcionDeMedicamento prescripcionMed = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(chequeoMedico);
+                          mostrarPopUp(prescripcionMed);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -238,7 +204,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
+                                      'Prescripcion Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()} ',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -246,23 +212,32 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${chequeoMedico.descripcion}',
+                                      'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
-                                    if (chequeoMedico.controles.isNotEmpty) ...[
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                    ],
+                                    const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha : ${chequeoMedico.imprimirFecha()}',
+                                      'Descripcion: ${prescripcionMed.descripcion}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha desde: ${prescripcionMed.fecha_desde}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
+                                      'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Regitrador por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -300,7 +275,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerChequeosMedicosPaginadosConfiltros();
+                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -312,7 +287,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerChequeosMedicosPaginadosConfiltros();
+                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -394,7 +369,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerChequeosMedicosPaginadosBotonFiltrar();
+                  obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -402,18 +377,18 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    obtenerChequeosMedicosPaginados();
+                    obtenerPrescripcionesMedicamentosPaginados();
                   });
                 },
-                child: const Text('Mostrar Todos'),
+                child: const Text('Mostrar Todas'),
               ),
             ],
           ),
         ],
         Expanded(
-          child: FutureBuilder<List<ChequeoMedico>>(
-            future: _chequeosMedicos,
-            builder: (BuildContext context, AsyncSnapshot<List<ChequeoMedico>> snapshot) {
+          child: FutureBuilder<List<PrescripcionDeMedicamento>>(
+            future: _prescripcionesMedicamentos,
+            builder: (BuildContext context, AsyncSnapshot<List<PrescripcionDeMedicamento>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -427,7 +402,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Salidas Medicas',
+                            'Aún no hay Prescripciones de Medicamentos',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -445,10 +420,10 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      ChequeoMedico chequeoMedico = snapshot.data![index];
+                      PrescripcionDeMedicamento prescripcionMed = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(chequeoMedico);
+                          mostrarPopUp(prescripcionMed);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -471,7 +446,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
+                                      'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -479,23 +454,32 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${chequeoMedico.descripcion}',
+                                      'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
-                                    if (chequeoMedico.controles.isNotEmpty) ...[
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                    ],
+                                    const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha : ${chequeoMedico.imprimirFecha()}',
+                                      'Descripcion: ${prescripcionMed.descripcion}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha desde: ${prescripcionMed.fecha_desde}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
+                                      'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Regitrador por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -533,7 +517,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerChequeosMedicosPaginadosConfiltros();
+                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -545,7 +529,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerChequeosMedicosPaginadosConfiltros();
+                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -561,53 +545,23 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
   }
 
   @override
-  void mostrarPopUp(ChequeoMedico chequeoMedico) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Chequeo Médico, Residente: ${chequeoMedico.ciResidente()} - ${chequeoMedico.nombreResidente()} - ${chequeoMedico.apellidoResidente()}',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Descripcion : ${chequeoMedico.descripcion}',
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              if (chequeoMedico.controles.isNotEmpty) ...[
-                const SizedBox(height: 8.0),
-                Text(
-                  'Controles: ${chequeoMedico.imprimirControlesMedicos()}',
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-              ],
-              Text(
-                'Fecha : ${chequeoMedico.imprimirFecha()}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void cerrarSesion() {
+    Utilidades.cerrarSesion(context);
+  }
+
+  @override
+  void limpiarFiltros() {
+    _paginaActual = 1;
+    _fechaDesde = null;
+    _fechaHasta = null;
+    _palabraClave = null;
+
+    if (usuario!.esResidente() && !usuario!.esAdministrador()) {
+      _ciResidente = usuario?.ci;
+    } else {
+      _ciResidente = null;
+    }
+    setState(() {});
   }
 
   @override
@@ -626,47 +580,121 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
     ));
   }
 
-  @override
-  void obtenerChequeosMedicosPaginadosBotonFiltrar() {
+  void obtenerPrescripcionesMedicamentosPaginadosConfiltros() {
+    _prescripcionesMedicamentos =
+        _controller.obtenerPrescripcionesMedicamentosPaginadosConfiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    setState(() {});
+  }
+
+  void obtenerPrescripcionesMedicamentosPaginados() {
+    limpiarFiltros();
+    obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+  }
+
+  void obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensajeError("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
-      obtenerChequeosMedicosPaginadosConfiltros();
+      obtenerPrescripcionesMedicamentosPaginadosConfiltros();
     }
   }
 
-  @override
-  void obtenerChequeosMedicosPaginadosConfiltros() {
-    _chequeosMedicos = _controller.obtenerChequeosMedicosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
-    setState(() {});
-  }
+  Future<void> selectFechaDesde(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fechaDesde ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
 
-  @override
-  void obtenerChequeosMedicosPaginados() {
-    limpiarFiltros();
-    obtenerChequeosMedicosPaginadosConfiltros();
-  }
-
-  @override
-  void limpiarFiltros() {
-    _paginaActual = 1;
-    _fechaDesde = null;
-    _fechaHasta = null;
-    _palabraClave = null;
-
-    if (usuario!.esResidente() && !usuario!.esAdministrador()) {
-      _ciResidente = usuario?.ci;
-    } else {
-      _ciResidente = null;
+    if (picked != null && picked != _fechaDesde) {
+      setState(() {
+        _fechaDesde = picked;
+      });
     }
   }
 
-  @override
-  void cerrarSesion() {
-    Utilidades.cerrarSesion(context);
+  Future<void> selectFechaHasta(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fechaHasta ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+
+    if (picked != null && picked != _fechaHasta) {
+      setState(() {
+        _fechaHasta = picked;
+      });
+    }
+  }
+
+  void mostrarPopUp(PrescripcionDeMedicamento prescripcionMed) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Descripcion: ${prescripcionMed.descripcion}',
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Fecha desde: ${prescripcionMed.fecha_desde}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Regitrador por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 20.0),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

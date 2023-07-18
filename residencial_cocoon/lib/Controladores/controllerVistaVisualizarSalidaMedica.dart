@@ -12,13 +12,9 @@ class ControllerVistaVisualizarSalidaMedica {
   ControllerVistaVisualizarSalidaMedica.empty();
 
 //Funciones
-  Future<int> calcularTotalPaginas(int elementosPorPagina, DateTime? fechaDesde,
-      DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+  Future<int> calcularTotalPaginas(int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     try {
-      int totalNotificaciones = await Fachada.getInstancia()
-              ?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(
-                  fechaDesde, fechaHasta, ciResidente, palabraClave) ??
-          0;
+      int totalNotificaciones = await Fachada.getInstancia()?.obtenerSalidasMedicasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave) ?? 0;
       return (totalNotificaciones / elementosPorPagina).ceil();
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
@@ -27,22 +23,9 @@ class ControllerVistaVisualizarSalidaMedica {
   }
 
   Future<List<SalidaMedica>> obtenerSalidasMedicasPaginadasConFiltros(
-      int paginaActual,
-      int elementosPorPagina,
-      DateTime? fechaDesde,
-      DateTime? fechaHasta,
-      String? ciResidente,
-      String? palabraClave) async {
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     try {
-      return await Fachada.getInstancia()
-              ?.obtenerSalidasMedicasPaginadasConfiltros(
-                  paginaActual,
-                  elementosPorPagina,
-                  fechaDesde,
-                  fechaHasta,
-                  ciResidente,
-                  palabraClave) ??
-          [];
+      return await Fachada.getInstancia()?.obtenerSalidasMedicasPaginadasConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave) ?? [];
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
       return [];

@@ -26,7 +26,9 @@ class Medicamento {
 
   String get unidad => this._unidad;
 
-  set unidad(String value) => this.unidad = value;
+  void setUnidad(String unidad) {
+    this._unidad = unidad;
+  }
 
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {
