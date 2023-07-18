@@ -44,10 +44,6 @@ class Medicamento {
     return jsonList.cast<Map<String, dynamic>>().map<Medicamento>((json) => Medicamento.fromJson(json)).toList();
   }
 
-  void setUnidad(String unidad) {
-    this._unidad = unidad;
-  }
-
   //Equals
   @override
   bool operator ==(Object other) {

@@ -4,7 +4,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarPrescr
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaVisualizarPrescripcionMedicamento extends StatefulWidget {
@@ -204,7 +204,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -446,7 +446,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -648,7 +648,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,

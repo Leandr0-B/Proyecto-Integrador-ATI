@@ -1,7 +1,7 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
 
 class ControllerVistaVisualizarPrescripcionMedicamento {
   //Atributos
