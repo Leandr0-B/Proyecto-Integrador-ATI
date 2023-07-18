@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/asociarMedicamentoException.dart';
@@ -722,9 +723,9 @@ class APIService {
   static obtenerMedicacionesPeriodicasPaginadasConfiltros(
       int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
     //ARREGLAR URL
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/chequeo-medico?page=$paginaActual&pageSize=$elementosPorPagina'
-        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
-        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-medicacion?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${fechaDesde != null ? '&fechaDesde=${DateFormat('yyyy-MM-dd').format(fechaDesde)}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${DateFormat('yyyy-MM-dd').format(fechaHasta)}' : ''}'
         '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
@@ -743,9 +744,9 @@ class APIService {
 
   static obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
     //ARREGLAR URL
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/chequeo-medico/count?page=1'
-        '${fechaDesde != null ? '&fechaDesde=${fechaDesde.toIso8601String()}' : ''}'
-        '${fechaHasta != null ? '&fechaHasta=${fechaHasta.toIso8601String()}' : ''}'
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-medicacion/count?page=1'
+        '${fechaDesde != null ? '&fechaDesde=${DateFormat('yyyy-MM-dd').format(fechaDesde)}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${DateFormat('yyyy-MM-dd').format(fechaHasta)}' : ''}'
         '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(

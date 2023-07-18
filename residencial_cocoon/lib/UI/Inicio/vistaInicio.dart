@@ -14,6 +14,7 @@ import 'package:residencial_cocoon/UI/Geriatra/vistaVisualizarVisitaMedicaExtern
 import 'package:residencial_cocoon/UI/Inicio/iVistaInicio.dart';
 import 'package:residencial_cocoon/UI/Login/vistaLogin.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaRegistrarMedicacionPeriodica.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaVisualizarRegistroMedicacionPeriodica.dart';
 import 'package:residencial_cocoon/UI/Notificacion/vistaNotificacion.dart';
 import 'package:residencial_cocoon/UI/SideBar/sideBarHeader.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
@@ -171,6 +172,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.medicacionPeriodica:
         container = VistaRegistrarMedicacionPeriodica();
         break;
+      case DrawerSections.visualizarMedicacionPeriodica:
+        container = VistaVisualizarRegistroMedicacionPeriodica();
+        break;
       default:
         container = Container();
         break;
@@ -292,6 +296,7 @@ class MyDrawerList extends StatelessWidget {
               child: const SideBarHeader(),
             ),
             menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
+            menuItem(63, "Visualizar Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
             if (usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
@@ -307,7 +312,7 @@ class MyDrawerList extends StatelessWidget {
               menuItem(51, "Registrar Medicamento", IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
               menuItem(52, "Asociar Medicamento a residente", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
               menuItem(53, "Prescripcion Medicamento", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
-              menuItem(54, "Medicación Periódica", Icons.list, DrawerSections.medicacionPeriodica),
+              menuItem(54, "Registro Medicación Periódica", Icons.list, DrawerSections.medicacionPeriodica),
               ExpansionTile(
                 leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 16)),
@@ -384,6 +389,7 @@ enum DrawerSections {
   asociarMedicamento,
   prescripcionMedicamento,
   medicacionPeriodica,
+  visualizarMedicacionPeriodica,
 }
 
 class NotificacionActualizadaCallback {

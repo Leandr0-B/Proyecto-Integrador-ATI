@@ -30,7 +30,11 @@ class RegistroMedicacionConPrescripcion {
     this._descripcion,
     this._cantidad_dada,
     this._hora_de_realizacion,
-  );
+    this._fecha_de_realizacion,
+    Usuario enfermero,
+  ) {
+    agregarEnfermero(enfermero);
+  }
 
   factory RegistroMedicacionConPrescripcion.fromJsonVistaPrevia(Map<String, dynamic> json) {
     Usuario geriatraAux = Usuario.empty();
@@ -87,6 +91,18 @@ class RegistroMedicacionConPrescripcion {
       hora_realizada = TimeOfDay(hour: hourHoraRealizada, minute: minuteHoraRealizada);
     }
 
+    DateTime fecha_realizacion;
+    if (json['fecha_realizacion'] == null) {
+      fecha_realizacion = DateTime(0);
+    } else {
+      fecha_realizacion = DateTime.parse(json['fecha_realizacion']);
+    }
+
+    Usuario enfermeroAux = Usuario.empty();
+    enfermeroAux.ci = json['ci_enfermero'] ?? "";
+    enfermeroAux.nombre = json['nombre_enfermero'] ?? "";
+    enfermeroAux.apellido = json['apellido_enfermero'] ?? "";
+
     RegistroMedicacionConPrescripcion registroAux = RegistroMedicacionConPrescripcion(
       json['id_registro_medicacion_con_prescripcion'],
       DateTime.parse(json['fecha_pactada']),
@@ -97,6 +113,8 @@ class RegistroMedicacionConPrescripcion {
       json['descripcion'] ?? "",
       json['cantidad_dada'] ?? 0,
       hora_realizada,
+      fecha_realizacion,
+      enfermeroAux,
     );
     return registroAux;
   }
@@ -150,5 +168,9 @@ class RegistroMedicacionConPrescripcion {
 
   String ciEnfermero() {
     return _enfermero.ciUsuario();
+  }
+
+  void agregarEnfermero(Usuario enfermero) {
+    _enfermero.usuario = enfermero;
   }
 }

@@ -227,19 +227,22 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha pactada: ${registroMed.fecha_pactada}',
+                                      'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    Text(
-                                      'Fecha de realización: ${registroMed.fecha_de_realizacion}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
+                                    if (registroMed.procesada == 1) ...{
+                                      Text(
+                                        'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                    },
                                   ],
                                 ),
                               ),
@@ -469,19 +472,22 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha pactada: ${registroMed.fecha_pactada}',
+                                      'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    Text(
-                                      'Fecha de realización: ${registroMed.fecha_de_realizacion}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
+                                    if (registroMed.procesada == 1) ...{
+                                      Text(
+                                        'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                    },
                                   ],
                                 ),
                               ),
@@ -582,20 +588,22 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha pactada: ${registroMed.fecha_pactada}',
+                'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
-              Text(
-                'Fecha de realización: ${registroMed.fecha_de_realizacion}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 20.0),
+              if (registroMed.procesada == 1) ...{
+                Text(
+                  'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 20.0),
+              },
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

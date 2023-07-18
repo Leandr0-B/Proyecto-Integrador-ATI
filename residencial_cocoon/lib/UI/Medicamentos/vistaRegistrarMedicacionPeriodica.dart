@@ -209,7 +209,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
+                                        'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                     ],
@@ -384,7 +384,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
+                                      'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
