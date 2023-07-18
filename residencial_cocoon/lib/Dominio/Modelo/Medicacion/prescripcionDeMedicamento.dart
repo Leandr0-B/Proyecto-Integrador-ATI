@@ -45,7 +45,7 @@ class PrescripcionDeMedicamento {
 
     Medicamento medicamentoAux = Medicamento.empty();
     medicamentoAux.nombre = json['nombre_medicamento'];
-    //medicamentoAux.setUnidad(json['unidad_medicamento']);
+    medicamentoAux.setUnidad(json['unidad_medicamento']);
 
     //Convierto la hora de string a TimeOfDay
     String timeString = json['hora_comienzo'];
