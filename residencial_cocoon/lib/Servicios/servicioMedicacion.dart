@@ -73,4 +73,19 @@ class ServicioMedicacion {
     await APIService.procesarMedicacion(selectedRegistro.idRegistroMedicacionConPrescripcion, horaDeRealizacion, fechaRealizacion, selectedRegistro.cantidadDada,
         selectedRegistro.descripcion, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
+
+  Future<List<RegistroMedicacionConPrescripcion>> obtenerMedicacionesPeriodicasPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String medicamentos = await APIService.obtenerMedicacionesPeriodicasPaginadasConfiltros(
+        paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(medicamentos);
+    return RegistroMedicacionConPrescripcion.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String cantidadTotal = await APIService.obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(
+        fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
+  }
 }

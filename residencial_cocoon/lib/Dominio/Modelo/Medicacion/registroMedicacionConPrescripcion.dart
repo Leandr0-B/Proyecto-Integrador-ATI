@@ -139,4 +139,16 @@ class RegistroMedicacionConPrescripcion {
   static List<RegistroMedicacionConPrescripcion> listaVistaPrevia(List jsonList) {
     return jsonList.cast<Map<String, dynamic>>().map<RegistroMedicacionConPrescripcion>((json) => RegistroMedicacionConPrescripcion.fromJsonVistaPrevia(json)).toList();
   }
+
+  String nombreEnfermero() {
+    return _enfermero.nombreUsuario();
+  }
+
+  String apellidoEnfermero() {
+    return _enfermero.apellidoUsuario();
+  }
+
+  String ciEnfermero() {
+    return _enfermero.ciUsuario();
+  }
 }

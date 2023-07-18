@@ -202,4 +202,13 @@ class Fachada {
   Future<void> procesarMedicacion(RegistroMedicacionConPrescripcion? selectedRegistro) async {
     await _servicioMedicacion?.procesarMedicacion(selectedRegistro);
   }
+
+  Future<List<RegistroMedicacionConPrescripcion>?> obtenerMedicacionesPeriodicasPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicacionesPeriodicasPaginadasConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
 }
