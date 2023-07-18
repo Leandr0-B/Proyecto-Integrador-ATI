@@ -720,6 +720,49 @@ class APIService {
     }
   }
 
+  static obtenerMedicacionesPeriodicasPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    //ARREGLAR URL
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-medicacion?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${fechaDesde != null ? '&fechaDesde=${DateFormat('yyyy-MM-dd').format(fechaDesde)}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${DateFormat('yyyy-MM-dd').format(fechaHasta)}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerMedicacionesPeriodicasPaginadasConFiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
+    //ARREGLAR URL
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-medicacion/count?page=1'
+        '${fechaDesde != null ? '&fechaDesde=${DateFormat('yyyy-MM-dd').format(fechaDesde)}' : ''}'
+        '${fechaHasta != null ? '&fechaHasta=${DateFormat('yyyy-MM-dd').format(fechaHasta)}' : ''}'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
   static obtenerPrescripcionesMedicamentosPaginadosConfiltros(
       int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion?page=$paginaActual&pageSize=$elementosPorPagina'
