@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
-import 'package:residencial_cocoon/UI/Geriatra/Medicamentos/iVistaAltaMedicamento.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/iVistaAltaMedicamento.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaAltaMedicamento extends StatefulWidget {
@@ -11,10 +11,8 @@ class VistaAltaMedicamento extends StatefulWidget {
   State<VistaAltaMedicamento> createState() => _VistaAltaMedicamentoState();
 }
 
-class _VistaAltaMedicamentoState extends State<VistaAltaMedicamento>
-    implements IvistaAltaMedicamento {
-  ControllerVistaAltaMedicamento controller =
-      ControllerVistaAltaMedicamento.empty();
+class _VistaAltaMedicamentoState extends State<VistaAltaMedicamento> implements IvistaAltaMedicamento {
+  ControllerVistaAltaMedicamento controller = ControllerVistaAltaMedicamento.empty();
   Usuario? selectedResidente;
   Sucursal? selectedSucursal;
   bool residentesVisible = false;
@@ -83,8 +81,8 @@ class _VistaAltaMedicamentoState extends State<VistaAltaMedicamento>
                             child: const Text('ml'),
                           ),
                           DropdownMenuItem<String>(
-                            value: 'c/u',
-                            child: const Text('c/u'),
+                            value: 'unidades',
+                            child: const Text('unidades'),
                           ),
                           DropdownMenuItem<String>(
                             value: 'pastillas',

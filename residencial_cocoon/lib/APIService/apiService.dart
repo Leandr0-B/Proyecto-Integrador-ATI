@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
@@ -676,6 +677,43 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       throw PrescripcionMedicamentoException("Se ingreso la prescripción del medicamento al residente.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerRegistrosMedicamentosConPrescripcion(DateTime? fechaFiltro, String? ciFiltro, String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/registro-medicacion/listado-del-dia?page=1${fechaFiltro != null ? '&fecha=${fechaFiltro.toString().split(' ')[0]}' : ''}${ciFiltro != null ? '&ci_residente=$ciFiltro' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static procesarMedicacion(int id, String horaRealizacion, String fechaRealizacion, int cantidadDada, String descripcion, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-medicacion/realizar-ingreso/$id');
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'horaDeRealizacion': horaRealizacion,
+        'fechaRealizacion': fechaRealizacion,
+        'cantidadDada': cantidadDada,
+        'descripcion': descripcion,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw MedicacionPeriodicaException("Se registro correctamente la medicacion periodica.");
     } else {
       throw Exception(errorObtenerToken);
     }
