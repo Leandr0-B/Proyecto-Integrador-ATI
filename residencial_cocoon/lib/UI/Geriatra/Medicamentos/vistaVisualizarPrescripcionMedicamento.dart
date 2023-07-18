@@ -204,7 +204,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripcion Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()} ',
+                                      'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -212,7 +212,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
+                                      'Fecha Creacion: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_creacion)}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -222,17 +222,17 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${prescripcionMed.fecha_desde}',
+                                      'Fecha desde: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_desde)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                                      'Fecha Hasta: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_hasta)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -454,7 +454,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
+                                      'Fecha Creacion: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_creacion)}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -464,17 +464,17 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${prescripcionMed.fecha_desde}',
+                                      'Fecha desde: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_desde)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                                      'Fecha Hasta: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_hasta)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -649,34 +649,37 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
             children: [
               Text(
                 'Salida Médica, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha Creacion: ${prescripcionMed.fecha_creacion}',
+                'Fecha Creacion: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_creacion)}',
                 style: const TextStyle(fontSize: 16.0),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
               Text(
                 'Descripcion: ${prescripcionMed.descripcion}',
                 style: const TextStyle(fontSize: 16.0),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
               Text(
-                'Fecha desde: ${prescripcionMed.fecha_desde}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                'Fecha Hasta: ${prescripcionMed.fecha_hasta}',
+                'Fecha desde: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_desde)}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad}',
+                'Fecha Hasta: ${DateFormat('yyyy-MM-dd').format(prescripcionMed.fecha_hasta)}',
                 style: const TextStyle(fontSize: 14.0),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 8.0),
+              Text(
+                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
               Text(
                 'Regitrador por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
