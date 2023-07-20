@@ -222,18 +222,38 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
+                                      'Cantidad Recetada: ${registroMed.prescripcion.cantidad}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
                                       'Estado: ${registroMed.procesada == 1 ? 'Realizado' : 'Pendiente'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
+                                      'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_pactada)}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Hora Pactada: ${registroMed.horaPactada.hour.toString().padLeft(2, '0')}:${registroMed.horaPactada.minute.toString().padLeft(2, '0')}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     if (registroMed.procesada == 1) ...{
                                       Text(
-                                        'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                                        'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Hora de realización: ${registroMed.horaDeRealizacion.hour.toString().padLeft(2, '0')}:${registroMed.horaDeRealizacion.minute.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Cantidad dada: ${registroMed.cantidadDada}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 8.0),
@@ -472,13 +492,23 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
+                                      'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_pactada)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     if (registroMed.procesada == 1) ...{
                                       Text(
-                                        'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                                        'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Hora de realización: ${registroMed.horaDeRealizacion.hour.toString().padLeft(2, '0')}:${registroMed.horaDeRealizacion.minute.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Cantidad dada: ${registroMed.cantidadDada}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 8.0),
@@ -583,18 +613,38 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
               ),
               const SizedBox(height: 8.0),
               Text(
+                'Cantidad Recetada: ${registroMed.prescripcion.cantidad}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
                 'Estado: ${registroMed.procesada == 1 ? 'Realizado' : 'Pendiente'}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha pactada: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_pactada)}',
+                'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_pactada)}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Hora Pactada: ${registroMed.horaPactada.hour.toString().padLeft(2, '0')}:${registroMed.horaPactada.minute.toString().padLeft(2, '0')}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               if (registroMed.procesada == 1) ...{
                 Text(
-                  'Fecha de realización: ${DateFormat('yyyy-MM-dd').format(registroMed.fecha_de_realizacion)}',
+                  'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Hora de realización: ${registroMed.horaDeRealizacion.hour.toString().padLeft(2, '0')}:${registroMed.horaDeRealizacion.minute.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Cantidad dada: ${registroMed.cantidadDada}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 8.0),

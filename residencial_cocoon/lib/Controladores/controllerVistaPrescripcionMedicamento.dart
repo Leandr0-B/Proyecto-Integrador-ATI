@@ -59,8 +59,8 @@ class ControllerVistaPrescripcionMedicamento {
 
   Future<int> calcularTotalPaginas(int elementosPorPagina, String? ciResidente, String? palabraClave) async {
     try {
-      int totalNotificaciones = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave) ?? 0;
-      return (totalNotificaciones / elementosPorPagina).ceil();
+      int totalMedicamentos = await Fachada.getInstancia()?.obtenerMedicamentosAsociadosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave) ?? 0;
+      return (totalMedicamentos / elementosPorPagina).ceil();
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
       return 0;

@@ -312,7 +312,7 @@ class MyDrawerList extends StatelessWidget {
               ),
               ExpansionTile(
                 leading: const Icon(IconData(0xe3d9, fontFamily: 'MaterialIcons'), size: 20, color: Colors.black),
-                title: const Text("Medicaciones", style: TextStyle(color: Colors.black, fontSize: 16)),
+                title: const Text("Medicamentos", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(51, "Registrar Medicamento", IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
                   menuItem(52, "Asociar Medicamento a residente", IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),

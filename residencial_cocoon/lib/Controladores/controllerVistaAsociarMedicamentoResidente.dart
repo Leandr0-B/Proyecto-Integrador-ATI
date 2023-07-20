@@ -36,9 +36,9 @@ class ControllerVistaAsociarMedicamento {
     }
   }
 
-  Future<List<Medicamento>?> listaMedicamentos(int paginaActual, int elementosPorPagina, Usuario residente, String palabraClave) async {
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, Usuario residente, String palabraClave) async {
     try {
-      return _medicamentos = await Fachada.getInstancia()?.listaMedicamentos(paginaActual, elementosPorPagina, residente.ci, palabraClave);
+      return _medicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosSinAsociar(paginaActual, elementosPorPagina, residente.ci, palabraClave);
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
     }
@@ -56,7 +56,7 @@ class ControllerVistaAsociarMedicamento {
 
   Future<int> calcularTotalPaginas(int elementosPorPagina, String? ciResidente, String? palabraClave) async {
     try {
-      int totalMedicamentos = await Fachada.getInstancia()?.obtenerMedicamentosAsociadosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave) ?? 0;
+      int totalMedicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(ciResidente, palabraClave) ?? 0;
       return (totalMedicamentos / elementosPorPagina).ceil();
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());

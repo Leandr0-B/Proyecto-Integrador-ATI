@@ -102,7 +102,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + " " + residente.apellido + ' | ' + residente.ci),
+                                      child: Text(residente.ci + ' - ' + residente.nombre + " " + residente.apellido),
                                     );
                                   }),
                                 ],

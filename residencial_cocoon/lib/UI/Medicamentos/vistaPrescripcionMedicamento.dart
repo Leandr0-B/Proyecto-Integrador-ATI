@@ -28,7 +28,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   Future<List<Medicamento>?> _medicamentos = Future.value([]);
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
-  int _elementosPorPagina = 5;
+  int _elementosPorPagina = 10;
   bool _residentesVisible = false;
 
   final _fieldDescripcion = TextEditingController();
@@ -115,7 +115,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + " " + residente.apellido + ' | ' + residente.ci),
+                                      child: Text(residente.ci + ' - ' + residente.nombre + " " + residente.apellido),
                                     );
                                   }),
                                 ],
@@ -464,7 +464,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      'Lista de elementos:',
+                      'Lista de medicamentos asociados:',
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
@@ -480,40 +480,58 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
-                            final List<Medicamento>? lista = snapshot.data;
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: lista?.length ?? 0,
-                              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
-                              itemBuilder: (BuildContext context, int index) {
-                                final Medicamento elemento = snapshot.data![index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedMedicamento = elemento;
-                                    });
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                    // Cerrar el diálogo y actualizar el estado
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                        width: 1.0,
+                            if (snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 32.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'El residente no tiene medicamentos asociados',
+                                        style: TextStyle(fontSize: 16.0),
                                       ),
-                                    ),
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      elemento.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
+                                      SizedBox(height: 8.0),
+                                    ],
                                   ),
-                                );
-                              },
-                            );
+                                ),
+                              );
+                            } else {
+                              final List<Medicamento>? lista = snapshot.data;
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                itemCount: lista?.length ?? 0,
+                                separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
+                                itemBuilder: (BuildContext context, int index) {
+                                  final Medicamento elemento = snapshot.data![index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedMedicamento = elemento;
+                                      });
+                                      Navigator.of(context).pop();
+                                      setState(() {});
+                                      // Cerrar el diálogo y actualizar el estado
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        elemento.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           }
                         },
                       ),

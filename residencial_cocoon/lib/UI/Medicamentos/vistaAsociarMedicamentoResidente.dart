@@ -21,7 +21,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   Future<List<Medicamento>?> _medicamentos = Future.value([]);
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
-  int _elementosPorPagina = 5;
+  int _elementosPorPagina = 10;
   int _stock = 0;
   int _stockNotificacion = 0;
   String _palabraClave = "";
@@ -108,7 +108,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                   ...residentes.map((residente) {
                                     return DropdownMenuItem<Usuario>(
                                       value: residente,
-                                      child: Text(residente.nombre + " " + residente.apellido + ' | ' + residente.ci),
+                                      child: Text(residente.ci + ' - ' + residente.nombre + " " + residente.apellido),
                                     );
                                   }),
                                 ],
@@ -273,7 +273,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
 
   @override
   void obtenerMedicamentosPaginadosConfiltros() {
-    _medicamentos = _controller.listaMedicamentos(_paginaActual, _elementosPorPagina, _selectedResidente!, _palabraClave);
+    _medicamentos = _controller.obtenerMedicamentosPaginadosConFiltrosSinAsociar(_paginaActual, _elementosPorPagina, _selectedResidente!, _palabraClave);
     _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _selectedResidente?.ci, _palabraClave);
     setState(() {});
   }
@@ -330,7 +330,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      'Lista de elementos:',
+                      'Lista de medicamentos sin asociar:',
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
@@ -346,40 +346,58 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
-                            final List<Medicamento>? lista = snapshot.data;
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: lista?.length ?? 0,
-                              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
-                              itemBuilder: (BuildContext context, int index) {
-                                final Medicamento elemento = snapshot.data![index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedMedicamento = elemento;
-                                    });
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                    // Cerrar el diálogo y actualizar el estado
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                        width: 1.0,
+                            if (snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 32.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'No hay medicamentos o todo los medicamentos ya fueron asociados al residente',
+                                        style: TextStyle(fontSize: 16.0),
                                       ),
-                                    ),
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      elemento.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
+                                      SizedBox(height: 8.0),
+                                    ],
                                   ),
-                                );
-                              },
-                            );
+                                ),
+                              );
+                            } else {
+                              final List<Medicamento>? lista = snapshot.data;
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                itemCount: lista?.length ?? 0,
+                                separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8.0),
+                                itemBuilder: (BuildContext context, int index) {
+                                  final Medicamento elemento = snapshot.data![index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedMedicamento = elemento;
+                                      });
+                                      Navigator.of(context).pop();
+                                      setState(() {});
+                                      // Cerrar el diálogo y actualizar el estado
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        elemento.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           }
                         },
                       ),

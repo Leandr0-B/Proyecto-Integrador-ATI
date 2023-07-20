@@ -22,8 +22,10 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   String _descripcionPopUp = '';
   final _fieldCantidad = TextEditingController();
   final _fieldHora = TextEditingController();
+  final _fieldFecha = TextEditingController();
   int _cantidadPopUp = 0;
   TimeOfDay? _horaPopUp;
+  DateTime? _fechaPopUp;
   RegistroMedicacionConPrescripcion? _selectedRegistro;
 
   @override
@@ -199,12 +201,12 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Fecha: ${registro.fecha_pactada.toString().split(' ')[0]}',
+                                        'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Hora: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
+                                        'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 8.0),
@@ -374,12 +376,12 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha: ${registro.fecha_pactada.toString().split(' ')[0]}',
+                                      'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Hora: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
+                                      'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -413,9 +415,11 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   @override
   void limpiar() {
     _horaPopUp = null;
+    _fechaPopUp = null;
     _fieldCantidad.clear();
     _fieldDescripcion.clear();
     _fieldHora.clear();
+    _fieldFecha.clear();
   }
 
   @override
@@ -489,7 +493,25 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     if (picked != null && picked != _horaPopUp) {
       setState(() {
         _horaPopUp = picked;
-        _fieldHora.text = _horaPopUp!.format(context);
+        _fieldHora.text = DateFormat('HH:mm').format(
+          DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _horaPopUp!.hour, _horaPopUp!.minute),
+        );
+      });
+    }
+  }
+
+  Future<void> _selectFechaPopup(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fechaPopUp ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != _fechaPopUp) {
+      setState(() {
+        _fechaPopUp = picked;
+        _fieldFecha.text = DateFormat('dd/MM/yyyy').format(_fechaPopUp!);
       });
     }
   }
@@ -503,15 +525,34 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   void _mostrarPopUp(RegistroMedicacionConPrescripcion registro) {
     _selectedRegistro = registro;
     _horaPopUp = registro.horaPactada;
+    _fechaPopUp = registro.fecha_pactada;
 
     if (registro.procesada == 1) {
       _fieldDescripcion.text = registro.descripcion;
       _fieldCantidad.text = registro.cantidadDada.toString();
-      _fieldHora.text = registro.horaDeRealizacion.format(context);
+      _fieldHora.text = DateFormat('HH:mm').format(
+        DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          registro.horaDeRealizacion.hour,
+          registro.horaDeRealizacion.minute,
+        ),
+      );
+      _fieldFecha.text = DateFormat('dd/MM/yyyy').format(registro.fecha_de_realizacion);
     } else {
       _fieldDescripcion.text = registro.descripcion;
       _fieldCantidad.text = registro.cantidadSugerida.toString();
-      _fieldHora.text = registro.horaPactada.format(context);
+      _fieldHora.text = DateFormat('HH:mm').format(
+        DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          registro.horaPactada.hour,
+          registro.horaPactada.minute,
+        ),
+      );
+      _fieldFecha.text = DateFormat('dd/MM/yyyy').format(registro.fecha_pactada);
     }
     setState(() {});
     showDialog(
@@ -542,11 +583,13 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                   style: const TextStyle(fontSize: 16.0),
                 ),
                 Text(
-                  'Fecha : ${registro.fecha_pactada.toString().split(' ')[0]}',
+                  'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 Text(
-                  'Hora pactada: ${registro.horaPactada.format(context)}',
+                  'Hora pactada: ${DateFormat('HH:mm').format(
+                    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, registro.horaPactada.hour, registro.horaPactada.minute),
+                  )}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 8.0),
@@ -608,7 +651,22 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Hora dada',
+                    labelText: 'Fecha Realizacion',
+                    hintText: 'Fecha',
+                  ),
+                  controller: _fieldFecha,
+                  onTap: registro.procesada != 1 ? () => _selectFechaPopup(context) : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor seleccione una Fecha.';
+                    }
+                  },
+                  readOnly: true, // Deshabilita la edición directa del campo de texto
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Hora Realizacion',
                     hintText: 'Hora',
                   ),
                   controller: _fieldHora,
@@ -643,8 +701,8 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   Future<void> procesarMedicacion() async {
     _selectedRegistro?.cantidadDada = _cantidadPopUp;
     _selectedRegistro?.horaDeRealizacion = _horaPopUp!;
+    _selectedRegistro?.fecha_de_realizacion = _fechaPopUp!;
     _selectedRegistro?.descripcion = _descripcionPopUp;
-    _selectedRegistro?.fecha_de_realizacion = DateTime.now();
     await _controller.procesarMedicacion(_selectedRegistro);
   }
 }

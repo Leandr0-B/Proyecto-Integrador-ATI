@@ -563,7 +563,8 @@ class APIService {
     }
   }
 
-  static Future<String> fetchMedicamentos(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave, String? token) async {
+  static Future<String> obtenerMedicamentosPaginadosConFiltrosSinAsociar(
+      int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-sin-asociar/${cedulaResidente}?page=$paginaActual&pageSize=$elementosPorPagina'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
@@ -580,7 +581,7 @@ class APIService {
     }
   }
 
-  static obtenerMedicamentosPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave, String? token) async {
+  static obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(String? ciResidente, String? palabraClave, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-sin-asociar/count/${ciResidente}?page=1'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
