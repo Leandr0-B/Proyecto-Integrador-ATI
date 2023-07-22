@@ -805,4 +805,43 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static obtenerUsuariosPaginadasConFiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClaveNombre != null ? '&palabraClaveNombre=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
+        '${palabraClaveApellido != null ? '&palabraClaveApellido=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerUsuariosPaginadasConFiltrosCantidadTotal(String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/count?page=1'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClaveNombre != null ? '&palabraClaveNombre=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
+        '${palabraClaveApellido != null ? '&palabraClaveApellido=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }
