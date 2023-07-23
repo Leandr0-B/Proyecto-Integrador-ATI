@@ -21,7 +21,7 @@ class ServicioMedicacion {
     await APIService.postMedicamento(nombre, unidad, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave) async {
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
     String medicamentos = await APIService.obtenerMedicamentosPaginadosConFiltrosSinAsociar(
         paginaActual, elementosPorPagina, cedulaResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
     List<dynamic> jsonList = jsonDecode(medicamentos);
@@ -39,7 +39,7 @@ class ServicioMedicacion {
     await APIService.postAsociarMedicamento(selectedMedicamento, selectedResidente, stock, stockNotificacion, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
-  Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave) async {
+  Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
     String medicamentos =
         await APIService.fetchMedicamentosAsociados(paginaActual, elementosPorPagina, cedulaResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
     List<dynamic> jsonList = jsonDecode(medicamentos);

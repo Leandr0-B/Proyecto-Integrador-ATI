@@ -21,6 +21,10 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
   String? _ciResidente;
   bool _filtroExpandido = false;
 
+  final _palabraClaveNombreController = TextEditingController();
+  final _palabraClaveApellidoController = TextEditingController();
+  final _ciResidenteController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +70,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                   decoration: const InputDecoration(
                     labelText: 'Ci Residente',
                   ),
+                  controller: _ciResidenteController,
                   onChanged: (value) {
                     setState(() {
                       _ciResidente = value;
@@ -79,6 +84,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                   decoration: const InputDecoration(
                     labelText: 'Nombre',
                   ),
+                  controller: _palabraClaveNombreController,
                   onChanged: (value) {
                     setState(() {
                       _palabraClaveNombre = value;
@@ -92,6 +98,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                   decoration: const InputDecoration(
                     labelText: 'Apellido',
                   ),
+                  controller: _palabraClaveApellidoController,
                   onChanged: (value) {
                     setState(() {
                       _palabraClaveApellido = value;
@@ -304,6 +311,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
             decoration: const InputDecoration(
               labelText: 'Ci Residente',
             ),
+            controller: _ciResidenteController,
             onChanged: (value) {
               setState(() {
                 _ciResidente = value;
@@ -315,6 +323,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
             decoration: const InputDecoration(
               labelText: 'Nombre',
             ),
+            controller: _palabraClaveNombreController,
             onChanged: (value) {
               setState(() {
                 _palabraClaveNombre = value;
@@ -326,6 +335,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
             decoration: const InputDecoration(
               labelText: 'Apellido',
             ),
+            controller: _palabraClaveApellidoController,
             onChanged: (value) {
               setState(() {
                 _palabraClaveApellido = value;
@@ -634,5 +644,8 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
     _palabraClaveNombre = null;
     _palabraClaveApellido = null;
     _ciResidente = null;
+    _palabraClaveNombreController.clear();
+    _palabraClaveApellidoController.clear();
+    _ciResidenteController.clear();
   }
 }

@@ -24,7 +24,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   String _descripcion = "";
   int _frecuencia = 0;
   int _cantidad = 0;
-  String _palabraClave = "";
+  String? _palabraClave = "";
   Future<List<Medicamento>?> _medicamentos = Future.value([]);
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
@@ -78,6 +78,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                                 _selectedSucursal = newValue;
                                 _selectedResidente = null;
                                 _residentesVisible = true;
+                                _palabraClave = null;
                               });
                             },
                             controlAffinity: ListTileControlAffinity.leading,
@@ -123,6 +124,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                                   setState(() {
                                     _selectedResidente = newValue;
                                     _selectedMedicamento = null;
+                                    _palabraClave = null;
                                   });
                                 },
                               );
@@ -419,7 +421,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   }
 
   void mostrarPopUp(Future<List<Medicamento>?> elementos) {
-    final TextEditingController textFieldController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
@@ -440,7 +441,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: textFieldController,
                             decoration: const InputDecoration(
                               labelText: 'Palabra clave',
                             ),

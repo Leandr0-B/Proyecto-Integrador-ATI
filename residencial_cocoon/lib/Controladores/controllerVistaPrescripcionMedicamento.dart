@@ -39,7 +39,7 @@ class ControllerVistaPrescripcionMedicamento {
     }
   }
 
-  Future<List<Medicamento>?> listaMedicamentos(int paginaActual, int elementosPorPagina, Usuario residente, String palabraClave) async {
+  Future<List<Medicamento>?> listaMedicamentos(int paginaActual, int elementosPorPagina, Usuario residente, String? palabraClave) async {
     try {
       return _medicamentos = await Fachada.getInstancia()?.listaMedicamentosAsociados(paginaActual, elementosPorPagina, residente.ci, palabraClave);
     } on TokenException catch (e) {
