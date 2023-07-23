@@ -24,6 +24,16 @@ class Residente extends Rol {
 
   set familiares(List<Familiar> familiares) => _familiares = familiares;
 
+  String obtenerTelefono() {
+    String telefono = '';
+    for (var fam in _familiares) {
+      if (fam.contactoPrimario == 1) {
+        telefono = fam.telefono;
+      }
+    }
+    return telefono;
+  }
+
   //ToString
   @override
   String toString() {

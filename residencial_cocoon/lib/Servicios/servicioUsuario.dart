@@ -38,51 +38,29 @@ class ServicioUsuario {
   }
 
   Future<List<Rol>?> listaRoles() async {
-    String roles = await APIService.fetchRoles(
-        Fachada.getInstancia()?.getUsuario()!.getToken());
-    List<dynamic> jsonList =
-        jsonDecode(roles); // convert the JSON text to a List
+    String roles = await APIService.fetchRoles(Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList = jsonDecode(roles); // convert the JSON text to a List
     return Rol.fromJsonList(jsonList);
   }
 
   Future<void> altaUsuario(
-      String ci,
-      String nombre,
-      int administrador,
-      List<int> selectedRoles,
-      List<int> selectedSucursales,
-      String apellido,
-      String telefono,
-      String email) async {
+      String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email) async {
     if (administrador == 0) {
       Usuario.validarRoles(selectedRoles);
       Usuario.validarSucursales(selectedSucursales);
     }
-    await APIService.postAltaUsuario(
-        ci,
-        nombre,
-        administrador,
-        selectedRoles,
-        selectedSucursales,
-        Fachada.getInstancia()?.getUsuario()?.getToken(),
-        apellido,
-        telefono,
-        email);
+    await APIService.postAltaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido, telefono, email);
   }
 
-  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci,
-      String nombre, int? selectedSucursal, String apellido) async {
-    List<Map<String, dynamic>> familiaresJsonList =
-        familiares.map((familiar) => familiar.toJson()).toList();
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido) async {
+    List<Map<String, dynamic>> familiaresJsonList = familiares.map((familiar) => familiar.toJson()).toList();
     List<int?> sucursales = [];
     sucursales.add(selectedSucursal);
-    await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList,
-        sucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido);
+    await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList, sucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {
-    String usuarios = await APIService.fetchUsuarios(
-        Fachada.getInstancia()?.getUsuario()!.getToken());
+    String usuarios = await APIService.fetchUsuarios(Fachada.getInstancia()?.getUsuario()!.getToken());
 
     List<dynamic> jsonList = jsonDecode(usuarios);
     return Usuario.listadoJson(jsonList);
@@ -96,24 +74,35 @@ class ServicioUsuario {
   }
 
   Future<void> cambioClave(String actual, String nueva) async {
-    await APIService.putUserPass(
-        actual, nueva, Fachada.getInstancia()?.getUsuario()?.getToken());
+    await APIService.putUserPass(actual, nueva, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
   Future<List<Usuario>?> residentesSucursal(Sucursal? suc) async {
-    String usuarios = await APIService.fetchUsuariosSucursal(
-        Fachada.getInstancia()?.getUsuario()?.getToken(), suc?.idSucursal);
+    String usuarios = await APIService.fetchUsuariosSucursal(Fachada.getInstancia()?.getUsuario()?.getToken(), suc?.idSucursal);
     List<dynamic> jsonList = jsonDecode(usuarios);
     return Usuario.listadoJsonResidentes(jsonList);
   }
 
   Future<void> actualizarTokenNotificaciones(String notificationToken) async {
-    await APIService.actualizarTokenNotificaciones(
-        notificationToken, Fachada.getInstancia()?.getUsuario()?.getToken());
+    await APIService.actualizarTokenNotificaciones(notificationToken, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
   Future<void> eliminarTokenNotificaciones() async {
-    await APIService.eliminarTokenNotificaciones(
-        Fachada.getInstancia()?.getUsuario()?.getToken());
+    await APIService.eliminarTokenNotificaciones(Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<List<Usuario>?> obtenerUsuariosPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    String usuarios = await APIService.obtenerUsuariosPaginadasConFiltros(
+        paginaActual, elementosPorPagina, ciResidente, palabraClaveNombre, palabraClaveApellido, Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList = jsonDecode(usuarios);
+    return Usuario.listadoJson(jsonList);
+  }
+
+  Future<int?> obtenerUsuariosPaginadasConFiltrosCantidadTotal(String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    String cantidadTotal =
+        await APIService.obtenerUsuariosPaginadasConFiltrosCantidadTotal(ciResidente, palabraClaveNombre, palabraClaveApellido, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
   }
 }

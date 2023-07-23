@@ -107,7 +107,7 @@ class Familiar {
       primario = "si";
     }
 
-    return "${this._nombre} ${this._apellido} Es contacto primario: $primario ${this._email}";
+    return "${this._nombre} - ${this._apellido} - Primario: $primario  - ${this._email}";
   }
 
   // Equals

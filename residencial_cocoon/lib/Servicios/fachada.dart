@@ -96,6 +96,15 @@ class Fachada {
     await _servicioUsuario?.actualizarTokenNotificaciones(notificationToken);
   }
 
+  Future<List<Usuario>?> obtenerUsuariosPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    return _servicioUsuario?.obtenerUsuariosPaginadasConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClaveNombre, palabraClaveApellido);
+  }
+
+  Future<int?> obtenerUsuariosPaginadasConFiltrosCantidadTotal(String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    return _servicioUsuario?.obtenerUsuariosPaginadasConFiltrosCantidadTotal(ciResidente, palabraClaveNombre, palabraClaveApellido);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();

@@ -32,4 +32,24 @@ class ControllerVistaListaUsuario {
     _vista?.mostrarMensajeError(mensaje);
     _vista?.cerrarSesion();
   }
+
+  Future<List<Usuario>> obtenerUsuariosPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    try {
+      return await Fachada.getInstancia()?.obtenerUsuariosPaginadasConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClaveNombre, palabraClaveApellido) ?? [];
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+      return [];
+    }
+  }
+
+  Future<int> calcularTotalPaginas(int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    try {
+      int totalNotificaciones = await Fachada.getInstancia()?.obtenerUsuariosPaginadasConFiltrosCantidadTotal(ciResidente, palabraClaveNombre, palabraClaveApellido) ?? 0;
+      return (totalNotificaciones / elementosPorPagina).ceil();
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+      return 0;
+    }
+  }
 }

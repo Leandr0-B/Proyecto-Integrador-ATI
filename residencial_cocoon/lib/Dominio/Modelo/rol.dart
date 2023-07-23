@@ -84,10 +84,7 @@ class Rol implements IRol {
   }
 
   static List<Rol> fromJsonList(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Rol>((json) => Rol.fromJson(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Rol>((json) => Rol.fromJson(json)).toList();
   }
 
   //Equals
@@ -117,6 +114,11 @@ class Rol implements IRol {
   @override
   bool esResidente() {
     return false;
+  }
+
+  @override
+  String obtenerTelefono() {
+    return '';
   }
 
   //ToString
