@@ -198,6 +198,11 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                         style: const TextStyle(fontSize: 16.0),
                                       ),
                                       const SizedBox(height: 8.0),
+                                      Text(
+                                        'Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")},',
+                                        style: const TextStyle(fontSize: 16.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
                                     ] else ...[
                                       Text(
                                         'Telefono: ${usuario.telefono}',
@@ -430,6 +435,11 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                         style: const TextStyle(fontSize: 16.0),
                                       ),
                                       const SizedBox(height: 8.0),
+                                      Text(
+                                        'Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")},',
+                                        style: const TextStyle(fontSize: 16.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
                                     ] else ...[
                                       Text(
                                         'Telefono: ${usuario.telefono}',
@@ -545,6 +555,11 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
               if (usuario.esResidente() && !usuario.getfamiliares()!.isEmpty) ...[
                 Text(
                   'Telefono Familiar: ${usuario.telefonoFamiliar()}',
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Familiares: ${usuario.getfamiliares()?.map((familiar) => familiar.toStringMostrar()).join(", ")},',
                   style: const TextStyle(fontSize: 16.0),
                 ),
                 const SizedBox(height: 8.0),

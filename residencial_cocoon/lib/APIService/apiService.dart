@@ -809,9 +809,9 @@ class APIService {
   static obtenerUsuariosPaginadasConFiltros(
       int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario?page=$paginaActual&pageSize=$elementosPorPagina'
-        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
-        '${palabraClaveNombre != null ? '&palabraClaveNombre=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
-        '${palabraClaveApellido != null ? '&palabraClaveApellido=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
+        '${ciResidente != null ? '&ci=$ciResidente' : ''}'
+        '${palabraClaveNombre != null ? '&nombres=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
+        '${palabraClaveApellido != null ? '&apellidos=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -828,9 +828,9 @@ class APIService {
 
   static obtenerUsuariosPaginadasConFiltrosCantidadTotal(String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/count?page=1'
-        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
-        '${palabraClaveNombre != null ? '&palabraClaveNombre=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
-        '${palabraClaveApellido != null ? '&palabraClaveApellido=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
+        '${ciResidente != null ? '&ci=$ciResidente' : ''}'
+        '${palabraClaveNombre != null ? '&nombres=${Uri.encodeComponent(palabraClaveNombre)}' : ''}'
+        '${palabraClaveApellido != null ? '&apellidos=${Uri.encodeComponent(palabraClaveApellido)}' : ''}');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
