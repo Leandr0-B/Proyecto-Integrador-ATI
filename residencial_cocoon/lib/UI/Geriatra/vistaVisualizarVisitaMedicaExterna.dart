@@ -31,6 +31,9 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   bool _filtroExpandido = false;
   Usuario? usuario = Fachada.getInstancia()?.getUsuario();
 
+  final _palabraClaveController = TextEditingController();
+  final _ciResidenteController = TextEditingController();
+
   Future<void> selectFechaDesde(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -137,6 +140,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                     decoration: const InputDecoration(
                       labelText: 'Ci Residente',
                     ),
+                    controller: _ciResidenteController,
                     onChanged: (value) {
                       setState(() {
                         _ciResidente = value;
@@ -151,6 +155,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                   decoration: const InputDecoration(
                     labelText: 'Palabra clave',
                   ),
+                  controller: _palabraClaveController,
                   onChanged: (value) {
                     setState(() {
                       _palabraClave = value;
@@ -363,6 +368,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               decoration: const InputDecoration(
                 labelText: 'Ci Residente',
               ),
+              controller: _ciResidenteController,
               onChanged: (value) {
                 setState(() {
                   _ciResidente = value;
@@ -375,6 +381,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
             decoration: const InputDecoration(
               labelText: 'Palabra clave',
             ),
+            controller: _palabraClaveController,
             onChanged: (value) {
               setState(() {
                 _palabraClave = value;
@@ -650,11 +657,12 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
-
+    _palabraClaveController.clear();
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
       _ciResidente = usuario?.ci;
     } else {
       _ciResidente = null;
+      _ciResidenteController.clear();
     }
   }
 

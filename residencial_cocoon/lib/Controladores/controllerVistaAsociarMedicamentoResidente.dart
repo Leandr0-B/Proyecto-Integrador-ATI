@@ -36,7 +36,7 @@ class ControllerVistaAsociarMedicamento {
     }
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, Usuario residente, String palabraClave) async {
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, Usuario residente, String? palabraClave) async {
     try {
       return _medicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosSinAsociar(paginaActual, elementosPorPagina, residente.ci, palabraClave);
     } on TokenException catch (e) {

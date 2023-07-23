@@ -24,9 +24,11 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   int _elementosPorPagina = 10;
   int _stock = 0;
   int _stockNotificacion = 0;
-  String _palabraClave = "";
+  String? _palabraClave = "";
   final _fieldStock = TextEditingController();
   final _fieldStockNotificacion = TextEditingController();
+
+  final _palabraClaveController = TextEditingController();
 
   @override
   void initState() {
@@ -71,6 +73,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                 _selectedSucursal = newValue;
                                 _selectedResidente = null;
                                 residentesVisible = true;
+                                _palabraClaveController.clear();
+                                _palabraClave = null;
                               });
                             },
                             controlAffinity: ListTileControlAffinity.leading,
@@ -115,6 +119,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                 onChanged: (Usuario? newValue) {
                                   setState(() {
                                     _selectedResidente = newValue;
+                                    _palabraClaveController.clear();
+                                    _palabraClave = null;
                                   });
                                 },
                               );
@@ -285,7 +291,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   }
 
   void mostrarPopUp(Future<List<Medicamento>?> elementos) {
-    final TextEditingController textFieldController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
@@ -306,7 +311,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: textFieldController,
+                            controller: _palabraClaveController,
                             decoration: const InputDecoration(
                               labelText: 'Palabra clave',
                             ),
