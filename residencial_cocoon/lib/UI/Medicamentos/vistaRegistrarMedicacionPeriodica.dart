@@ -27,6 +27,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   TimeOfDay? _horaPopUp;
   DateTime? _fechaPopUp;
   RegistroMedicacionConPrescripcion? _selectedRegistro;
+  String _rutaImagen = "";
 
   @override
   void initState() {
@@ -148,25 +149,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: registro.procesada == 1
-                                  ? Colors.green
-                                  : registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))
-                                      ? Colors.red
-                                      : (() {
-                                          final currentTime = TimeOfDay.now();
-                                          switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
-                                            case 0:
-                                              return Colors.orange;
-                                            case -1:
-                                              return Colors.red;
-                                            case 1:
-                                              if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
-                                                return Colors.yellow;
-                                              } else {
-                                                return Colors.white;
-                                              }
-                                          }
-                                        })(),
+                              color: colorDelRegistro(registro),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -177,45 +160,63 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Medicacion Periódica, Residente: ${registro.prescripcion.ciResidente()} - ${registro.prescripcion.nombreResidente()} - ${registro.prescripcion.apellidoResidente()} ',
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                child: Row(
+                                  // Utilizamos un Row para colocar el texto y la imagen en una fila
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      // El Expanded se expandirá al 80% del ancho disponible
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Medicacion Periódica, Residente: ${registro.prescripcion.ciResidente()} - ${registro.prescripcion.nombreResidente()} - ${registro.prescripcion.apellidoResidente()} ',
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Descripcion : ${registro.prescripcion.descripcion}',
+                                            style: const TextStyle(fontSize: 16.0),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Medicamento : ${registro.prescripcion.medicamento.nombre}- Cantidad: ${registro.prescripcion.cantidad} - Unidad: ${registro.prescripcion.medicamento.unidad}',
+                                            style: const TextStyle(fontSize: 16.0),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
+                                            style: const TextStyle(fontSize: 14.0),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
+                                            style: const TextStyle(fontSize: 14.0),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
+                                            style: const TextStyle(fontSize: 14.0),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Descripcion : ${registro.prescripcion.descripcion}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Medicamento : ${registro.prescripcion.medicamento.nombre}- Cantidad: ${registro.prescripcion.cantidad} - Unidad: ${registro.prescripcion.medicamento.unidad}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(
+                                      // El SizedBox actuará como un espacio fijo ocupando el 20% del ancho disponible
+                                      width: 0.2 * 300, // 20% del ancho total (300 en este caso)
+                                      child: _rutaImagen != ""
+                                          ? Image(
+                                              image: AssetImage('assets/images/$_rutaImagen.png'),
+                                              fit: BoxFit.contain, // Ajustar la imagen al espacio disponible
+                                            )
+                                          : Container(), // Puedes usar un Container vacío si no hay imagen
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -323,25 +324,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: registro.procesada == 1
-                                  ? Colors.green
-                                  : registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))
-                                      ? Colors.red
-                                      : (() {
-                                          final currentTime = TimeOfDay.now();
-                                          switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
-                                            case 0:
-                                              return Colors.orange;
-                                            case -1:
-                                              return Colors.red;
-                                            case 1:
-                                              if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
-                                                return Colors.yellow;
-                                              } else {
-                                                return Colors.white;
-                                              }
-                                          }
-                                        })(),
+                              color: colorDelRegistro(registro),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -389,6 +372,12 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
+                                    if (_rutaImagen != "")
+                                      Image(
+                                        image: AssetImage('assets/images/{$_rutaImagen}.png'),
+                                        width: 100, // Tamaño de la imagen
+                                        height: 100, // Tamaño de la imagen
+                                      ),
                                   ],
                                 ),
                               ),
@@ -405,6 +394,37 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
         ),
       ],
     );
+  }
+
+  Color colorDelRegistro(RegistroMedicacionConPrescripcion registro) {
+    if (registro.procesada == 1) {
+      _rutaImagen = "procesado";
+      return Colors.green;
+    } else if (registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
+      _rutaImagen = "vencido";
+      return Colors.red;
+    } else {
+      final currentTime = TimeOfDay.now();
+      switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
+        case 0:
+          _rutaImagen = "enHora";
+          return Colors.orange;
+        case -1:
+          _rutaImagen = "vencido";
+          return Colors.red;
+        case 1:
+          if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
+            _rutaImagen = "porVencer";
+            return Colors.yellow;
+          } else {
+            _rutaImagen = "";
+            return Colors.white;
+          }
+        default:
+          _rutaImagen = "";
+          return Colors.white;
+      }
+    }
   }
 
   @override
