@@ -1,3 +1,4 @@
+import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/asociarMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
@@ -12,7 +13,6 @@ class ControllerVistaAsociarMedicamento {
   List<Sucursal>? _sucursales;
   Sucursal? _selectedSucursal;
   List<Usuario>? _residentes;
-  List<Medicamento>? _medicamentos;
 
   //Constructor
   ControllerVistaAsociarMedicamento.empty();
@@ -36,9 +36,9 @@ class ControllerVistaAsociarMedicamento {
     }
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, Usuario residente, String? palabraClave) async {
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltros(int paginaActual, int elementosPorPagina, String? palabraClave) async {
     try {
-      return _medicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosSinAsociar(paginaActual, elementosPorPagina, residente.ci, palabraClave);
+      return await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltros(paginaActual, elementosPorPagina, palabraClave);
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
     }
@@ -54,9 +54,9 @@ class ControllerVistaAsociarMedicamento {
     _vista?.cerrarSesion();
   }
 
-  Future<int> calcularTotalPaginas(int elementosPorPagina, String? ciResidente, String? palabraClave) async {
+  Future<int> calcularTotalPaginas(int elementosPorPagina, String? palabraClave) async {
     try {
-      int totalMedicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(ciResidente, palabraClave) ?? 0;
+      int totalMedicamentos = await Fachada.getInstancia()?.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(palabraClave) ?? 0;
       return (totalMedicamentos / elementosPorPagina).ceil();
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
@@ -64,10 +64,10 @@ class ControllerVistaAsociarMedicamento {
     }
   }
 
-  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal, int stock, int stockNotificacion) async {
+  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal) async {
     try {
-      if (_controles(selectedMedicamento, selectedResidente, selectedSucursal, stock, stockNotificacion)) {
-        await Fachada.getInstancia()?.asociarMedicamento(selectedMedicamento, selectedResidente, stock, stockNotificacion);
+      if (_controles(selectedMedicamento, selectedResidente, selectedSucursal)) {
+        await Fachada.getInstancia()?.asociarMedicamento(selectedMedicamento, selectedResidente);
       }
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
@@ -79,7 +79,7 @@ class ControllerVistaAsociarMedicamento {
     }
   }
 
-  bool _controles(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal, int stock, int stockNotificacion) {
+  bool _controles(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal) {
     if (selectedSucursal == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
       return false;
@@ -89,8 +89,27 @@ class ControllerVistaAsociarMedicamento {
     } else if (selectedMedicamento == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar un medicamento.");
       return false;
-    } else if (stock <= stockNotificacion) {
-      _vista?.mostrarMensajeError("La cantidad del medicamento tiene que ser mayor que la cantidad para la notificación.");
+    }
+    return true;
+  }
+
+  Future<void> altaMedicamento(String nombreMedicamento, String? selectedUnidad) async {
+    if (_controlesAltaMedicamento(selectedUnidad)) {
+      try {
+        await Fachada?.getInstancia()?.altaMedicamento(nombreMedicamento, selectedUnidad);
+      } on AltaMedicamentoException catch (e) {
+        _vista?.mostrarMensaje(e.toString());
+      } on TokenException catch (e) {
+        _cerrarSesion(e.toString());
+      } on Exception catch (ex) {
+        _vista?.mostrarMensajeError(ex.toString());
+      }
+    }
+  }
+
+  bool _controlesAltaMedicamento(String? uniadad) {
+    if (uniadad == null || uniadad.isEmpty) {
+      _vista?.mostrarMensajeError("Tiene que seleccionar la unidad del medicamento");
       return false;
     }
     return true;

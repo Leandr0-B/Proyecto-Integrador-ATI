@@ -181,16 +181,16 @@ class Fachada {
     await _servicioMedicacion?.altaMedicamento(nombre, unidad);
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
-    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosSinAsociar(paginaActual, elementosPorPagina, cedulaResidente, palabraClave);
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltros(int paginaActual, int elementosPorPagina, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltros(paginaActual, elementosPorPagina, palabraClave);
   }
 
-  Future<int?> obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(String? ciResidente, String? palabraClave) async {
-    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(ciResidente, palabraClave);
+  Future<int?> obtenerMedicamentosPaginadosConFiltrosCantidadTotal(String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(palabraClave);
   }
 
-  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, int stock, int stockNotificacion) async {
-    await _servicioMedicacion?.asociarMedicamento(selectedMedicamento, selectedResidente, stock, stockNotificacion);
+  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente) async {
+    await _servicioMedicacion?.asociarMedicamento(selectedMedicamento, selectedResidente);
   }
 
   Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {

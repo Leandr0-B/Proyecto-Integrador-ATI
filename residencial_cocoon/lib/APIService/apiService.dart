@@ -563,9 +563,8 @@ class APIService {
     }
   }
 
-  static Future<String> obtenerMedicamentosPaginadosConFiltrosSinAsociar(
-      int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave, String? token) async {
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-sin-asociar/${cedulaResidente}?page=$paginaActual&pageSize=$elementosPorPagina'
+  static Future<String> obtenerMedicamentosPaginadosConFiltros(int paginaActual, int elementosPorPagina, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/?page=$paginaActual&pageSize=$elementosPorPagina'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
       url,
@@ -581,8 +580,8 @@ class APIService {
     }
   }
 
-  static obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(String? ciResidente, String? palabraClave, String? token) async {
-    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/medicamentos-sin-asociar/count/${ciResidente}?page=1'
+  static obtenerMedicamentosPaginadosConFiltrosCantidadTotal(String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/count/?page=1'
         '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
     final response = await http.get(
       url,
@@ -598,7 +597,7 @@ class APIService {
     }
   }
 
-  static postAsociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, int stock, int stockNotificacion, String? token) async {
+  static postAsociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/medicamento/asociar-medicamento');
 
     final response = await http.post(
@@ -606,8 +605,6 @@ class APIService {
       body: jsonEncode({
         'ci_residente': selectedResidente?.ci,
         'id_medicamento': selectedMedicamento?.id_medicamento,
-        'stock': stock,
-        'stock_notificacion': stockNotificacion,
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
@@ -617,7 +614,7 @@ class APIService {
     } else if (response.statusCode == 200) {
       throw AsociarMedicamentoException("Se asocio el medicamento al residente.");
     } else {
-      throw Exception(errorObtenerToken);
+      throw Exception("El residente ya tiene asociado el medicamento.");
     }
   }
 

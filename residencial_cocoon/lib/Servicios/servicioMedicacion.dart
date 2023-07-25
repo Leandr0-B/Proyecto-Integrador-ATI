@@ -21,22 +21,20 @@ class ServicioMedicacion {
     await APIService.postMedicamento(nombre, unidad, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
-    String medicamentos = await APIService.obtenerMedicamentosPaginadosConFiltrosSinAsociar(
-        paginaActual, elementosPorPagina, cedulaResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltros(int paginaActual, int elementosPorPagina, String? palabraClave) async {
+    String medicamentos = await APIService.obtenerMedicamentosPaginadosConFiltros(paginaActual, elementosPorPagina, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
     List<dynamic> jsonList = jsonDecode(medicamentos);
     return Medicamento.fromJsonList(jsonList);
   }
 
-  Future<int?> obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(String? ciResidente, String? palabraClave) async {
-    String cantidadTotal =
-        await APIService.obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+  Future<int?> obtenerMedicamentosPaginadosConFiltrosCantidadTotal(String? palabraClave) async {
+    String cantidadTotal = await APIService.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
     int? total = jsonDecode(cantidadTotal)['total'];
     return total;
   }
 
-  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, int stock, int stockNotificacion) async {
-    await APIService.postAsociarMedicamento(selectedMedicamento, selectedResidente, stock, stockNotificacion, Fachada.getInstancia()?.getUsuario()?.getToken());
+  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente) async {
+    await APIService.postAsociarMedicamento(selectedMedicamento, selectedResidente, Fachada.getInstancia()?.getUsuario()?.getToken());
   }
 
   Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
