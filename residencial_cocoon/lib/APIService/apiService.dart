@@ -652,8 +652,8 @@ class APIService {
     }
   }
 
-  static postPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, String? geriatraCi, int cantidad, String descripcion, String fecha_desde_formateada,
-      String fecha_hasta_formateada, int frecuencia, String horaSeleccionadaString, String? token) async {
+  static postPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, String? geriatraCi, int cantidad, String descripcion, int notificacionStock,
+      int prescripcionCronica, int duracion, int frecuencia, String horaSeleccionadaString, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/crear');
 
     final response = await http.post(
@@ -664,8 +664,9 @@ class APIService {
         'id_medicamento': selectedMedicamento?.id_medicamento,
         'cantidad': cantidad,
         'descripcion': descripcion,
-        'fecha_desde': fecha_desde_formateada,
-        'fecha_hasta': fecha_hasta_formateada,
+        'enviarNotificacionDeStock': notificacionStock,
+        'duracion': duracion,
+        'cronica': prescripcionCronica,
         'frecuencia': frecuencia,
         'hora_comienzo': horaSeleccionadaString,
       }),

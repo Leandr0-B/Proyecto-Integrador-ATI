@@ -172,7 +172,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                       asociarMedicamento();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Asociar Medicamento'),
                 ),
               ],
             ),

@@ -201,9 +201,10 @@ class Fachada {
     return await _servicioMedicacion?.obtenerMedicamentosAsociadosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave);
   }
 
-  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, DateTime? fecha_desde, DateTime? fecha_hasta,
-      int frecuencia, TimeOfDay? hora_comienzo) async {
-    await _servicioMedicacion?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, fecha_desde, fecha_hasta, frecuencia, hora_comienzo);
+  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, int notificacionStock, int prescripcionCronica,
+      int duracion, int frecuencia, TimeOfDay? hora_comienzo) async {
+    await _servicioMedicacion?.registrarPrescripcion(
+        selectedMedicamento, selectedResidente, cantidad, descripcion, notificacionStock, prescripcionCronica, duracion, frecuencia, hora_comienzo);
   }
 
   Future<List<RegistroMedicacionConPrescripcion>?> obtenerRegistrosMedicamentosConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {
