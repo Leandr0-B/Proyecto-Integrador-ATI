@@ -51,13 +51,11 @@ class ServicioMedicacion {
     return total;
   }
 
-  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, DateTime? fecha_desde, DateTime? fecha_hasta,
-      int frecuencia, TimeOfDay? hora_comienzo) async {
+  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, int notificacionStock, int prescripcionCronica,
+      int duracion, int frecuencia, TimeOfDay? hora_comienzo) async {
     String horaSeleccionadaString = '${hora_comienzo!.hour}:${hora_comienzo!.minute.toString().padLeft(2, '0')}';
-    String fecha_desde_formateada = DateFormat('yyyy-MM-dd').format(fecha_desde!);
-    String fecha_hasta_formateada = DateFormat('yyyy-MM-dd').format(fecha_hasta!);
     Usuario? geriatra = Fachada.getInstancia()?.getUsuario();
-    await APIService.postPrescripcion(selectedMedicamento, selectedResidente, geriatra?.ci, cantidad, descripcion, fecha_desde_formateada, fecha_hasta_formateada, frecuencia,
+    await APIService.postPrescripcion(selectedMedicamento, selectedResidente, geriatra?.ci, cantidad, descripcion, notificacionStock, prescripcionCronica, duracion, frecuencia,
         horaSeleccionadaString, geriatra?.getToken());
   }
 

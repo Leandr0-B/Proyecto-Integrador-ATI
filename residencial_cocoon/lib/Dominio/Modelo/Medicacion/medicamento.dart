@@ -11,10 +11,10 @@ class Medicamento {
 
   Medicamento.empty();
 
-  Medicamento.json(this._id_medicamento, this._nombre, this._unidad);
+  Medicamento.json(this._id_medicamento, this._nombre, this._unidad, this._stock);
 
   factory Medicamento.fromJson(Map<String, dynamic> json) {
-    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad']);
+    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad'], json['stock'] ?? 0);
   }
 
   //Get Set

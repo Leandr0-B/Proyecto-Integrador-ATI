@@ -18,8 +18,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   Usuario? _selectedResidente;
   Sucursal? _selectedSucursal;
   Medicamento? _selectedMedicamento;
-  DateTime? _fecha_desde;
-  DateTime? _fecha_hasta;
   TimeOfDay? _hora_comienzo;
   String _descripcion = "";
   int _frecuencia = 0;
@@ -30,10 +28,14 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   int _paginaActual = 1;
   int _elementosPorPagina = 10;
   bool _residentesVisible = false;
+  int _notificacionStock = 1;
+  int _prescripcionCronica = 0;
+  int _duracion = 0;
 
   final _fieldDescripcion = TextEditingController();
   final _fieldFrecuencia = TextEditingController();
   final _fieldCantidad = TextEditingController();
+  final _fieldDuracion = TextEditingController();
 
   @override
   void initState() {
@@ -156,11 +158,22 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            _selectedMedicamento.toString(),
+                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock: ${_selectedMedicamento?.stock}",
                             style: const TextStyle(
                               fontSize: 16.0,
                             ),
                           ),
+                        ),
+                        SizedBox(height: 16.0),
+                        CheckboxListTile(
+                          title: Text("¿Enviar notificacion de necesidad de stock?"),
+                          value: _notificacionStock == 1,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _notificacionStock = newValue! ? 1 : 0;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
                         ),
                         SizedBox(height: 10),
                         Align(
@@ -245,38 +258,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("Seleccione la fecha desde:"),
-                        ),
-                        InkWell(
-                          onTap: () => _selectFechaDesde(context),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              hintText: 'Fecha',
-                            ),
-                            child: Text(
-                              _fecha_desde != null ? DateFormat('dd/MM/yyyy').format(_fecha_desde!) : 'Seleccione una fecha',
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Seleccione la fecha hasta:"),
-                        ),
-                        InkWell(
-                          onTap: () => _selectFechaHasta(context),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              hintText: 'Fecha',
-                            ),
-                            child: Text(
-                              _fecha_hasta != null ? DateFormat('dd/MM/yyyy').format(_fecha_hasta!) : 'Seleccione una fecha',
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerLeft,
                           child: Text("Seleccione la hora de comienzo:"),
                         ),
                         InkWell(
@@ -290,6 +271,43 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                             ),
                           ),
                         ),
+                        SizedBox(height: 16.0),
+                        CheckboxListTile(
+                          title: Text("¿Es una prescripción crónica?"),
+                          value: _prescripcionCronica == 1,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _prescripcionCronica = newValue! ? 1 : 0;
+                              _fieldDuracion.clear();
+                              _duracion = 0;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                        if (_prescripcionCronica == 0)
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Ingrese la duracion en días:',
+                              hintText: 'Duración de prescripción en días',
+                            ),
+                            maxLength: 100,
+                            controller: _fieldDuracion,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la duración de la prescripción.';
+                              }
+                              if (num.tryParse(value) == null) {
+                                return 'Solo puede ingresar valores numéricos.';
+                              }
+                              if (num.tryParse(value)! < 0) {
+                                return 'Solo puede ingresar valores positivos.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _duracion = int.parse(value!);
+                            },
+                          ),
                       ]
                     ],
                   ],
@@ -324,12 +342,11 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
       _fieldCantidad.clear();
       _fieldDescripcion.clear();
       _fieldFrecuencia.clear();
+      _fieldDuracion.clear();
       _selectedMedicamento = null;
       _selectedResidente = null;
       _selectedSucursal = null;
       _residentesVisible = false;
-      _fecha_desde = null;
-      _fecha_hasta = null;
       _hora_comienzo = null; /////////////
     });
   }
@@ -376,35 +393,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
   @override
   Future<void> registrarPrescripcion() async {
     await _controller.registrarPrescripcion(
-        _selectedMedicamento, _selectedResidente, _selectedSucursal, _cantidad, _descripcion, _fecha_desde, _fecha_hasta, _frecuencia, _hora_comienzo);
-  }
-
-  Future<void> _selectFechaDesde(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fecha_desde ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-    if (picked != null && picked != _fecha_desde) {
-      setState(() {
-        _fecha_desde = picked;
-      });
-    }
-  }
-
-  Future<void> _selectFechaHasta(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fecha_hasta ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-    if (picked != null && picked != _fecha_hasta) {
-      setState(() {
-        _fecha_hasta = picked;
-      });
-    }
+        _selectedMedicamento, _selectedResidente, _selectedSucursal, _cantidad, _descripcion, _notificacionStock, _prescripcionCronica, _duracion, _frecuencia, _hora_comienzo);
   }
 
   Future<void> _selectHora(BuildContext context) async {

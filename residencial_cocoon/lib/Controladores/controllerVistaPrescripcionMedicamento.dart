@@ -68,10 +68,11 @@ class ControllerVistaPrescripcionMedicamento {
   }
 
   Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal, int cantidad, String descripcion,
-      DateTime? fecha_desde, DateTime? fecha_hasta, int _frecuencia, TimeOfDay? hora_comienzo) async {
+      int notificacionStock, int prescripcionCronica, int duracion, int _frecuencia, TimeOfDay? hora_comienzo) async {
     try {
-      if (_controles(selectedMedicamento, selectedResidente, selectedSucursal, cantidad, fecha_desde, fecha_hasta, hora_comienzo)) {
-        await Fachada.getInstancia()?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, fecha_desde, fecha_hasta, _frecuencia, hora_comienzo);
+      if (_controles(selectedMedicamento, selectedResidente, selectedSucursal, cantidad, hora_comienzo)) {
+        await Fachada.getInstancia()
+            ?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, notificacionStock, prescripcionCronica, duracion, _frecuencia, hora_comienzo);
       }
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
@@ -83,8 +84,7 @@ class ControllerVistaPrescripcionMedicamento {
     }
   }
 
-  bool _controles(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal, int cantidad, DateTime? fecha_desde, DateTime? fecha_hasta,
-      TimeOfDay? hora_comienzo) {
+  bool _controles(Medicamento? selectedMedicamento, Usuario? selectedResidente, Sucursal? selectedSucursal, int cantidad, TimeOfDay? hora_comienzo) {
     if (selectedSucursal == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar una sucursal.");
       return false;
@@ -93,15 +93,6 @@ class ControllerVistaPrescripcionMedicamento {
       return false;
     } else if (selectedMedicamento == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar un medicamento.");
-      return false;
-    } else if (fecha_desde == null) {
-      _vista?.mostrarMensajeError("Tiene que seleccionar una fecha desde.");
-      return false;
-    } else if (fecha_hasta == null) {
-      _vista?.mostrarMensajeError("Tiene que seleccionar una fecha hasta.");
-      return false;
-    } else if (fecha_desde.isAfter(fecha_hasta)) {
-      _vista?.mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
       return false;
     }
     return true;
