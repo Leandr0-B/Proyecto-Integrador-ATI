@@ -232,4 +232,30 @@ class Fachada {
   Future<int?> obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioMedicacion?.obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
+
+  Future<List<PrescripcionDeMedicamento>?> obtenerPrescripcionesActivasPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesActivasPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave);
+  }
+
+  Future<List<Familiar>?> obtenerFamiliaresPaginadosConfiltros(int paginaActual, int elementosPorPagina, String? ciResidente, String? ciFamiliar) async {
+    return await _servicioUsuario?.obtenerFamiliaresPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, ciFamiliar);
+  }
+
+  Future<int?> obtenerFamiliaresPaginadosConfiltrosCantidadTotal(String? ciResidente, String? ciFamiliar) async {
+    return await _servicioUsuario?.obtenerFamiliaresPaginadosConfiltrosCantidadTotal(ciResidente, ciFamiliar);
+  }
+
+  Future<void> altaFamiliar(
+      String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta) async {
+    await _servicioUsuario?.altaFamiliar(ciResidente, ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta);
+  }
+
+  Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar) async {
+    await _servicioMedicacion?.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar);
+  }
 }

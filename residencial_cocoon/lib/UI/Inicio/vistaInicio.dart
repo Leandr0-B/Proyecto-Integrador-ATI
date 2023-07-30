@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaStockMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaVisualizarPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaAsociarMedicamentoResidente.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaPrescripcionMedicamento.dart';
@@ -175,6 +176,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.visualizarPrescripcionesMedicamentos:
         container = VistaVisualizarPrescripcionMedicamento();
         break;
+      case DrawerSections.stockMedicamento:
+        container = VistaStockMedicamento();
+        break;
       default:
         container = Container();
         break;
@@ -311,6 +315,7 @@ class MyDrawerList extends StatelessWidget {
                 title: const Text("Medicamentos", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
                   menuItem(52, "Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
+                  menuItem(53, "Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
                 ],
               ),
             ],
@@ -405,6 +410,7 @@ enum DrawerSections {
   visualizarPrescripcionesMedicamentos,
   medicacionPeriodica,
   visualizarMedicacionPeriodica,
+  stockMedicamento,
 }
 
 class NotificacionActualizadaCallback {
