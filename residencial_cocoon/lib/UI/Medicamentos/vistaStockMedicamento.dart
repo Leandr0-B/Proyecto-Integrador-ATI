@@ -18,7 +18,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
   final _formKeyFamiliar = GlobalKey<FormState>();
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
-  int _elementosPorPagina = 3;
+  int _elementosPorPagina = 6;
   String? _palabraClave = "";
   String? _ciResidente;
   String? _ciFamiliar;
