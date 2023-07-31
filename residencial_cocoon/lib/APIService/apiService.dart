@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/altaFamiliarException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/asociarMedicamentoException.dart';
@@ -9,6 +10,7 @@ import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
@@ -838,6 +840,123 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerPrescripcionesActivasPaginadosConfiltros(int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/activas/?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/activas/count?page=1'
+        '${ciResidente != null ? '&ciResidente=$ciResidente' : ''}'
+        '${palabraClave != null ? '&palabraClave=${Uri.encodeComponent(palabraClave)}' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerFamiliaresPaginadosConfiltros(int paginaActual, int elementosPorPagina, String? ciResidente, String? ciFamiliar, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/residente/${ciResidente}/familiares/?page=$paginaActual&pageSize=$elementosPorPagina'
+        '${ciFamiliar != null ? '&ciFamiliarFilter=$ciFamiliar' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerFamiliaresPaginadosConfiltrosCantidadTotal(String? ciResidente, String? ciFamiliar, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/residente/${ciResidente}/familiares/count?page=1'
+        '${ciFamiliar != null ? '&ciFamiliarFilter=$ciFamiliar' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static altaFamiliar(String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta,
+      String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/residente/${ciResidente}/familiares');
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'ci': ciFamiliarAlta,
+        'nombre': nombreFamiliarAlta,
+        'apellido': apellidoFamiliarAlta,
+        'telefono': telefonoFamiliarAlta,
+        'email': emailFamiliarAlta,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw AltaFamiliarException("Familiar agregado existosamente.");
+    } else if (response.statusCode == 400) {
+      throw Exception("El familiar ya esta ingresado.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/asociar');
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'id_prescripcion': id_prescripcion,
+        'cantidad_de_stock': stock,
+        'stock_notificacion': stockNotificacion,
+        'ciFamiliar': ciFamiliar,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw PrescripcionStockException("El stock de la medicación asociada a la prescripción se actualizó existosamente.");
     } else {
       throw Exception(errorObtenerToken);
     }

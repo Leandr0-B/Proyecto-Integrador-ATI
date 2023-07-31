@@ -102,4 +102,23 @@ class ServicioMedicacion {
     int? total = jsonDecode(cantidadTotal)['total'];
     return total;
   }
+
+  Future<List<PrescripcionDeMedicamento>?> obtenerPrescripcionesActivasPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClave) async {
+    String prescripciones = await APIService.obtenerPrescripcionesActivasPaginadosConfiltros(
+        paginaActual, elementosPorPagina, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(prescripciones);
+    return PrescripcionDeMedicamento.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave) async {
+    String cantidadTotal =
+        await APIService.obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
+  }
+
+  Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar) async {
+    await APIService.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar, Fachada.getInstancia()?.getUsuario()!.getToken());
+  }
 }

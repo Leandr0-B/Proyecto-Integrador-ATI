@@ -105,4 +105,23 @@ class ServicioUsuario {
     int? total = jsonDecode(cantidadTotal)['total'];
     return total;
   }
+
+  Future<List<Familiar>?> obtenerFamiliaresPaginadosConfiltros(int paginaActual, int elementosPorPagina, String? ciResidente, String? ciFamiliar) async {
+    String familiares =
+        await APIService.obtenerFamiliaresPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, ciFamiliar, Fachada.getInstancia()?.getUsuario()!.getToken());
+    List<dynamic> jsonList = jsonDecode(familiares);
+    return Familiar.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerFamiliaresPaginadosConfiltrosCantidadTotal(String? ciResidente, String? ciFamiliar) async {
+    String cantidadTotal = await APIService.obtenerFamiliaresPaginadosConfiltrosCantidadTotal(ciResidente, ciFamiliar, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
+  }
+
+  Future<void> altaFamiliar(
+      String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta) async {
+    await APIService.altaFamiliar(
+        ciResidente, ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta, Fachada.getInstancia()?.getUsuario()!.getToken());
+  }
 }

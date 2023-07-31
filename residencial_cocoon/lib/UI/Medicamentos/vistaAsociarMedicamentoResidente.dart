@@ -168,7 +168,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      _selectedMedicamento = _selectedMedicamento;
                       asociarMedicamento();
                     }
                   },
