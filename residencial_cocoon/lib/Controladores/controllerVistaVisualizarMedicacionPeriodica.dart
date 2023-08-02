@@ -30,10 +30,32 @@ class ControllerVistaRegistrarMedicacionPeriodica {
 
   Future<void> procesarMedicacion(RegistroMedicacionConPrescripcion? selectedRegistro) async {
     try {
-      await Fachada.getInstancia()?.procesarMedicacion(selectedRegistro);
+      if (_controles(selectedRegistro)) {
+        await Fachada.getInstancia()?.procesarMedicacion(selectedRegistro);
+      }
     } on MedicacionPeriodicaException catch (e) {
       _vista?.limpiar();
       _vista?.cambiarColor(selectedRegistro);
+      _vista?.mostrarMensaje(e.toString());
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+    } on Exception catch (e) {
+      _vista?.mostrarMensajeError(e.toString());
+    }
+  }
+
+  bool _controles(RegistroMedicacionConPrescripcion? registro) {
+    if (registro!.cantidadDada > registro!.prescripcion.medicamento.stock) {
+      _vista?.mostrarMensajeError("La cantidad dada no puede ser mayor al stock del medicamento.");
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> notificarStock(RegistroMedicacionConPrescripcion registro) async {
+    try {
+      //await Fachada.getInstancia()?.notificarStock(registro.idRegistroMedicacionConPrescripcion);
+    } on MedicacionPeriodicaException catch (e) {
       _vista?.mostrarMensaje(e.toString());
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
