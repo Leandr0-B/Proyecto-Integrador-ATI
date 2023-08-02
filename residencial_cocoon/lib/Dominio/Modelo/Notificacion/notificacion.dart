@@ -22,7 +22,7 @@ class Notificacion {
 
     usuario.ci = json['ci_envia'];
     usuario.nombre = json['nombre_envia'];
-    //usuario.apellido = json['apellido_envia'];
+    usuario.apellido = json['apellido_envia'];
 
     tipoNotificacion.idTipoNotificacion = json['id_tipo_notificacion'];
     tipoNotificacion.nombre = json['nombre_tipo_notificacion'];
@@ -88,7 +88,7 @@ class Notificacion {
   }
 
   String nombreUsuarioQueEnvia() {
-    return "${usuarioEnvia.ci} - ${usuarioEnvia.nombre}";
+    return "${usuarioEnvia.ci} - ${usuarioEnvia.nombre} - ${usuarioEnvia.apellido}";
   }
 
   void marcarNotificacionComoLeida() {
