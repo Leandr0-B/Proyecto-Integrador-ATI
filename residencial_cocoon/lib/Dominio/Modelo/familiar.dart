@@ -32,7 +32,7 @@ class Familiar {
       json['nombre'],
       json['apellido'],
       json['email'],
-      json['contacto_primario'],
+      json['contacto_primario'] ?? 0,
       json['telefono'],
     );
   }
