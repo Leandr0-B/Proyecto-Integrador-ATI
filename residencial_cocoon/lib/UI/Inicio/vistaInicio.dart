@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Inicio/fondoInicio.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaStockMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaVisualizarPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaAsociarMedicamentoResidente.dart';
@@ -22,6 +23,7 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
+
 import 'dart:html' as html;
 
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
@@ -126,7 +128,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
 
     switch (currentPage) {
       case DrawerSections.inicio:
-        container = Container();
+        container = FondoInicio();
         break;
       case DrawerSections.listaUsuarios:
         container = VistaListaUsuario();
