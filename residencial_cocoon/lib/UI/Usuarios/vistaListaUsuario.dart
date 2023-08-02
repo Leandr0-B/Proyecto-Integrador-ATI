@@ -220,18 +220,18 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                         'Email: ${usuario.email}',
                                         style: const TextStyle(fontSize: 16.0),
                                       ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                    ]
+                                    ],
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
                                   ],
                                 ),
                               ),
@@ -460,18 +460,18 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                         'Email: ${usuario.email}',
                                         style: const TextStyle(fontSize: 16.0),
                                       ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                    ]
+                                    ],
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
                                   ],
                                 ),
                               ),
@@ -583,18 +583,18 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                   'Email: ${usuario.email}',
                   style: const TextStyle(fontSize: 16.0),
                 ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-                const SizedBox(height: 8.0),
-              ]
+              ],
+              const SizedBox(height: 8.0),
+              Text(
+                'Roles: ${usuario.roles?.map((rol) => rol.toStringMostrar()).join(", ")}',
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Sucursales: ${usuario.getSucursales()?.map((sucursal) => sucursal.toStringMostrar()).join(", ")}',
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              const SizedBox(height: 8.0),
             ],
           ),
         ),
