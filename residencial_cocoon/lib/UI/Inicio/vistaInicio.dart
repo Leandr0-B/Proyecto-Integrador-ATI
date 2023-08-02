@@ -110,7 +110,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
-      backgroundColor: Colors.yellow,
+      backgroundColor: Color.fromRGBO(225, 183, 72, 1),
     ));
   }
 
