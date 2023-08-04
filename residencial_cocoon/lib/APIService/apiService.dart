@@ -941,7 +941,7 @@ class APIService {
     }
   }
 
-  static cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, String? token) async {
+  static cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, int stockAnterior, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/asociar');
     final response = await http.put(
       url,
@@ -950,6 +950,7 @@ class APIService {
         'cantidad_de_stock': stock,
         'stock_notificacion': stockNotificacion,
         'ciFamiliar': ciFamiliar,
+        'stock_anterior': stockAnterior,
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
