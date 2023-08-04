@@ -704,6 +704,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
+                                  mostrarPopUp(prescripcion);
                                 },
                                 child: const Text('Cerrar'),
                               ),
@@ -766,7 +767,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Stock de medicamento guardado: ${prescripcion.medicamento.stockAnterior}',
+                    'Stock de medicamento sobrante: ${prescripcion.medicamento.stockAnterior}',
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 8.0),
@@ -836,124 +837,64 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                       },
                       child: Text('Agregar Familiar'),
                     ),
-                    if (_selectedFamiliar != null) ...[
-                      SizedBox(height: 10),
-                      Form(
-                        key: _formKey, // Agregar la key del formulario
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Ingrese la cantidad:',
-                                hintText: 'Cantidad de medicamento',
-                              ),
-                              maxLength: 100,
-                              controller: _fieldStock,
-                              validator: (value) {
-                                if (value == null || value.isEmpty || int.parse(value) == 0) {
-                                  // Reemplazar "value == 0" por "int.parse(value) == 0"
-                                  return 'Por favor ingrese la cantidad.';
-                                }
-                                if (num.tryParse(value) == null) {
-                                  return 'Solo puede ingresar valores numéricos.';
-                                }
-                                if (num.tryParse(value)! < 0) {
-                                  return 'Solo puede ingresar valores positivos.';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _stock = int.parse(value!);
-                              },
-                            ),
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Ingrese la cantidad de notificación:',
-                                hintText: 'Cantidad para notificación',
-                              ),
-                              maxLength: 100,
-                              controller: _fieldStockNotificacion,
-                              validator: (value) {
-                                if (value == null || value.isEmpty || int.parse(value) == 0) {
-                                  // Reemplazar "value == 0" por "int.parse(value) == 0"
-                                  return 'Por favor ingrese la cantidad para notificación.';
-                                }
-                                if (num.tryParse(value) == null) {
-                                  return 'Solo puede ingresar valores numéricos.';
-                                }
-                                if (num.tryParse(value)! < 0) {
-                                  return 'Solo puede ingresar valores positivos.';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _stockNotificacion = int.parse(value!);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ] else ...[
-                    SizedBox(height: 10),
-                    Form(
-                      key: _formKey, // Agregar la key del formulario
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: 'Ingrese la cantidad:',
-                              hintText: 'Cantidad de medicamento',
-                            ),
-                            maxLength: 100,
-                            controller: _fieldStock,
-                            validator: (value) {
-                              if (value == null || value.isEmpty || int.parse(value) == 0) {
-                                // Reemplazar "value == 0" por "int.parse(value) == 0"
-                                return 'Por favor ingrese la cantidad.';
-                              }
-                              if (num.tryParse(value) == null) {
-                                return 'Solo puede ingresar valores numéricos.';
-                              }
-                              if (num.tryParse(value)! < 0) {
-                                return 'Solo puede ingresar valores positivos.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _stock = int.parse(value!);
-                            },
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: 'Ingrese la cantidad de notificación:',
-                              hintText: 'Cantidad para notificación',
-                            ),
-                            maxLength: 100,
-                            controller: _fieldStockNotificacion,
-                            validator: (value) {
-                              if (value == null || value.isEmpty || int.parse(value) == 0) {
-                                // Reemplazar "value == 0" por "int.parse(value) == 0"
-                                return 'Por favor ingrese la cantidad para notificación.';
-                              }
-                              if (num.tryParse(value) == null) {
-                                return 'Solo puede ingresar valores numéricos.';
-                              }
-                              if (num.tryParse(value)! < 0) {
-                                return 'Solo puede ingresar valores positivos.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _stockNotificacion = int.parse(value!);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
+                  SizedBox(height: 10),
+                  Form(
+                    key: _formKey, // Agregar la key del formulario
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Ingrese la cantidad:',
+                            hintText: 'Cantidad de medicamento',
+                          ),
+                          maxLength: 100,
+                          controller: _fieldStock,
+                          validator: (value) {
+                            if (value == null || value.isEmpty || int.parse(value) == 0) {
+                              // Reemplazar "value == 0" por "int.parse(value) == 0"
+                              return 'Por favor ingrese la cantidad.';
+                            }
+                            if (num.tryParse(value) == null) {
+                              return 'Solo puede ingresar valores numéricos.';
+                            }
+                            if (num.tryParse(value)! < 0) {
+                              return 'Solo puede ingresar valores positivos.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _stock = int.parse(value!);
+                          },
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Ingrese la cantidad de notificación:',
+                            hintText: 'Cantidad para notificación',
+                          ),
+                          maxLength: 100,
+                          controller: _fieldStockNotificacion,
+                          validator: (value) {
+                            if (value == null || value.isEmpty || int.parse(value) == 0) {
+                              // Reemplazar "value == 0" por "int.parse(value) == 0"
+                              return 'Por favor ingrese la cantidad para notificación.';
+                            }
+                            if (num.tryParse(value) == null) {
+                              return 'Solo puede ingresar valores numéricos.';
+                            }
+                            if (num.tryParse(value)! < 0) {
+                              return 'Solo puede ingresar valores positivos.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _stockNotificacion = int.parse(value!);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
                     children: [
