@@ -53,6 +53,7 @@ class PrescripcionDeMedicamento {
     medicamentoAux.setUnidad(json['unidad_medicamento']);
     medicamentoAux.stock = json['stock'];
     medicamentoAux.stockNotificacion = json['stock_notificacion'];
+    medicamentoAux.stockAnterior = json['stock_anterior'];
 
     //Convierto la hora de string a TimeOfDay
     String timeString = json['hora_comienzo'];
@@ -125,6 +126,9 @@ class PrescripcionDeMedicamento {
 
   DateTime get fecha_creacion => this._fecha_creacion;
   set fecha_creacion(DateTime value) => this._fecha_creacion = value;
+
+  int get cronica => this._cronica;
+  set cronica(int value) => this._cronica = value;
 
   //Funciones
   void agregarGeriatra(Usuario geriatra) {
