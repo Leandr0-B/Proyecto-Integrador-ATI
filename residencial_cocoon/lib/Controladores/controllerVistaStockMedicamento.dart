@@ -47,12 +47,13 @@ class ControllerVistaStockMedicamento {
     _vista?.cerrarSesion();
   }
 
-  Future<List<PrescripcionDeMedicamento>?> obtenerPrescripcionesActivasPaginadosConfiltros(
+  Future<List<PrescripcionDeMedicamento>> obtenerPrescripcionesActivasPaginadosConfiltros(
       int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClave) async {
     try {
-      return await Fachada.getInstancia()?.obtenerPrescripcionesActivasPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClave);
+      return await Fachada.getInstancia()?.obtenerPrescripcionesActivasPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClave) ?? [];
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
+      return [];
     }
   }
 
@@ -74,6 +75,7 @@ class ControllerVistaStockMedicamento {
     }
   }
 
+/*
   Future<int> calcularTotalPaginasFamiliares(int elementosPorPagina, String? ciResidente, String? ciFamiliar) async {
     try {
       int totalMedicamentos = await Fachada.getInstancia()?.obtenerFamiliaresPaginadosConfiltrosCantidadTotal(ciResidente, ciFamiliar) ?? 0;
@@ -83,6 +85,7 @@ class ControllerVistaStockMedicamento {
       return 0;
     }
   }
+*/
 
   Future<void> altaFamiliar(
       String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta) async {
@@ -97,10 +100,10 @@ class ControllerVistaStockMedicamento {
     }
   }
 
-  Future<void> cargarStock(PrescripcionDeMedicamento? selectedPrescripcion, int stock, int stockNotificacion, Familiar? selectedFamiliar) async {
+  Future<void> cargarStock(PrescripcionDeMedicamento? selectedPrescripcion, int stock, int stockNotificacion, Familiar? selectedFamiliar, int stockAnterior) async {
     try {
-      if (_controles(selectedPrescripcion, selectedFamiliar)) {
-        await Fachada.getInstancia()?.cargarStock(selectedPrescripcion?.id_prescripcion, stock, stockNotificacion, selectedFamiliar?.ci);
+      if (_controles(selectedPrescripcion, selectedFamiliar, stock, stockAnterior)) {
+        await Fachada.getInstancia()?.cargarStock(selectedPrescripcion?.id_prescripcion, stock, stockNotificacion, selectedFamiliar?.ci, stockAnterior);
       }
     } on PrescripcionStockException catch (e) {
       _vista?.mostrarMensaje(e.toString());
@@ -112,12 +115,16 @@ class ControllerVistaStockMedicamento {
     }
   }
 
-  bool _controles(PrescripcionDeMedicamento? prescripcion, Familiar? familiar) {
+  bool _controles(PrescripcionDeMedicamento? prescripcion, Familiar? familiar, int stock, int stockAnterior) {
     if (prescripcion == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar una prescripción.");
       return false;
-    } else if (familiar == null) {
+    } else if (familiar == null && stockAnterior == 0) {
       _vista?.mostrarMensajeError("Tiene que seleccionar un familiar.");
+      return false;
+    }
+    if (stockAnterior == 1 && prescripcion.medicamento.stockAnterior < stock) {
+      _vista?.mostrarMensajeError("El stock ingresado no puede ser mayor al que se tiene almacenado.");
       return false;
     }
     return true;

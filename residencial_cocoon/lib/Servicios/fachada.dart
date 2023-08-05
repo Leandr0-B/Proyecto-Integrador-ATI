@@ -255,7 +255,7 @@ class Fachada {
     await _servicioUsuario?.altaFamiliar(ciResidente, ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta);
   }
 
-  Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar) async {
-    await _servicioMedicacion?.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar);
+  Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, int stockAnterior) async {
+    await _servicioMedicacion?.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar, stockAnterior);
   }
 }

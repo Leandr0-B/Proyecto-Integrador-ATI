@@ -44,6 +44,10 @@ class Medicamento {
 
   set stockNotificacion(int value) => this._stockNotificacion = value;
 
+  int get stockAnterior => this._stockAnterior;
+
+  set stockAnterior(int value) => this._stockAnterior = value;
+
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {
     return jsonList.cast<Map<String, dynamic>>().map<Medicamento>((json) => Medicamento.fromJson(json)).toList();
