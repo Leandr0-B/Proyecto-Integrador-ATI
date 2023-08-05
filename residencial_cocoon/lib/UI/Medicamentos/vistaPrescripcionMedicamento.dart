@@ -159,7 +159,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock: ${_selectedMedicamento?.stock}",
+                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock Sobrante: ${_selectedMedicamento?.stockAnterior}",
                             style: const TextStyle(
                               fontSize: 16.0,
                             ),
@@ -274,7 +274,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         ),
                         SizedBox(height: 16.0),
                         CheckboxListTile(
-                          title: Text("¿Es una prescripción crónica?"),
+                          title: Text("Prescripción Crónica"),
                           value: _prescripcionCronica == 1,
                           onChanged: (newValue) {
                             setState(() {
