@@ -27,7 +27,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   TimeOfDay? _horaPopUp;
   DateTime? _fechaPopUp;
   RegistroMedicacionConPrescripcion? _selectedRegistro;
-  String _rutaImagen = "";
+  String _seleccionIcono = "";
 
   @override
   void initState() {
@@ -207,14 +207,14 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       ),
                                     ),
                                     SizedBox(
-                                      // El SizedBox actuará como un espacio fijo ocupando el 20% del ancho disponible
                                       width: 0.2 * 300, // 20% del ancho total (300 en este caso)
-                                      child: _rutaImagen != ""
-                                          ? Image(
-                                              image: AssetImage('assets/images/$_rutaImagen.png'),
-                                              fit: BoxFit.contain, // Ajustar la imagen al espacio disponible
+                                      child: _seleccionIcono != ""
+                                          ? Icon(
+                                              _obtenerIcono(_seleccionIcono),
+                                              size: 80, // Tamaño del ícono
+                                              color: Colors.black, // Color del ícono (puedes cambiarlo según tus necesidades)
                                             )
-                                          : Container(), // Puedes usar un Container vacío si no hay imagen
+                                          : Container(),
                                     ),
                                   ],
                                 ),
@@ -372,11 +372,13 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
-                                    if (_rutaImagen != "")
-                                      Image(
-                                        image: AssetImage('assets/images/{$_rutaImagen}.png'),
-                                        width: 100, // Tamaño de la imagen
-                                        height: 100, // Tamaño de la imagen
+                                    if (_seleccionIcono != "")
+                                      Center(
+                                        child: Icon(
+                                          _obtenerIcono(_seleccionIcono),
+                                          size: 80, // Tamaño del ícono
+                                          color: Colors.black, // Color del ícono (puedes cambiarlo según tus necesidades)
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -396,32 +398,47 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     );
   }
 
+  IconData _obtenerIcono(String icono) {
+    switch (icono) {
+      case 'procesado':
+        return Icons.check_circle_outline;
+      case 'vencido':
+        return Icons.watch_later_outlined;
+      case 'enHora':
+        return Icons.circle_notifications_outlined;
+      case 'porVencer':
+        return Icons.warning_amber_rounded;
+      default:
+        return Icons.live_help_rounded;
+    }
+  }
+
   Color colorDelRegistro(RegistroMedicacionConPrescripcion registro) {
     if (registro.procesada == 1) {
-      _rutaImagen = "procesado";
-      return Colors.green;
+      _seleccionIcono = "procesado";
+      return const Color.fromARGB(255, 42, 119, 44);
     } else if (registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
-      _rutaImagen = "vencido";
-      return Colors.red;
+      _seleccionIcono = "vencido";
+      return const Color.fromARGB(255, 145, 21, 12);
     } else {
       final currentTime = TimeOfDay.now();
       switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
         case 0:
-          _rutaImagen = "enHora";
+          _seleccionIcono = "enHora";
           return Colors.orange;
         case -1:
-          _rutaImagen = "vencido";
-          return Colors.red;
+          _seleccionIcono = "vencido";
+          return const Color.fromARGB(255, 145, 21, 12);
         case 1:
           if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
-            _rutaImagen = "porVencer";
-            return Colors.yellow;
+            _seleccionIcono = "porVencer";
+            return const Color.fromARGB(255, 235, 214, 29);
           } else {
-            _rutaImagen = "";
+            _seleccionIcono = "";
             return Colors.white;
           }
         default:
-          _rutaImagen = "";
+          _seleccionIcono = "";
           return Colors.white;
       }
     }
