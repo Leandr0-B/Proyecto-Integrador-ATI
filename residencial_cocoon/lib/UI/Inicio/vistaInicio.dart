@@ -312,6 +312,7 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(22, "Registrar Residente", Icons.person_add, DrawerSections.altaResidente),
                 ],
               ),
+              /*
               ExpansionTile(
                 leading: const Icon(IconData(0xe3d9, fontFamily: 'MaterialIcons'), size: 20, color: Colors.black),
                 title: const Text("Medicamentos", style: TextStyle(color: Colors.black, fontSize: 16)),
@@ -320,6 +321,7 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(53, "Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
                 ],
               ),
+              */
             ],
             if (usuario!.esGeriatra() || usuario!.esAdministrador()) ...[
               ExpansionTile(
@@ -332,6 +334,7 @@ class MyDrawerList extends StatelessWidget {
                   menuItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
                   menuItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
                   menuItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
+                  menuItem(52, "Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
                   menuItem(47, "Prescripcion Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
                   menuItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
                 ],
@@ -342,6 +345,7 @@ class MyDrawerList extends StatelessWidget {
                 leading: const Icon(Icons.badge_sharp, size: 20, color: Colors.black),
                 title: const Text("Enfermero", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
+                  menuItem(53, "Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
                   menuItem(61, "Registro Medicación Periódica", Icons.fact_check, DrawerSections.medicacionPeriodica),
                 ],
               ),
