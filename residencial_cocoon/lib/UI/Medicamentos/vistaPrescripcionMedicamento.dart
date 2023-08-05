@@ -79,6 +79,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                               setState(() {
                                 _selectedSucursal = newValue;
                                 _selectedResidente = null;
+                                _selectedMedicamento = null;
                                 _residentesVisible = true;
                                 _palabraClave = null;
                               });
