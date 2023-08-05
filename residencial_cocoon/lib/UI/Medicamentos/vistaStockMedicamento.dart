@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaStockMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
@@ -194,7 +195,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción, Descripcion: ${prescripcion.descripcion}',
+                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -202,7 +203,12 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fecha_creacion)}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Descripcion: ${prescripcion.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -211,6 +217,10 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
+                                    Text(
+                                      'Stock actual: ${prescripcion.stock}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -396,7 +406,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción, Descripcion: ${prescripcion.descripcion}',
+                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -404,7 +414,12 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fecha_creacion)}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Descripcion: ${prescripcion.descripcion}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -413,6 +428,10 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
+                                    Text(
+                                      'Stock actual: ${prescripcion.stock}',
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -726,7 +745,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
     _fieldStockNotificacion.clear();
     _fieldStock.clear();
     _stockAnterior = 0;
-    _fieldStockNotificacion.text = prescripcion.medicamento.stockNotificacion.toString();
+    _fieldStockNotificacion.text = prescripcion.stockNotificacion.toString();
 
     await showDialog(
       context: context,
@@ -744,7 +763,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Prescripción, Descripcion: ${prescripcion.descripcion}',
+                    'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -752,7 +771,12 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                    'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fecha_creacion)}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Descripcion: ${prescripcion.descripcion}',
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 8.0),
@@ -762,17 +786,12 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    '¿Es cronica?: ${prescripcion.cronica == 1 ? "Si" : "No"}',
+                    'Stock sobrante del medicamento: ${prescripcion.getStockAnterior()}',
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Stock de medicamento sobrante: ${prescripcion.medicamento.stockAnterior}',
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'Stock actual del medicamento: ${prescripcion.medicamento.stock}',
+                    'Stock actual: ${prescripcion.stock}',
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 8.0),
@@ -780,7 +799,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                   if (prescripcion.medicamento.stockAnterior != 0) ...[
                     SizedBox(height: 16.0),
                     CheckboxListTile(
-                      title: Text("¿Usar stock almacenado?"),
+                      title: Text("¿Usar stock sobrante?"),
                       value: _stockAnterior == 1,
                       onChanged: (newValue) {
                         setState(() {

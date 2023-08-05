@@ -21,6 +21,7 @@ class PrescripcionDeMedicamento {
   int _duracion = 0;
   int _cronica = 0;
   int _stock = 0;
+  int _stockNotificacion = 0;
 
   //Constructor
   PrescripcionDeMedicamento.empty();
@@ -43,8 +44,7 @@ class PrescripcionDeMedicamento {
     medicamentoAux.nombre = json['nombre_medicamento'];
     medicamentoAux.setUnidad(json['unidad_medicamento']);
     medicamentoAux.stock = json['stock'];
-    medicamentoAux.stockNotificacion = json['stock_notificacion'];
-    medicamentoAux.stockAnterior = json['stock_anterior'];
+    medicamentoAux.stockAnterior = json['stock_anterior'] ?? 0;
 
     //Convierto la hora de string a TimeOfDay
     String timeString = json['hora_comienzo'];
@@ -78,6 +78,7 @@ class PrescripcionDeMedicamento {
       json['cronica'],
     );
     prescripcionAux.stock = json['stock'];
+    prescripcionAux.stockNotificacion = json['stock_notificacion'];
     prescripcionAux.agregarGeriatra(geriatraAux);
     prescripcionAux.agregarResidente(residenteAux);
     prescripcionAux.medicamento = medicamentoAux;
@@ -128,6 +129,9 @@ class PrescripcionDeMedicamento {
   set duracion(int value) => this._duracion = value;
   int get duracion => this._duracion;
 
+  set stockNotificacion(int value) => this._stockNotificacion = value;
+  int get stockNotificacion => this._stockNotificacion;
+
   //Funciones
   void agregarGeriatra(Usuario geriatra) {
     _geriatra.usuario = geriatra;
@@ -171,6 +175,10 @@ class PrescripcionDeMedicamento {
 
   String ciGeriatra() {
     return _geriatra.ciUsuario();
+  }
+
+  int getStockAnterior() {
+    return medicamento.stockAnterior;
   }
 
   //ToString

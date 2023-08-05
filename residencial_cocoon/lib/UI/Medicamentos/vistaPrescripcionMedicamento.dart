@@ -273,7 +273,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         ),
                         SizedBox(height: 16.0),
                         CheckboxListTile(
-                          title: Text("¿Es una prescripción crónica?"),
+                          title: Text("Prescripción Crónica"),
                           value: _prescripcionCronica == 1,
                           onChanged: (newValue) {
                             setState(() {

@@ -241,7 +241,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock}  ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -489,7 +489,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -692,7 +692,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
+                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
