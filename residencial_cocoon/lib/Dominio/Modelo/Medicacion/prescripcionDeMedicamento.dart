@@ -20,22 +20,13 @@ class PrescripcionDeMedicamento {
   TimeOfDay _hora_comienzo = TimeOfDay(hour: 0, minute: 0);
   int _duracion = 0;
   int _cronica = 0;
+  int _stock = 0;
 
   //Constructor
   PrescripcionDeMedicamento.empty();
 
-  PrescripcionDeMedicamento(
-    this._id_prescripcion,
-    this._descripcion,
-    this._fecha_desde,
-    this._fecha_hasta,
-    this._cantidad,
-    this._frecuencia,
-    this._hora_comienzo,
-    this._fecha_creacion,
-    this._duracion,
-    this._cronica,
-  );
+  PrescripcionDeMedicamento(this._id_prescripcion, this._descripcion, this._fecha_desde, this._fecha_hasta, this._cantidad, this._frecuencia, this._hora_comienzo,
+      this._fecha_creacion, this._duracion, this._cronica);
 
   factory PrescripcionDeMedicamento.fromJsonVistaPrevia(Map<String, dynamic> json) {
     Usuario geriatraAux = Usuario.empty();
@@ -85,6 +76,7 @@ class PrescripcionDeMedicamento {
       json['duracion'] ?? 0,
       json['cronica'],
     );
+    prescripcionAux.stock = json['stock'];
     prescripcionAux.agregarGeriatra(geriatraAux);
     prescripcionAux.agregarResidente(residenteAux);
     prescripcionAux.medicamento = medicamentoAux;
@@ -126,6 +118,15 @@ class PrescripcionDeMedicamento {
   DateTime get fecha_creacion => this._fecha_creacion;
   set fecha_creacion(DateTime value) => this._fecha_creacion = value;
 
+  set cronica(int value) => this._cronica = value;
+  int get cronica => this._cronica;
+
+  set stock(int value) => this._stock = value;
+  int get stock => this._stock;
+
+  set duracion(int value) => this._duracion = value;
+  int get duracion => this._duracion;
+
   //Funciones
   void agregarGeriatra(Usuario geriatra) {
     _geriatra.usuario = geriatra;
@@ -137,6 +138,10 @@ class PrescripcionDeMedicamento {
 
   void agregarMedicamento(Medicamento medicamento) {
     _medicamento = medicamento;
+  }
+
+  bool esCronica() {
+    return _cronica == 1;
   }
 
   static List<PrescripcionDeMedicamento> listaVistaPrevia(List jsonList) {

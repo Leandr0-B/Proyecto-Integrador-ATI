@@ -209,7 +209,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -227,17 +227,21 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}',
+                                      prescripcionMed.fecha_desde != DateTime(0)
+                                          ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}'
+                                          : 'Fecha desde: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}',
+                                      prescripcionMed.fecha_hasta != DateTime(0)
+                                          ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}'
+                                          : 'Fecha Hasta: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -453,7 +457,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -471,17 +475,21 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}',
+                                      prescripcionMed.fecha_desde != DateTime(0)
+                                          ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}'
+                                          : 'Fecha desde: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}',
+                                      prescripcionMed.fecha_hasta != DateTime(0)
+                                          ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}'
+                                          : 'Fecha Hasta: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
+                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -656,7 +664,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Prescripción Medicamento, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -674,17 +682,17 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}',
+                prescripcionMed.fecha_desde != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}' : 'Fecha desde: ---',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}',
+                prescripcionMed.fecha_hasta != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}' : 'Fecha Hasta: ---',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad: ${prescripcionMed.cantidad}',
+                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} - ${prescripcionMed.esCronica() ? '' : 'Duracion ${prescripcionMed.duracion} Dias'}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),

@@ -5,16 +5,17 @@ class Medicamento {
   String _unidad = "";
   int _stock = 0;
   int _stockNotificacion = 0;
+  int _stockAnterior = 0;
 
   //Constructor
   Medicamento(this._nombre, this._unidad);
 
   Medicamento.empty();
 
-  Medicamento.json(this._id_medicamento, this._nombre, this._unidad, this._stock);
+  Medicamento.json(this._id_medicamento, this._nombre, this._unidad, this._stock, this._stockAnterior);
 
   factory Medicamento.fromJson(Map<String, dynamic> json) {
-    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad'], json['stock'] ?? 0);
+    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad'], json['stock'] ?? 0, json['stock_anterior']);
   }
 
   //Get Set
@@ -27,6 +28,10 @@ class Medicamento {
   set nombre(String value) => this._nombre = value;
 
   String get unidad => this._unidad;
+
+  set stockAnterior(int value) => this._stockAnterior = value;
+
+  int get stockAnterior => this._stockAnterior;
 
   int get stock => this._stock;
   void setUnidad(String unidad) {

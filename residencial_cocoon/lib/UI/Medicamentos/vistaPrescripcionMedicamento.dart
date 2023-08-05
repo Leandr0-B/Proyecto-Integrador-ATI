@@ -158,7 +158,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock: ${_selectedMedicamento?.stock}",
+                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock Sobrante: ${_selectedMedicamento?.stockAnterior}",
                             style: const TextStyle(
                               fontSize: 16.0,
                             ),
