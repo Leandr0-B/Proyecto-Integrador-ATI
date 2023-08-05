@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/geriatra.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/residente.dart';
@@ -17,6 +18,8 @@ class PrescripcionDeMedicamento {
   int _cantidad = 0;
   int _frecuencia = 0;
   TimeOfDay _hora_comienzo = TimeOfDay(hour: 0, minute: 0);
+  int _duracion = 0;
+  int _cronica = 0;
 
   //Constructor
   PrescripcionDeMedicamento.empty();
@@ -30,6 +33,8 @@ class PrescripcionDeMedicamento {
     this._frecuencia,
     this._hora_comienzo,
     this._fecha_creacion,
+    this._duracion,
+    this._cronica,
   );
 
   factory PrescripcionDeMedicamento.fromJsonVistaPrevia(Map<String, dynamic> json) {
@@ -46,6 +51,9 @@ class PrescripcionDeMedicamento {
     Medicamento medicamentoAux = Medicamento.empty();
     medicamentoAux.nombre = json['nombre_medicamento'];
     medicamentoAux.setUnidad(json['unidad_medicamento']);
+    medicamentoAux.stock = json['stock'];
+    medicamentoAux.stockNotificacion = json['stock_notificacion'];
+    medicamentoAux.stockAnterior = json['stock_anterior'];
 
     //Convierto la hora de string a TimeOfDay
     String timeString = json['hora_comienzo'];
@@ -56,15 +64,27 @@ class PrescripcionDeMedicamento {
 
     TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
 
+    DateTime fecha_desde;
+    DateTime fecha_hasta;
+    if (json['fecha_desde'] != null && json['fecha_hasta'] != null) {
+      fecha_desde = DateTime.parse(json['fecha_desde']);
+      fecha_hasta = DateTime.parse(json['fecha_hasta']);
+    } else {
+      fecha_desde = DateTime(0);
+      fecha_hasta = DateTime(0);
+    }
+
     PrescripcionDeMedicamento prescripcionAux = PrescripcionDeMedicamento(
-      json['id_prescripcion'],
+      json['id_prescripcion'] ?? 0, ////////////
       json['descripcion'],
-      DateTime.parse(json['fecha_desde']),
-      DateTime.parse(json['fecha_hasta']),
+      fecha_desde,
+      fecha_hasta,
       json['cantidad'],
       json['frecuencia'],
       time,
       DateTime.parse(json['fecha_creacion']),
+      json['duracion'] ?? 0,
+      json['cronica'],
     );
     prescripcionAux.agregarGeriatra(geriatraAux);
     prescripcionAux.agregarResidente(residenteAux);
@@ -107,6 +127,9 @@ class PrescripcionDeMedicamento {
   DateTime get fecha_creacion => this._fecha_creacion;
   set fecha_creacion(DateTime value) => this._fecha_creacion = value;
 
+  int get cronica => this._cronica;
+  set cronica(int value) => this._cronica = value;
+
   //Funciones
   void agregarGeriatra(Usuario geriatra) {
     _geriatra.usuario = geriatra;
@@ -146,5 +169,12 @@ class PrescripcionDeMedicamento {
 
   String ciGeriatra() {
     return _geriatra.ciUsuario();
+  }
+
+  //ToString
+  @override
+  String toString() {
+    String cronicaStr = _cronica == 1 ? "Cronica: Si" : "Cronica: No";
+    return nombreResidente() + '  ' + apellidoResidente() + ' | ' + _descripcion + ' | ' + DateFormat('dd/MM/yyyy').format(_fecha_creacion) + '  ' + cronicaStr;
   }
 }

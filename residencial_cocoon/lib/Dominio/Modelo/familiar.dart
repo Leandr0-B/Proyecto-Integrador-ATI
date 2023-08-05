@@ -17,6 +17,14 @@ class Familiar {
     this._telefono,
   );
 
+  Familiar.lista(
+    this._ci,
+    this._nombre,
+    this._apellido,
+    this._email,
+    this._contactoPrimario,
+  );
+
   factory Familiar.fromJson(Map<String, dynamic> json) {
     // Crear y retornar un nuevo objeto Usuario
     return Familiar(
@@ -24,8 +32,19 @@ class Familiar {
       json['nombre'],
       json['apellido'],
       json['email'],
-      json['contacto_primario'],
+      json['contacto_primario'] ?? 0,
       json['telefono'],
+    );
+  }
+
+  factory Familiar.fromJsonList(Map<String, dynamic> json) {
+    // Crear y retornar un nuevo objeto Usuario
+    return Familiar.lista(
+      json['ci_familiar'],
+      json['nombre'],
+      json['apellido'],
+      json['email'],
+      json['contacto_primario'] ?? 0,
     );
   }
 
@@ -89,6 +108,10 @@ class Familiar {
     return words.join(' ');
   }
 
+  static List<Familiar> listaVistaPrevia(List jsonList) {
+    return jsonList.cast<Map<String, dynamic>>().map<Familiar>((json) => Familiar.fromJsonList(json)).toList();
+  }
+
   //ToString
   @override
   String toString() {
@@ -107,7 +130,7 @@ class Familiar {
       primario = "si";
     }
 
-    return "${this._nombre} ${this._apellido} Es contacto primario: $primario ${this._email}";
+    return "${this._nombre} - ${this._apellido} - Primario: $primario  - ${this._email}";
   }
 
   // Equals

@@ -613,6 +613,14 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 8.0),
+                Text(
+                  'Stock actual del medicamento: ${registro.prescripcion.medicamento.stock < registro.cantidadSugerida ? "No hay stock suficiente" : registro.prescripcion.medicamento.stock}',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: registro.prescripcion.medicamento.stock < registro.cantidadSugerida ? Colors.red : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
                 SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -699,23 +707,90 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                   readOnly: true, // Deshabilita la edición directa del campo de texto
                 ),
                 SizedBox(height: 10),
-                if (registro.procesada != 1)
-                  ElevatedButton(
-                    child: Text("Procesar"),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        procesarMedicacion();
-                        Navigator.pop(context);
-                      }
-                    },
-                  ),
+                if (registro.procesada != 1) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
+                    children: [
+                      if (registro.prescripcion.medicamento.stock >= registro.cantidadSugerida)
+                        ElevatedButton(
+                          child: Text("Procesar"),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              procesarMedicacion();
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      SizedBox(width: 8.0),
+                      if (registro.prescripcion.medicamento.stock < registro.cantidadSugerida)
+                        ElevatedButton(
+                          child: Text("Solicitar Stock"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _popUpConfirmacion(registro);
+                          },
+                        ),
+                    ],
+                  )
+                ]
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _popUpConfirmacion(RegistroMedicacionConPrescripcion registro) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                '¿Estas seguro que quieres solicitar mas stock de la medicacion: ${registro.prescripcion.medicamento.nombre} para el residente: ${registro.prescripcion.nombreResidente()} ${registro.prescripcion.apellidoResidente()}?',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
+                children: [
+                  ElevatedButton(
+                    child: Text("Si"),
+                    onPressed: () {
+                      notificarStock(registro);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 8.0),
+                  ElevatedButton(
+                    child: Text("No"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              )
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> notificarStock(RegistroMedicacionConPrescripcion registro) async {
+    await _controller.notificarStock(registro);
   }
 
   Future<void> procesarMedicacion() async {

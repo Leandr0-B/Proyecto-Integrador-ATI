@@ -4,4 +4,5 @@ abstract class IRol {
   bool esResidente();
   bool esGeriatra();
   bool esEnfermero();
+  String obtenerTelefono();
 }

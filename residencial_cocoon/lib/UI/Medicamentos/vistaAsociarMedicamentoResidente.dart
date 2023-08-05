@@ -22,11 +22,14 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   Future<int> _cantidadDePaginas = Future.value(0);
   int _paginaActual = 1;
   int _elementosPorPagina = 10;
-  int _stock = 0;
-  int _stockNotificacion = 0;
-  String _palabraClave = "";
-  final _fieldStock = TextEditingController();
-  final _fieldStockNotificacion = TextEditingController();
+  String? _palabraClave = "";
+  final _palabraClaveController = TextEditingController();
+
+  //Medicamento Alta
+  String _nombreMedicamento = "";
+  String? _selectedUnidad;
+  final _formKeyMedicamento = GlobalKey<FormState>();
+  final _nombreMedicamentoController = TextEditingController();
 
   @override
   void initState() {
@@ -71,6 +74,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                 _selectedSucursal = newValue;
                                 _selectedResidente = null;
                                 residentesVisible = true;
+                                _palabraClaveController.clear();
+                                _palabraClave = null;
                               });
                             },
                             controlAffinity: ListTileControlAffinity.leading,
@@ -115,6 +120,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                 onChanged: (Usuario? newValue) {
                                   setState(() {
                                     _selectedResidente = newValue;
+                                    _palabraClaveController.clear();
+                                    _palabraClave = null;
                                   });
                                 },
                               );
@@ -130,8 +137,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                         ElevatedButton(
                           onPressed: () {
                             _selectedMedicamento = null;
-                            _fieldStock.clear();
-                            _fieldStockNotificacion.clear();
                             obtenerMedicamentosPaginadosConfiltros();
                             mostrarPopUp(_medicamentos);
                           },
@@ -154,52 +159,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                             ),
                           ),
                         ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Ingrese la cantidad:',
-                            hintText: 'Cantidad de medicamento',
-                          ),
-                          maxLength: 100,
-                          controller: _fieldStock,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese la cantidad.';
-                            }
-                            if (num.tryParse(value) == null) {
-                              return 'Solo puede ingresar valores numéricos.';
-                            }
-                            if (num.tryParse(value)! < 0) {
-                              return 'Solo puede ingresar valores positivos.';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _stock = int.parse(value!);
-                          },
-                        ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Ingrese la cantidad de notificación:',
-                            hintText: 'Cantidad para notificación',
-                          ),
-                          maxLength: 100,
-                          controller: _fieldStockNotificacion,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese la cantidad para notificación.';
-                            }
-                            if (num.tryParse(value) == null) {
-                              return 'Solo puede ingresar valores numéricos.';
-                            }
-                            if (num.tryParse(value)! < 0) {
-                              return 'Solo puede ingresar valores positivos.';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _stockNotificacion = int.parse(value!);
-                          },
-                        ),
                       ]
                     ],
                   ],
@@ -209,11 +168,10 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      _selectedMedicamento = _selectedMedicamento;
                       asociarMedicamento();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Asociar Medicamento'),
                 ),
               ],
             ),
@@ -225,7 +183,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
 
   @override
   Future<void> asociarMedicamento() async {
-    await _controller.asociarMedicamento(_selectedMedicamento, _selectedResidente, _selectedSucursal, _stock, _stockNotificacion);
+    await _controller.asociarMedicamento(_selectedMedicamento, _selectedResidente, _selectedSucursal);
   }
 
   @override
@@ -236,8 +194,6 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   @override
   void limpiar() {
     setState(() {
-      _fieldStock.clear();
-      _fieldStockNotificacion.clear();
       _selectedMedicamento = null;
       _selectedResidente = null;
       _selectedSucursal = null;
@@ -273,8 +229,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
 
   @override
   void obtenerMedicamentosPaginadosConfiltros() {
-    _medicamentos = _controller.obtenerMedicamentosPaginadosConFiltrosSinAsociar(_paginaActual, _elementosPorPagina, _selectedResidente!, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _selectedResidente?.ci, _palabraClave);
+    _medicamentos = _controller.obtenerMedicamentosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _palabraClave);
     setState(() {});
   }
 
@@ -284,8 +240,124 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
     obtenerMedicamentosPaginadosConfiltros();
   }
 
+  Future<void> altaMedicamento() async {
+    await _controller.altaMedicamento(_nombreMedicamento, _selectedUnidad);
+  }
+
+  void altaPopUp() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKeyMedicamento,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 16.0),
+                          Text(
+                            'Nuevo Medicamento:',
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          SizedBox(height: 16.0),
+                          TextFormField(
+                            maxLength: 100,
+                            controller: _nombreMedicamentoController,
+                            decoration: const InputDecoration(
+                              labelText: 'Nombre Medicamento',
+                              hintText: 'Ingrese Nombre',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el nombre del medicamento';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _nombreMedicamento = value!;
+                            },
+                          ),
+                          SizedBox(height: 16.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("Seleccione la unidad:"),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: DropdownButton<String>(
+                              value: _selectedUnidad,
+                              hint: const Text('Seleccione una opción'),
+                              items: <DropdownMenuItem<String>>[
+                                DropdownMenuItem<String>(
+                                  value: 'ml',
+                                  child: const Text('ml'),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: 'unidades',
+                                  child: const Text('unidades'),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: 'pastillas',
+                                  child: const Text('pastillas'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedUnidad = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKeyMedicamento.currentState!.validate()) {
+                                    _formKeyMedicamento.currentState!.save();
+                                    altaMedicamento();
+                                    _nombreMedicamentoController.clear();
+                                    _selectedUnidad = null;
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: const Text('Registrar Medicamento'),
+                              ),
+                              SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cerrar'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            );
+          },
+        );
+      },
+    );
+  }
+
   void mostrarPopUp(Future<List<Medicamento>?> elementos) {
-    final TextEditingController textFieldController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
@@ -306,7 +378,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: textFieldController,
+                            controller: _palabraClaveController,
                             decoration: const InputDecoration(
                               labelText: 'Palabra clave',
                             ),
@@ -330,7 +402,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      'Lista de medicamentos sin asociar:',
+                      'Lista de medicamentos:',
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
@@ -354,7 +426,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'No hay medicamentos o todo los medicamentos ya fueron asociados al residente',
+                                        'No hay medicamentos cargados en el sistema.',
                                         style: TextStyle(fontSize: 16.0),
                                       ),
                                       SizedBox(height: 8.0),
@@ -402,14 +474,24 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
                         },
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cerrar'),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            altaPopUp();
+                          },
+                          child: const Text('Nuevo Medicamento'),
+                        ),
+                        SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cerrar'),
+                        ),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

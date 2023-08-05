@@ -5,16 +5,17 @@ class Medicamento {
   String _unidad = "";
   int _stock = 0;
   int _stockNotificacion = 0;
+  int _stockAnterior = 0;
 
   //Constructor
   Medicamento(this._nombre, this._unidad);
 
   Medicamento.empty();
 
-  Medicamento.json(this._id_medicamento, this._nombre, this._unidad);
+  Medicamento.json(this._id_medicamento, this._nombre, this._unidad, this._stock, this._stockAnterior);
 
   factory Medicamento.fromJson(Map<String, dynamic> json) {
-    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad']);
+    return Medicamento.json(json['id_medicamento'], json['nombre'], json['unidad'], json['stock'] ?? 0, json['stock_anterior'] ?? 0);
   }
 
   //Get Set
@@ -38,6 +39,10 @@ class Medicamento {
   int get stockNotificacion => this._stockNotificacion;
 
   set stockNotificacion(int value) => this._stockNotificacion = value;
+
+  int get stockAnterior => this._stockAnterior;
+
+  set stockAnterior(int value) => this._stockAnterior = value;
 
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {

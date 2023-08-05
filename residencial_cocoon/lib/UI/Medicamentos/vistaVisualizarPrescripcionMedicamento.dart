@@ -27,6 +27,9 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
   bool _filtroExpandido = false;
   Usuario? usuario = Fachada.getInstancia()?.getUsuario();
 
+  final _palabraClaveController = TextEditingController();
+  final _ciResidenteController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +106,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                     decoration: const InputDecoration(
                       labelText: 'Ci Residente',
                     ),
+                    controller: _ciResidenteController,
                     onChanged: (value) {
                       setState(() {
                         _ciResidente = value;
@@ -117,6 +121,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                   decoration: const InputDecoration(
                     labelText: 'Palabra clave',
                   ),
+                  controller: _palabraClaveController,
                   onChanged: (value) {
                     setState(() {
                       _palabraClave = value;
@@ -344,6 +349,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               decoration: const InputDecoration(
                 labelText: 'Ci Residente',
               ),
+              controller: _ciResidenteController,
               onChanged: (value) {
                 setState(() {
                   _ciResidente = value;
@@ -356,6 +362,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
             decoration: const InputDecoration(
               labelText: 'Palabra clave',
             ),
+            controller: _palabraClaveController,
             onChanged: (value) {
               setState(() {
                 _palabraClave = value;
@@ -555,11 +562,12 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
-
+    _palabraClaveController.clear();
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
       _ciResidente = usuario?.ci;
     } else {
       _ciResidente = null;
+      _ciResidenteController.clear();
     }
     setState(() {});
   }

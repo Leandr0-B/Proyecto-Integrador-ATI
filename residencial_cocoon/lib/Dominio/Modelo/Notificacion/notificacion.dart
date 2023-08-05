@@ -9,12 +9,12 @@ class Notificacion {
   String _mensaje = "";
   DateTime _fecha = DateTime(0);
   bool _leida = false;
+  bool _notificacionPersistente = false;
   TipoNotificacion _tipoNotificacion = TipoNotificacion.empty();
   Usuario _usuarioEnvia = Usuario.empty();
 
   //Constructor
-  Notificacion(this._idNotificacion, this._titulo, this._mensaje, this._fecha,
-      this._leida, this._tipoNotificacion, this._usuarioEnvia);
+  Notificacion(this._idNotificacion, this._titulo, this._mensaje, this._fecha, this._leida, this._notificacionPersistente, this._tipoNotificacion, this._usuarioEnvia);
 
   factory Notificacion.fromJsonVistaPrevia(Map<String, dynamic> json) {
     Usuario usuario = Usuario.empty();
@@ -22,18 +22,21 @@ class Notificacion {
 
     usuario.ci = json['ci_envia'];
     usuario.nombre = json['nombre_envia'];
+    usuario.apellido = json['apellido_envia'];
 
     tipoNotificacion.idTipoNotificacion = json['id_tipo_notificacion'];
     tipoNotificacion.nombre = json['nombre_tipo_notificacion'];
 
     Notificacion aux = Notificacion(
-        json['id_notificacion'],
-        json['titulo'],
-        json['mensaje'],
-        DateTime.parse(json['fecha']),
-        json['leida'],
-        tipoNotificacion,
-        usuario);
+      json['id_notificacion'],
+      json['titulo'],
+      json['mensaje'],
+      DateTime.parse(json['fecha']),
+      json['leida'],
+      json['notificacion_persistente'],
+      tipoNotificacion,
+      usuario,
+    );
     return aux;
   }
 
@@ -59,11 +62,11 @@ class Notificacion {
   Usuario get usuarioEnvia => _usuarioEnvia;
   set usuarioEnvia(Usuario value) => _usuarioEnvia = value;
 
+  bool get notificacionPersistente => this._notificacionPersistente;
+  set notificacionPersistente(bool value) => this._notificacionPersistente = value;
+
   static List<Notificacion> listaVistaPrevia(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Notificacion>((json) => Notificacion.fromJsonVistaPrevia(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Notificacion>((json) => Notificacion.fromJsonVistaPrevia(json)).toList();
   }
 
   //ToString
@@ -85,7 +88,7 @@ class Notificacion {
   }
 
   String nombreUsuarioQueEnvia() {
-    return "${usuarioEnvia.ci} - ${usuarioEnvia.nombre}";
+    return "${usuarioEnvia.ci} - ${usuarioEnvia.nombre} - ${usuarioEnvia.apellido}";
   }
 
   void marcarNotificacionComoLeida() {

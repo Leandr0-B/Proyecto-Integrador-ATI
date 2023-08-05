@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Inicio/fondoInicio.dart';
+import 'package:residencial_cocoon/UI/Medicamentos/vistaStockMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaVisualizarPrescripcionMedicamento.dart';
-import 'package:residencial_cocoon/UI/Medicamentos/vistaAltaMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaAsociarMedicamentoResidente.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaPrescripcionMedicamento.dart';
 import 'package:residencial_cocoon/UI/Geriatra/vistaChequeoMedico.dart';
@@ -22,6 +23,7 @@ import 'package:residencial_cocoon/UI/Usuarios/vistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaAltaResidente.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaCambioContrasena.dart';
 import 'package:residencial_cocoon/UI/Usuarios/vistaListaUsuario.dart';
+
 import 'dart:html' as html;
 
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
@@ -110,7 +112,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(mensaje),
-      backgroundColor: Colors.yellow,
+      backgroundColor: Color.fromRGBO(225, 183, 72, 1),
     ));
   }
 
@@ -126,7 +128,7 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
 
     switch (currentPage) {
       case DrawerSections.inicio:
-        container = Container();
+        container = FondoInicio();
         break;
       case DrawerSections.listaUsuarios:
         container = VistaListaUsuario();
@@ -161,9 +163,6 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.visualizarChequeoMedico:
         container = VistaVisualizarChequeoMedico();
         break;
-      case DrawerSections.altaMedicamento:
-        container = VistaAltaMedicamento();
-        break;
       case DrawerSections.asociarMedicamento:
         container = VistaAsociarMedicamento();
         break;
@@ -178,6 +177,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
         break;
       case DrawerSections.visualizarPrescripcionesMedicamentos:
         container = VistaVisualizarPrescripcionMedicamento();
+        break;
+      case DrawerSections.stockMedicamento:
+        container = VistaStockMedicamento();
         break;
       default:
         container = Container();
@@ -314,8 +316,8 @@ class MyDrawerList extends StatelessWidget {
                 leading: const Icon(IconData(0xe3d9, fontFamily: 'MaterialIcons'), size: 20, color: Colors.black),
                 title: const Text("Medicamentos", style: TextStyle(color: Colors.black, fontSize: 16)),
                 children: [
-                  menuItem(51, "Registrar Medicamento", const IconData(0xe3d9, fontFamily: 'MaterialIcons'), DrawerSections.altaMedicamento),
                   menuItem(52, "Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
+                  menuItem(53, "Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
                 ],
               ),
             ],
@@ -405,12 +407,12 @@ enum DrawerSections {
   visualizarSalidaMedica,
   visualizarVisitaMedica,
   visualizarChequeoMedico,
-  altaMedicamento,
   asociarMedicamento,
   prescripcionMedicamento,
   visualizarPrescripcionesMedicamentos,
   medicacionPeriodica,
   visualizarMedicacionPeriodica,
+  stockMedicamento,
 }
 
 class NotificacionActualizadaCallback {

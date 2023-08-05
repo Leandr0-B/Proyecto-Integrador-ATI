@@ -21,9 +21,7 @@ class VistaNotificacion extends StatefulWidget {
 
 //Get set
 
-class _VistaNotificacionState extends State<VistaNotificacion>
-    with WidgetsBindingObserver
-    implements IVistaNotificacion {
+class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindingObserver implements IVistaNotificacion {
   Future<List<Notificacion>> _notificaciones = Future.value([]);
   ControllerVistaNotificacion _controller = ControllerVistaNotificacion.empty();
 
@@ -35,6 +33,8 @@ class _VistaNotificacionState extends State<VistaNotificacion>
   DateTime? _fechaHasta;
   String? _palabraClave;
   bool _filtroExpandido = false;
+
+  final _palabraClaveController = TextEditingController();
 
   Future<void> selectFechaDesde(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -76,8 +76,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
     WidgetsBinding.instance?.addObserver(this);
     html.document.onVisibilityChange.listen((event) {
       setState(() {
-        _isPageVisible = _isPageVisible =
-            html.document.hidden != null ? !html.document.hidden! : true;
+        _isPageVisible = _isPageVisible = html.document.hidden != null ? !html.document.hidden! : true;
       });
       if (_isPageVisible) {
         // esto se rompe muchas veces es preferible que no se este ejecutando todo el tiempo
@@ -93,8 +92,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
       setState(() {
         _isPageVisible = true;
       });
-    } else if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       setState(() {
         _isPageVisible = false;
       });
@@ -147,9 +145,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaDesde != null
-                          ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
-                          : 'Fecha Desde',
+                      _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
                     ),
                   ),
                 ),
@@ -163,9 +159,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                       hintText: 'Fecha',
                     ),
                     child: Text(
-                      _fechaHasta != null
-                          ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
-                          : 'Fecha Hasta',
+                      _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
                     ),
                   ),
                 ),
@@ -176,6 +170,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                   decoration: const InputDecoration(
                     labelText: 'Palabra clave',
                   ),
+                  controller: _palabraClaveController,
                   onChanged: (value) {
                     setState(() {
                       _palabraClave = value;
@@ -207,8 +202,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
         Expanded(
           child: FutureBuilder<List<Notificacion>>(
             future: _notificaciones,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<Notificacion>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<Notificacion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -235,24 +229,25 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                     padding: const EdgeInsets.all(16.0),
                     itemCount: snapshot.data!.length,
                     separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(
-                          height: 16.0); // Espacio entre cada notificación
+                      return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
                       Notificacion notificacion = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          marcarNotificacionComoLeida(notificacion);
-                          mostrarPopUp(notificacion);
+                          if (!notificacion.notificacionPersistente) {
+                            marcarNotificacionComoLeida(notificacion);
+                            mostrarPopUp(notificacion);
+                          } else {
+                            mostrarPopUp(notificacion);
+                          }
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida
-                                  ? const Color.fromARGB(166, 201, 200, 200)
-                                  : const Color.fromARGB(255, 255, 255, 255),
+                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -275,15 +270,23 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    Text(
-                                      notificacion.leida ? 'Leída' : 'Nueva!',
-                                      style: TextStyle(
-                                        color: notificacion.leida
-                                            ? Colors.black
-                                            : Colors.red,
-                                        fontWeight: FontWeight.bold,
+                                    if (notificacion.notificacionPersistente == false) ...[
+                                      Text(
+                                        notificacion.leida ? 'Leída' : 'Nueva!',
+                                        style: TextStyle(
+                                          color: notificacion.leida ? Colors.black : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
+                                    ] else ...[
+                                      Text(
+                                        'Importante',
+                                        style: TextStyle(
+                                          color: notificacion.leida ? Colors.black : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                     const SizedBox(height: 8.0),
                                     Text(
                                       'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
@@ -307,15 +310,12 @@ class _VistaNotificacionState extends State<VistaNotificacion>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future:
-                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ??
-                      0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -359,9 +359,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
       children: [
         ListTile(
           title: const Text('Filtros'),
-          trailing: _filtroExpandido
-              ? const Icon(Icons.keyboard_arrow_up)
-              : const Icon(Icons.keyboard_arrow_down),
+          trailing: _filtroExpandido ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.keyboard_arrow_down),
           onTap: () {
             setState(() {
               _filtroExpandido = !_filtroExpandido;
@@ -376,9 +374,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaDesde != null
-                    ? DateFormat('dd/MM/yyyy').format(_fechaDesde!)
-                    : 'Fecha Desde',
+                _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
               ),
             ),
           ),
@@ -390,9 +386,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                 hintText: 'Fecha',
               ),
               child: Text(
-                _fechaHasta != null
-                    ? DateFormat('dd/MM/yyyy').format(_fechaHasta!)
-                    : 'Fecha Hasta',
+                _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
               ),
             ),
           ),
@@ -401,6 +395,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
             decoration: const InputDecoration(
               labelText: 'Palabra clave',
             ),
+            controller: _palabraClaveController,
             onChanged: (value) {
               setState(() {
                 _palabraClave = value;
@@ -433,8 +428,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
         Expanded(
           child: FutureBuilder<List<Notificacion>>(
             future: _notificaciones,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<Notificacion>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<Notificacion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -469,17 +463,19 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                       Notificacion notificacion = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          marcarNotificacionComoLeida(notificacion);
-                          mostrarPopUp(notificacion);
+                          if (!notificacion.notificacionPersistente) {
+                            marcarNotificacionComoLeida(notificacion);
+                            mostrarPopUp(notificacion);
+                          } else {
+                            mostrarPopUp(notificacion);
+                          }
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida
-                                  ? const Color.fromARGB(166, 201, 200, 200)
-                                  : const Color.fromARGB(255, 255, 255, 255),
+                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -502,15 +498,23 @@ class _VistaNotificacionState extends State<VistaNotificacion>
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    Text(
-                                      notificacion.leida ? 'Leída' : 'Nueva!',
-                                      style: TextStyle(
-                                        color: notificacion.leida
-                                            ? Colors.black
-                                            : Colors.red,
-                                        fontWeight: FontWeight.bold,
+                                    if (notificacion.notificacionPersistente == false) ...[
+                                      Text(
+                                        notificacion.leida ? 'Leída' : 'Nueva!',
+                                        style: TextStyle(
+                                          color: notificacion.leida ? Colors.black : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
+                                    ] else ...[
+                                      Text(
+                                        'Importante',
+                                        style: TextStyle(
+                                          color: notificacion.leida ? Colors.black : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                     const SizedBox(height: 8.0),
                                     Text(
                                       'Enviado por: ${notificacion.nombreUsuarioQueEnvia()}',
@@ -534,15 +538,12 @@ class _VistaNotificacionState extends State<VistaNotificacion>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder<int>(
-              future:
-                  _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
+              future: _cantidadDePaginas, // _cantidadDePaginas es un Future<int>
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                      ''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
+                  return Text(''); // Muestra un mensaje de error si hay un problema al obtener _cantidadDePaginas
                 } else {
-                  final int totalPagesValue = snapshot.data ??
-                      0; // Obtiene el valor de _cantidadDePaginas
+                  final int totalPagesValue = snapshot.data ?? 0; // Obtiene el valor de _cantidadDePaginas
                   return totalPagesValue == 0
                       ? Container() // No muestra nada si _cantidadDePaginas es 0
                       : Row(
@@ -590,8 +591,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Container(
-          width:
-              MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
+          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -599,8 +599,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
             children: [
               Text(
                 notificacion.titulo,
-                style: const TextStyle(
-                    fontSize: 18.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               Text(
@@ -647,12 +646,9 @@ class _VistaNotificacionState extends State<VistaNotificacion>
 
   @override
   void obtenerNotificacionesPaginadasBotonFiltrar() {
-    if (_fechaDesde != null &&
-        _fechaHasta != null &&
-        _fechaDesde!.isAfter(_fechaHasta!)) {
+    if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
-    } else if (_fechaDesde == null && _fechaHasta != null ||
-        _fechaDesde != null && _fechaHasta == null) {
+    } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
@@ -662,14 +658,8 @@ class _VistaNotificacionState extends State<VistaNotificacion>
 
   @override
   void obtenerNotificacionesPaginadasConfiltros() {
-    _notificaciones = _controller.obtenerNotificacionesPaginadasConFiltros(
-        _paginaActual,
-        _elementosPorPagina,
-        _fechaDesde,
-        _fechaHasta,
-        _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(
-        _elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
+    _notificaciones = _controller.obtenerNotificacionesPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
     setState(() {});
   }
 
@@ -685,6 +675,7 @@ class _VistaNotificacionState extends State<VistaNotificacion>
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
+    _palabraClaveController.clear();
   }
 
   @override

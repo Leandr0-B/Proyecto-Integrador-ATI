@@ -96,6 +96,15 @@ class Fachada {
     await _servicioUsuario?.actualizarTokenNotificaciones(notificationToken);
   }
 
+  Future<List<Usuario>?> obtenerUsuariosPaginadasConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    return _servicioUsuario?.obtenerUsuariosPaginadasConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClaveNombre, palabraClaveApellido);
+  }
+
+  Future<int?> obtenerUsuariosPaginadasConFiltrosCantidadTotal(String? ciResidente, String? palabraClaveNombre, String? palabraClaveApellido) async {
+    return _servicioUsuario?.obtenerUsuariosPaginadasConFiltrosCantidadTotal(ciResidente, palabraClaveNombre, palabraClaveApellido);
+  }
+
   //Sucursal
   Future<List<Sucursal>?> listaSucursales() async {
     return await _servicioSucursal?.listaSucursales();
@@ -172,19 +181,19 @@ class Fachada {
     await _servicioMedicacion?.altaMedicamento(nombre, unidad);
   }
 
-  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltrosSinAsociar(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave) async {
-    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosSinAsociar(paginaActual, elementosPorPagina, cedulaResidente, palabraClave);
+  Future<List<Medicamento>?> obtenerMedicamentosPaginadosConFiltros(int paginaActual, int elementosPorPagina, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltros(paginaActual, elementosPorPagina, palabraClave);
   }
 
-  Future<int?> obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(String? ciResidente, String? palabraClave) async {
-    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosSinAsociarCantidadTotal(ciResidente, palabraClave);
+  Future<int?> obtenerMedicamentosPaginadosConFiltrosCantidadTotal(String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerMedicamentosPaginadosConFiltrosCantidadTotal(palabraClave);
   }
 
-  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente, int stock, int stockNotificacion) async {
-    await _servicioMedicacion?.asociarMedicamento(selectedMedicamento, selectedResidente, stock, stockNotificacion);
+  Future<void> asociarMedicamento(Medicamento? selectedMedicamento, Usuario? selectedResidente) async {
+    await _servicioMedicacion?.asociarMedicamento(selectedMedicamento, selectedResidente);
   }
 
-  Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String palabraClave) async {
+  Future<List<Medicamento>?> listaMedicamentosAsociados(int paginaActual, int elementosPorPagina, String cedulaResidente, String? palabraClave) async {
     return await _servicioMedicacion?.listaMedicamentosAsociados(paginaActual, elementosPorPagina, cedulaResidente, palabraClave);
   }
 
@@ -192,9 +201,10 @@ class Fachada {
     return await _servicioMedicacion?.obtenerMedicamentosAsociadosPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave);
   }
 
-  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, DateTime? fecha_desde, DateTime? fecha_hasta,
-      int frecuencia, TimeOfDay? hora_comienzo) async {
-    await _servicioMedicacion?.registrarPrescripcion(selectedMedicamento, selectedResidente, cantidad, descripcion, fecha_desde, fecha_hasta, frecuencia, hora_comienzo);
+  Future<void> registrarPrescripcion(Medicamento? selectedMedicamento, Usuario? selectedResidente, int cantidad, String descripcion, int notificacionStock, int prescripcionCronica,
+      int duracion, int frecuencia, TimeOfDay? hora_comienzo) async {
+    await _servicioMedicacion?.registrarPrescripcion(
+        selectedMedicamento, selectedResidente, cantidad, descripcion, notificacionStock, prescripcionCronica, duracion, frecuencia, hora_comienzo);
   }
 
   Future<List<RegistroMedicacionConPrescripcion>?> obtenerRegistrosMedicamentosConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {
@@ -221,5 +231,31 @@ class Fachada {
 
   Future<int?> obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioMedicacion?.obtenerPrescripcionesMedicamentosPaginadosConfiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<List<PrescripcionDeMedicamento>?> obtenerPrescripcionesActivasPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesActivasPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(String? ciResidente, String? palabraClave) async {
+    return await _servicioMedicacion?.obtenerPrescripcionesActivasPaginadosConFiltrosCantidadTotal(ciResidente, palabraClave);
+  }
+
+  Future<List<Familiar>?> obtenerFamiliaresPaginadosConfiltros(int paginaActual, int elementosPorPagina, String? ciResidente, String? ciFamiliar) async {
+    return await _servicioUsuario?.obtenerFamiliaresPaginadosConfiltros(paginaActual, elementosPorPagina, ciResidente, ciFamiliar);
+  }
+
+  Future<int?> obtenerFamiliaresPaginadosConfiltrosCantidadTotal(String? ciResidente, String? ciFamiliar) async {
+    return await _servicioUsuario?.obtenerFamiliaresPaginadosConfiltrosCantidadTotal(ciResidente, ciFamiliar);
+  }
+
+  Future<void> altaFamiliar(
+      String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta) async {
+    await _servicioUsuario?.altaFamiliar(ciResidente, ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta);
+  }
+
+  Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, int stockAnterior) async {
+    await _servicioMedicacion?.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar, stockAnterior);
   }
 }

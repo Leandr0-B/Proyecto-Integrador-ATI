@@ -30,8 +30,11 @@ class ServicioNotificacion {
 
   Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
     String notificaciones = await APIService.obtenerNotificacionesPaginadasConFiltros(page, limit, desde, hasta, palabras, Fachada.getInstancia()?.getUsuario()!.getToken());
-    List<dynamic> jsonList = jsonDecode(notificaciones);
-    return Notificacion.listaVistaPrevia(jsonList);
+    List<dynamic> jsonListPersistentes = jsonDecode(notificaciones)['notificacionesPersistentes'];
+    List<dynamic> jsonListNormales = jsonDecode(notificaciones)['paginatedNotificaciones'];
+    List<Notificacion> persistentes = Notificacion.listaVistaPrevia(jsonListPersistentes);
+    List<Notificacion> normales = Notificacion.listaVistaPrevia(jsonListNormales);
+    return persistentes + normales;
   }
 
   Future<int?> obtenerNotificacionesPaginadasConFiltrosCantidadTotal(DateTime? desde, DateTime? hasta, String? palabras) async {

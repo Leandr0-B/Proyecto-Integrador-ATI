@@ -22,17 +22,7 @@ class Usuario {
   // Constructores
   Usuario.empty();
 
-  Usuario(
-      this._ci,
-      this._nombre,
-      this._administrador,
-      this._roles,
-      this._sucursales,
-      this._authToken,
-      this._tokenNotificacion,
-      this._apellido,
-      this._telefono,
-      this._email);
+  Usuario(this._ci, this._nombre, this._administrador, this._roles, this._sucursales, this._authToken, this._tokenNotificacion, this._apellido, this._telefono, this._email);
 
   Usuario.paraLista(
     this._ci,
@@ -53,8 +43,7 @@ class Usuario {
     this._apellido,
   );
 
-  Usuario.sinRoles(this._ci, this._nombre, this._administrador,
-      this._sucursales, this._authToken, this._tokenNotificacion);
+  Usuario.sinRoles(this._ci, this._nombre, this._administrador, this._sucursales, this._authToken, this._tokenNotificacion);
 
   // Constructor utilizado para logearte
   factory Usuario.login(Map<String, dynamic> json) {
@@ -63,25 +52,14 @@ class Usuario {
 
     // Recuperar las sucursales del JSON y convertirlas en objetos de Sucursal
     List<dynamic> sucursalesJson = json['sucursales'];
-    sucursalesList = sucursalesJson
-        .map((sucursalJson) => Sucursal.fromJson(sucursalJson))
-        .toList();
+    sucursalesList = sucursalesJson.map((sucursalJson) => Sucursal.fromJson(sucursalJson)).toList();
 
     // Recuperar los roles del Json y convertirlos en objetos de Rol
     List<dynamic> roles = json['roles'];
     rolesList = roles.map((rol) => Rol.fromJsonToEspecializacion(rol)).toList();
 
-    Usuario aux = Usuario(
-        json['ci'],
-        json['nombre'],
-        json['administrador'],
-        rolesList,
-        sucursalesList,
-        json['authToken'],
-        json['tokenNotificacion'] ?? "",
-        json['apellido'],
-        json['telefono'],
-        json['email']);
+    Usuario aux = Usuario(json['ci'], json['nombre'], json['administrador'], rolesList, sucursalesList, json['authToken'], json['tokenNotificacion'] ?? "", json['apellido'],
+        json['telefono'], json['email']);
 
     for (int i = 0; i < rolesList.length; i++) {
       rolesList[i].usuario = aux;
@@ -96,16 +74,12 @@ class Usuario {
 
     // Recuperar los roles del JSON y convertirlos en objetos de Rol
     List<dynamic> rolesJson = json['roles'];
-    rolesList = rolesJson
-        .map((roleJson) => Rol.fromJsonToEspecializacion(roleJson))
-        .toList();
+    rolesList = rolesJson.map((roleJson) => Rol.fromJsonToEspecializacion(roleJson)).toList();
 
     //recuperar los familiares del JSON y meterlos en el Rol Residente
     if (json.containsKey('familiares')) {
       List<dynamic> familiaresJson = json['familiares'];
-      familiaresList = familiaresJson
-          .map((familiarJson) => Familiar.fromJson(familiarJson))
-          .toList();
+      familiaresList = familiaresJson.map((familiarJson) => Familiar.fromJson(familiarJson)).toList();
 
       for (int i = 0; i < rolesList.length; i++) {
         if (rolesList[i].esResidente()) {
@@ -116,21 +90,11 @@ class Usuario {
 
     // Recuperar las sucursales del JSON y convertirlas en objetos de Sucursal
     List<dynamic> sucursalesJson = json['sucursales'];
-    sucursalesList = sucursalesJson
-        .map((sucursalJson) => Sucursal.fromJson(sucursalJson))
-        .toList();
+    sucursalesList = sucursalesJson.map((sucursalJson) => Sucursal.fromJson(sucursalJson)).toList();
 
     // Crear y retornar un nuevo objeto Usuario
     return Usuario.paraLista(
-        json['ci'],
-        json['nombre'],
-        json['administrador'] ?? 0,
-        rolesList,
-        sucursalesList,
-        json['inactivo'] ?? 0,
-        json['apellido'],
-        json['telefono'],
-        json['email']);
+        json['ci'], json['nombre'], json['administrador'] ?? 0, rolesList, sucursalesList, json['inactivo'] ?? 0, json['apellido'], json['telefono'], json['email']);
   }
 
   factory Usuario.fromJsonListaResidente(Map<String, dynamic> json) {
@@ -225,17 +189,11 @@ class Usuario {
   }
 
   static List<Usuario> listadoJson(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Usuario>((json) => Usuario.fromJsonLista(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Usuario>((json) => Usuario.fromJsonLista(json)).toList();
   }
 
   static List<Usuario> listadoJsonResidentes(List<dynamic> jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<Usuario>((json) => Usuario.fromJsonListaResidente(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<Usuario>((json) => Usuario.fromJsonListaResidente(json)).toList();
   }
 
   bool esResidente() {
@@ -289,11 +247,20 @@ class Usuario {
 
   static bool esEmailValido(String email) {
     // Expresión regular para verificar el formato del email
-    const pattern =
-        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
+    const pattern = r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
     final regex = RegExp(pattern);
 
     return regex.hasMatch(email);
+  }
+
+  String telefonoFamiliar() {
+    String telefono = '';
+    for (var rol in _roles) {
+      if (rol.esResidente()) {
+        telefono = rol.obtenerTelefono();
+      }
+    }
+    return telefono;
   }
 
   //ToString
