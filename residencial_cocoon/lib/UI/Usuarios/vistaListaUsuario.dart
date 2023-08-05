@@ -37,7 +37,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Usuarios',
+          'Lista de Usuarios',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),

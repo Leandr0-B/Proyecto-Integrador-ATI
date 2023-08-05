@@ -79,7 +79,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Salidas Médica',
+          'Salidas Médicas',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),

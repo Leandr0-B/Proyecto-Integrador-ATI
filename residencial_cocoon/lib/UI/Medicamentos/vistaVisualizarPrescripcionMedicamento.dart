@@ -45,7 +45,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Prescripciones de Medicamentos',
+          'Prescripciones de Medicamentos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
