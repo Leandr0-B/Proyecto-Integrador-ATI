@@ -162,7 +162,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                 padding: const EdgeInsets.all(20.0),
                                 child: Row(
                                   // Utilizamos un Row para colocar el texto y la imagen en una fila
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Expanded(
                                       // El Expanded se expandirá al 80% del ancho disponible
@@ -206,16 +206,19 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 0.2 * 300, // 20% del ancho total (300 en este caso)
-                                      child: _seleccionIcono != ""
-                                          ? Icon(
-                                              _obtenerIcono(_seleccionIcono),
-                                              size: 80, // Tamaño del ícono
-                                              color: Colors.black, // Color del ícono (puedes cambiarlo según tus necesidades)
-                                            )
-                                          : Container(),
-                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 25.0),
+                                      child: SizedBox(
+                                        width: 0.2 * 300, // 20% del ancho total (300 en este caso)
+                                        child: _seleccionIcono != ""
+                                            ? Icon(
+                                                _obtenerIcono(_seleccionIcono),
+                                                size: 80, // Tamaño del ícono
+                                                color: const Color.fromARGB(150, 0, 0, 0), // Color del ícono (puedes cambiarlo según tus necesidades)
+                                              )
+                                            : Container(),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -372,12 +375,13 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                       'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
+                                    const SizedBox(height: 16.0),
                                     if (_seleccionIcono != "")
                                       Center(
                                         child: Icon(
                                           _obtenerIcono(_seleccionIcono),
                                           size: 80, // Tamaño del ícono
-                                          color: Colors.black, // Color del ícono (puedes cambiarlo según tus necesidades)
+                                          color: Color.fromARGB(150, 0, 0, 0), // Color del ícono (puedes cambiarlo según tus necesidades)
                                         ),
                                       ),
                                   ],
@@ -416,10 +420,10 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   Color colorDelRegistro(RegistroMedicacionConPrescripcion registro) {
     if (registro.procesada == 1) {
       _seleccionIcono = "procesado";
-      return const Color.fromARGB(255, 42, 119, 44);
+      return const Color.fromARGB(150, 42, 119, 44);
     } else if (registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
       _seleccionIcono = "vencido";
-      return const Color.fromARGB(255, 145, 21, 12);
+      return const Color.fromARGB(120, 145, 21, 12);
     } else {
       final currentTime = TimeOfDay.now();
       switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
@@ -428,11 +432,11 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
           return Colors.orange;
         case -1:
           _seleccionIcono = "vencido";
-          return const Color.fromARGB(255, 145, 21, 12);
+          return const Color.fromARGB(120, 145, 21, 12);
         case 1:
           if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
             _seleccionIcono = "porVencer";
-            return const Color.fromARGB(255, 235, 214, 29);
+            return const Color.fromARGB(150, 235, 214, 29);
           } else {
             _seleccionIcono = "";
             return Colors.white;

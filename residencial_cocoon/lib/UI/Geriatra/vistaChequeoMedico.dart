@@ -38,7 +38,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Alta de Chequeo Médico',
+          'Registrar Chequeo Médico',
           style: TextStyle(color: Colors.black), // Cambia a tu color preferido.
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),

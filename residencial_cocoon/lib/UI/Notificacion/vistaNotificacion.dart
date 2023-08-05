@@ -247,7 +247,11 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
+                              color: notificacion.leida
+                                  ? const Color.fromARGB(166, 201, 200, 200)
+                                  : notificacion.notificacionPersistente
+                                      ? const Color.fromRGBO(225, 183, 72, 1)
+                                      : const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),
@@ -270,7 +274,7 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    if (notificacion.notificacionPersistente == false) ...[
+                                    if (!notificacion.notificacionPersistente) ...[
                                       Text(
                                         notificacion.leida ? 'Leída' : 'Nueva!',
                                         style: TextStyle(
@@ -358,7 +362,8 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
     return Column(
       children: [
         ListTile(
-          title: const Text('Filtros'),
+          title: const Text('Filtrar'),
+          tileColor: Colors.grey[200],
           trailing: _filtroExpandido ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.keyboard_arrow_down),
           onTap: () {
             setState(() {
@@ -367,62 +372,82 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
           },
         ),
         if (_filtroExpandido) ...[
-          InkWell(
-            onTap: () => selectFechaDesde(context),
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                hintText: 'Fecha',
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200], // Color de fondo gris para el área del Padding
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(0.0),
+                topRight: Radius.circular(0.0),
+                bottomLeft: Radius.circular(16.0), // Radio de esquina inferior izquierda
+                bottomRight: Radius.circular(16.0), // Radio de esquina inferior derecha
               ),
-              child: Text(
-                _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
+            ), // Color de fondo gris para el área del Padding
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Padding solo a la derecha e izquierda
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  InkWell(
+                    onTap: () => selectFechaDesde(context),
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        hintText: 'Fecha',
+                      ),
+                      child: Text(
+                        _fechaDesde != null ? DateFormat('dd/MM/yyyy').format(_fechaDesde!) : 'Fecha Desde',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: () => selectFechaHasta(context),
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        hintText: 'Fecha',
+                      ),
+                      child: Text(
+                        _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Palabra clave',
+                    ),
+                    controller: _palabraClaveController,
+                    onChanged: (value) {
+                      setState(() {
+                        _palabraClave = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Filtrar notificaciones
+                          obtenerNotificacionesPaginadasBotonFiltrar();
+                        },
+                        child: const Text('Filtrar'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            obtenerNotificacionesPaginadas();
+                          });
+                        },
+                        child: const Text('Mostrar Todas'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () => selectFechaHasta(context),
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                hintText: 'Fecha',
-              ),
-              child: Text(
-                _fechaHasta != null ? DateFormat('dd/MM/yyyy').format(_fechaHasta!) : 'Fecha Hasta',
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Palabra clave',
-            ),
-            controller: _palabraClaveController,
-            onChanged: (value) {
-              setState(() {
-                _palabraClave = value;
-              });
-            },
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Filtrar notificaciones
-                  obtenerNotificacionesPaginadasBotonFiltrar();
-                },
-                child: const Text('Filtrar'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    obtenerNotificacionesPaginadas();
-                  });
-                },
-                child: const Text('Mostrar Todas'),
-              ),
-            ],
           ),
         ],
         Expanded(
@@ -475,7 +500,11 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
                           child: Container(
                             width: double.infinity,
                             child: Card(
-                              color: notificacion.leida ? const Color.fromARGB(166, 201, 200, 200) : const Color.fromARGB(255, 255, 255, 255),
+                              color: notificacion.leida
+                                  ? const Color.fromARGB(166, 201, 200, 200)
+                                  : notificacion.notificacionPersistente
+                                      ? const Color.fromRGBO(225, 183, 72, 1)
+                                      : const Color.fromARGB(255, 255, 255, 255),
                               shape: RoundedRectangleBorder(
                                 // Borde más fuerte y ancho
                                 borderRadius: BorderRadius.circular(8.0),

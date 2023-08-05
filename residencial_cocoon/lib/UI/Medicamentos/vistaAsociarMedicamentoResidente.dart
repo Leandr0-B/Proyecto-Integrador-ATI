@@ -42,7 +42,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Asociar medicamento',
+          'Asociar Medicamento',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),

@@ -33,7 +33,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Alta Salida Médica',
+          'Registrar Salida Médica',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),

@@ -48,7 +48,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Prescripcion medicamento',
+          'Registrar Prescripcion de Medicamento',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
