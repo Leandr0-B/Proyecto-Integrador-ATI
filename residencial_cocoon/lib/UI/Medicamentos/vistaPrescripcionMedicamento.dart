@@ -322,7 +322,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                       registrarPrescripcion();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Ingresar prescripción'),
                 ),
               ],
             ),
