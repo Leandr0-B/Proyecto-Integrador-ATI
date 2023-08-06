@@ -178,4 +178,9 @@ class RegistroMedicacionConPrescripcion {
   int idPrescripcion() {
     return _prescripcion.id_prescripcion;
   }
+
+  void procesar() {
+    _procesada = 1;
+    _prescripcion.restarStock(_cantidad_dada);
+  }
 }

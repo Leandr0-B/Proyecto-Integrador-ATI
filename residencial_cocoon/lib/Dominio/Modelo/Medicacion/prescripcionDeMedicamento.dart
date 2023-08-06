@@ -181,6 +181,10 @@ class PrescripcionDeMedicamento {
     return medicamento.stockAnterior;
   }
 
+  void restarStock(int cantidadDada) {
+    _medicamento.restarStock(cantidadDada);
+  }
+
   //ToString
   @override
   String toString() {

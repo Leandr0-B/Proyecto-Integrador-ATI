@@ -44,6 +44,10 @@ class Medicamento {
     return jsonList.cast<Map<String, dynamic>>().map<Medicamento>((json) => Medicamento.fromJson(json)).toList();
   }
 
+  void restarStock(int cantidadDada) {
+    _stock -= cantidadDada;
+  }
+
   //Equals
   @override
   bool operator ==(Object other) {

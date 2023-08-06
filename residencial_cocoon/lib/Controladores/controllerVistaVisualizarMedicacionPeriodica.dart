@@ -36,7 +36,8 @@ class ControllerVistaRegistrarMedicacionPeriodica {
       }
     } on MedicacionPeriodicaException catch (e) {
       _vista?.limpiar();
-      _vista?.cambiarColor(selectedRegistro);
+      selectedRegistro?.procesar();
+      _vista?.cambiarColor();
       _vista?.mostrarMensaje(e.toString());
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());
