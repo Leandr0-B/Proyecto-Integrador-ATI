@@ -17,7 +17,7 @@ class _FondoInicioState extends State<FondoInicio> {
         body: Container(
             decoration: const BoxDecoration(
       image: DecorationImage(
-        image: AssetImage('/images/fondo.png'),
+        image: AssetImage('assets/images/fondo.png'),
         fit: BoxFit.cover,
       ),
     )));
