@@ -4,7 +4,6 @@ class Medicamento {
   String _nombre = "";
   String _unidad = "";
   int _stock = 0;
-  int _stockNotificacion = 0;
   int _stockAnterior = 0;
 
   //Constructor
@@ -29,20 +28,16 @@ class Medicamento {
 
   String get unidad => this._unidad;
 
+  set stockAnterior(int value) => this._stockAnterior = value;
+
+  int get stockAnterior => this._stockAnterior;
+
   int get stock => this._stock;
   void setUnidad(String unidad) {
     this._unidad = unidad;
   }
 
   set stock(int value) => this._stock = value;
-
-  int get stockNotificacion => this._stockNotificacion;
-
-  set stockNotificacion(int value) => this._stockNotificacion = value;
-
-  int get stockAnterior => this._stockAnterior;
-
-  set stockAnterior(int value) => this._stockAnterior = value;
 
   //Funciones
   static List<Medicamento> fromJsonList(List<dynamic> jsonList) {

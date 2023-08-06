@@ -79,7 +79,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Chequeos Médicos',
+          'Chequeos Médicos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),

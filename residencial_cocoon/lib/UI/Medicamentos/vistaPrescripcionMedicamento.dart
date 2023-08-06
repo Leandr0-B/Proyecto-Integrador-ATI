@@ -48,7 +48,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Prescripcion medicamento',
+          'Registrar Prescripcion de Medicamento',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(195, 190, 190, 180),
@@ -159,7 +159,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock: ${_selectedMedicamento?.stock}",
+                            "${_selectedMedicamento?.nombre} | Unidad: ${_selectedMedicamento?.unidad} | Stock Sobrante: ${_selectedMedicamento?.stockAnterior}",
                             style: const TextStyle(
                               fontSize: 16.0,
                             ),
@@ -274,7 +274,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                         ),
                         SizedBox(height: 16.0),
                         CheckboxListTile(
-                          title: Text("¿Es una prescripción crónica?"),
+                          title: Text("Prescripción Crónica"),
                           value: _prescripcionCronica == 1,
                           onChanged: (newValue) {
                             setState(() {
@@ -322,7 +322,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                       registrarPrescripcion();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Ingresar prescripción'),
                 ),
               ],
             ),

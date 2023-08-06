@@ -79,7 +79,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Visitas Medicas Externas',
+          'Visitas Medicas Externas',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),

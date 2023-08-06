@@ -45,7 +45,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Visualizar Registro de Medicaciones Periódicas',
+          'Registro de Medicaciones Periódicas',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
