@@ -1,4 +1,5 @@
 import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/solicitarStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -54,8 +55,8 @@ class ControllerVistaRegistrarMedicacionPeriodica {
 
   Future<void> notificarStock(RegistroMedicacionConPrescripcion registro) async {
     try {
-      //await Fachada.getInstancia()?.notificarStock(registro.idRegistroMedicacionConPrescripcion);
-    } on MedicacionPeriodicaException catch (e) {
+      await Fachada.getInstancia()?.notificarStock(registro.idPrescripcion());
+    } on SolicitarStockException catch (e) {
       _vista?.mostrarMensaje(e.toString());
     } on TokenException catch (e) {
       _cerrarSesion(e.toString());

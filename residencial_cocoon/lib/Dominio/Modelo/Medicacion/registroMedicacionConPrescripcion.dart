@@ -54,6 +54,7 @@ class RegistroMedicacionConPrescripcion {
     medicamentoAux.stock = json['stock_medicamento'] ?? 0;
 
     PrescripcionDeMedicamento prescripcionAux = PrescripcionDeMedicamento.empty();
+    prescripcionAux.id_prescripcion = json['id_prescripcion'];
     prescripcionAux.descripcion = json['descripcion_prescripcion'];
     prescripcionAux.fecha_desde = DateTime.parse(json['fecha_desde']);
     prescripcionAux.fecha_hasta = DateTime.parse(json['fecha_hasta']);
@@ -172,5 +173,9 @@ class RegistroMedicacionConPrescripcion {
 
   void agregarEnfermero(Usuario enfermero) {
     _enfermero.usuario = enfermero;
+  }
+
+  int idPrescripcion() {
+    return _prescripcion.id_prescripcion;
   }
 }

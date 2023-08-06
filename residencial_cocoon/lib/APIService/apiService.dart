@@ -12,6 +12,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaExcepti
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/solicitarStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
@@ -958,6 +959,23 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       throw PrescripcionStockException("El stock de la medicación asociada a la prescripción se actualizó existosamente.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static notificarStock(int idRegistroMedicacionConPrescripcion, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-medicacion/${idRegistroMedicacionConPrescripcion}/solicitar-stock');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({}),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw SolicitarStockException("El stock fue solicitado.");
     } else {
       throw Exception(errorObtenerToken);
     }
