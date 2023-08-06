@@ -26,4 +26,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/menu.jpg
-    - assets/images/
+    - assets/images/fondo.png
