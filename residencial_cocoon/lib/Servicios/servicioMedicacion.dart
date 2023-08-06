@@ -121,4 +121,8 @@ class ServicioMedicacion {
   Future<void> cargarStock(int? id_prescripcion, int stock, int stockNotificacion, String? ciFamiliar, int stockAnterior) async {
     await APIService.cargarStock(id_prescripcion, stock, stockNotificacion, ciFamiliar, stockAnterior, Fachada.getInstancia()?.getUsuario()!.getToken());
   }
+
+  Future<void> notificarStock(int idRegistroMedicacionConPrescripcion) async {
+    await APIService.notificarStock(idRegistroMedicacionConPrescripcion, Fachada.getInstancia()?.getUsuario()!.getToken());
+  }
 }
