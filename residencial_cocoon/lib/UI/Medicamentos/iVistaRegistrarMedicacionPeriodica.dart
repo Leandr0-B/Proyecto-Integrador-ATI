@@ -5,5 +5,5 @@ abstract class IvistaRegistrarMedicacionPeriodica {
   void mostrarMensajeError(String mensaje);
   void limpiar();
   void cerrarSesion();
-  void cambiarColor(RegistroMedicacionConPrescripcion? selectedRegistro);
+  void cambiarColor();
 }

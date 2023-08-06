@@ -558,8 +558,8 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   }
 
   @override
-  void cambiarColor(RegistroMedicacionConPrescripcion? unRegistro) {
-    unRegistro?.procesada = 1;
+  void cambiarColor() {
+    //unRegistro?.procesada = 1;
     setState(() {});
   }
 
