@@ -133,6 +133,12 @@ class Fachada {
     return await _servicioControl?.listaControles();
   }
 
+  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo,
+      int maximoValorReferenciaMinimo, int maximoValorReferenciaMaximo) async {
+    await _servicioControl?.registrarControl(
+        nombreControl, unidadControl, compuestoControl, valorReferenciaMinimo, valorReferenciaMaximo, maximoValorReferenciaMinimo, maximoValorReferenciaMaximo);
+  }
+
   Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
     await _servicioControl?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
   }
@@ -261,5 +267,11 @@ class Fachada {
 
   Future<void> notificarStock(int idRegistroMedicacionConPrescripcion) async {
     await _servicioMedicacion?.notificarStock(idRegistroMedicacionConPrescripcion);
+  }
+
+  Future<void> registrarPrescripcionControl(Usuario? selectedResidente, Sucursal? selectedSucursal, List<Control?> selectedControles, TimeOfDay? horaComienzo, String descripcion,
+      int frecuencia, int prescripcionCronica, int duracion) async {
+    await _servicioControl?.registrarPrescripcionControl(
+        selectedResidente, selectedSucursal, selectedControles, horaComienzo, descripcion, frecuencia, prescripcionCronica, duracion);
   }
 }

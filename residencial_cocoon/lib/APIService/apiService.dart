@@ -1,3 +1,4 @@
+import 'package:flutter/src/material/time.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/altaFamiliarException.dart';
@@ -6,9 +7,11 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Exceptions/asociarMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/cambioContrasenaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/controlException.dart';
 import 'dart:convert';
 import 'package:residencial_cocoon/Dominio/Exceptions/loginException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionControlException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
@@ -976,6 +979,59 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       throw SolicitarStockException("El stock fue solicitado.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo, int maximoValorReferenciaMinimo,
+      int maximoValorReferenciaMaximo, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/control/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'nombre': nombreControl,
+        'unidad': unidadControl,
+        'valor_referencia_minimo': valorReferenciaMinimo,
+        'valor_referencia_maximo': valorReferenciaMaximo,
+        'maximo_valor_referencia_minimo': maximoValorReferenciaMinimo,
+        'maximo_valor_referencia_maximo': maximoValorReferenciaMaximo,
+        'valor_compuesto': compuestoControl,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw ControlException("Control agregado exitosamente.");
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static registrarPrescripcionControl(Usuario? selectedResidente, String? ciGeriatra, Sucursal? selectedSucursal, List<Map<String, dynamic>> listaControles, String horaComienzo,
+      String descripcion, int frecuencia, int prescripcionCronica, int duracion, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/prescripcion-control/crear');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'descripcion': descripcion,
+        'hora_comienzo': horaComienzo,
+        'frecuencia': frecuencia,
+        'ci_geriatra': ciGeriatra,
+        'ci_residente': selectedResidente?.ci,
+        'duracion': duracion,
+        'cronica': prescripcionCronica,
+        'controles': listaControles,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw PrescripcionControlException("Prescripción de control creada exitosamente.");
     } else {
       throw Exception(errorObtenerToken);
     }
