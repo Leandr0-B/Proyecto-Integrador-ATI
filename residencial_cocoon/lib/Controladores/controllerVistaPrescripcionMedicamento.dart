@@ -94,6 +94,9 @@ class ControllerVistaPrescripcionMedicamento {
     } else if (selectedMedicamento == null) {
       _vista?.mostrarMensajeError("Tiene que seleccionar un medicamento.");
       return false;
+    } else if (hora_comienzo == null) {
+      _vista?.mostrarMensajeError("Tiene que seleccionar un hora de comienzo.");
+      return false;
     }
     return true;
   }

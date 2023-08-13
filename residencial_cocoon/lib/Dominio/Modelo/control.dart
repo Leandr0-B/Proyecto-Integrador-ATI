@@ -4,11 +4,19 @@ class Control {
   String _nombre = '';
   String _unidad = '';
   String _valor = '';
+  double _valor_referencia_minimo = 0;
+  double _valor_referencia_maximo = 0;
+  int _rango = 0;
+  int _valor_compuesto = 0;
+  double _maximo_valor_referencia_minimo = 0;
+  double _maximo_valor_referencia_maximo = 0;
 
   //Contructor
   Control(this._id_control, this._nombre, this._unidad);
 
   Control.preview(this._id_control, this._nombre, this._unidad, this._valor);
+
+  Control.empty();
 
   factory Control.fromJson(Map<String, dynamic> json) {
     return Control(json['id_control'], json['nombre'], json['unidad']);
@@ -20,6 +28,23 @@ class Control {
     return Control.preview(json['id_control'], json['nombre'], json['unidad'], json['valor']);
   }
 
+  factory Control.fromJsonPrescripcion(Map<String, dynamic> json) {
+    Control auxControl = Control.empty();
+
+    auxControl.id_control = json['id_control'];
+    auxControl.nombre = json['nombre'];
+    auxControl.unidad = json['unidad'];
+    auxControl.valor_referencia_minimo = json['valor_referencia_minimo'];
+    auxControl.valor_referencia_maximo = json['valor_referencia_maximo'];
+    auxControl.valor_compuesto = json['valor_compuesto'];
+    if (auxControl.valor_compuesto == 1) {
+      auxControl.maximo_valor_referencia_maximo = json['maximo_valor_referencia_maximo'];
+      auxControl.maximo_valor_referencia_minimo = json['maximo_valor_referencia_minimo'];
+    }
+
+    return auxControl;
+  }
+
   //Get Set
   int get id_control => this._id_control;
   set id_control(int value) => this._id_control = value;
@@ -28,16 +53,36 @@ class Control {
   set nombre(String value) => this._nombre = value;
 
   String get valor => this._valor;
-
   set valor(String value) => this._valor = value;
 
   String get unidad => this._unidad;
-
   set unidad(String value) => this._unidad = value;
+
+  double get valor_referencia_minimo => this._valor_referencia_minimo;
+  set valor_referencia_minimo(double value) => this._valor_referencia_minimo = value;
+
+  get valor_referencia_maximo => this._valor_referencia_maximo;
+  set valor_referencia_maximo(value) => this._valor_referencia_maximo = value;
+
+  get rango => this._rango;
+  set rango(value) => this._rango = value;
+
+  get maximo_valor_referencia_minimo => this._maximo_valor_referencia_minimo;
+  set maximo_valor_referencia_minimo(value) => this._maximo_valor_referencia_minimo = value;
+
+  get maximo_valor_referencia_maximo => this._maximo_valor_referencia_maximo;
+  set maximo_valor_referencia_maximo(value) => this._maximo_valor_referencia_maximo = value;
+
+  int get valor_compuesto => this._valor_compuesto;
+  set valor_compuesto(int value) => this._valor_compuesto = value;
 
   //Funciones
   static List<Control> fromJsonList(List<dynamic> jsonList) {
     return jsonList.cast<Map<String, dynamic>>().map<Control>((json) => Control.fromJson(json)).toList();
+  }
+
+  static List<Control> fromJsonListPrescripcion(List<dynamic> jsonList) {
+    return jsonList.cast<Map<String, dynamic>>().map<Control>((json) => Control.fromJsonPrescripcion(json)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +92,18 @@ class Control {
       'unidad': _unidad,
       'valor': _valor,
     };
+  }
+
+  static List<Map<String, dynamic>> listaParaApi(List<Control?> controles) {
+    return controles.map((control) {
+      if (control != null) {
+        return {
+          'id_control': control.id_control,
+          'nombre': control.nombre,
+        };
+      }
+      return <String, dynamic>{};
+    }).toList();
   }
 
   //Equals
@@ -65,6 +122,14 @@ class Control {
     retorno += "nombre: $_nombre, ";
     retorno += "unidad: $_unidad";
     retorno += "valor: $_valor";
+    return retorno;
+  }
+
+  String toStringPrescripcion() {
+    String retorno = "";
+    retorno += "Nombre: $_nombre, ";
+    retorno += "Unidad: $_unidad";
+
     return retorno;
   }
 }

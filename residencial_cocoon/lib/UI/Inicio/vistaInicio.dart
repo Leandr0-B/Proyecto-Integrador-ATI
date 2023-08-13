@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
+import 'package:residencial_cocoon/UI/Chequeo/vistaPrescripcionControl.dart';
 import 'package:residencial_cocoon/UI/Inicio/fondoInicio.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaStockMedicamento.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaVisualizarPrescripcionMedicamento.dart';
@@ -181,6 +182,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.stockMedicamento:
         container = VistaStockMedicamento();
         break;
+      case DrawerSections.prescripcionControl:
+        container = VistaPrescripcionControl();
+        break;
       default:
         container = Container();
         break;
@@ -334,6 +338,7 @@ class MyDrawerList extends StatelessWidget {
                         menuSubItem(43, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
                         menuSubItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
                         menuSubItem(47, "Registrar Prescripcion Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
+                        menuSubItem(45, "Registrar Prescripcion Control", Icons.fact_check, DrawerSections.prescripcionControl),
                         menuSubItem(42, "Visualizar Salidas Medicas", Icons.list, DrawerSections.visualizarSalidaMedica),
                         menuSubItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
                         menuSubItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
@@ -463,6 +468,7 @@ enum DrawerSections {
   medicacionPeriodica,
   visualizarMedicacionPeriodica,
   stockMedicamento,
+  prescripcionControl,
 }
 
 class NotificacionActualizadaCallback {
