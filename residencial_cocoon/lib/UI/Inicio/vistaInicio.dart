@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Chequeo/vistaPrescripcionControl.dart';
+import 'package:residencial_cocoon/UI/Chequeo/vistaVisualizarPrescripcionesControl.dart';
 import 'package:residencial_cocoon/UI/Chequeo/vistaVisualizarRegistrosPrescripcionesControl.dart';
 import 'package:residencial_cocoon/UI/Inicio/fondoInicio.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/vistaStockMedicamento.dart';
@@ -188,6 +189,10 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
         break;
       case DrawerSections.visualizarRegistrosPrescripcionesControles:
         container = VistaVisualizarRegistrosPrescripcionesControl();
+        break;
+      case DrawerSections.visualizarPrescripcionesControles:
+        container = VistaVisualizarPrescripcionesControl();
+        break;
       default:
         container = Container();
         break;
@@ -346,6 +351,7 @@ class MyDrawerList extends StatelessWidget {
                         menuSubItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
                         menuSubItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
                         menuSubItem(61, "Visualizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
+                        menuSubItem(63, "Visualizar Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
                       ],
                     ),
                   ),
@@ -384,6 +390,7 @@ class MyDrawerList extends StatelessWidget {
                         menuSubItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
                         menuSubItem(63, "Visualizar Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
                         menuSubItem(63, "Visualizar Registros Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarRegistrosPrescripcionesControles),
+                        menuSubItem(63, "Visualizar Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
                       ],
                     ),
                   ),
@@ -474,6 +481,7 @@ enum DrawerSections {
   stockMedicamento,
   prescripcionControl,
   visualizarRegistrosPrescripcionesControles,
+  visualizarPrescripcionesControles,
 }
 
 class NotificacionActualizadaCallback {
