@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/material/time.dart';
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
@@ -273,5 +274,15 @@ class Fachada {
       int frecuencia, int prescripcionCronica, int duracion) async {
     await _servicioControl?.registrarPrescripcionControl(
         selectedResidente, selectedSucursal, selectedControles, horaComienzo, descripcion, frecuencia, prescripcionCronica, duracion);
+  }
+
+  Future<List<RegistroControlConPrescripcion>?> obtenerRegistrosPrescripcionesControlesPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioControl?.obtenerRegistrosPrescripcionesControlesPaginadosConfiltros(paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave);
+  }
+
+  Future<int?> obtenerRegistrosPrescripcionesControlesPaginadosConfiltrosCantidadTotal(
+      DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    return await _servicioControl?.obtenerRegistrosPrescripcionesControlesPaginadosConfiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
 }

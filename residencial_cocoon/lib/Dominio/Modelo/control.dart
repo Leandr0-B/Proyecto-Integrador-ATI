@@ -3,7 +3,8 @@ class Control {
   int _id_control = 0;
   String _nombre = '';
   String _unidad = '';
-  String _valor = '';
+  double _valor = 0;
+  double _segundoValor = 0;
   double _valor_referencia_minimo = 0;
   double _valor_referencia_maximo = 0;
   int _rango = 0;
@@ -41,7 +42,6 @@ class Control {
       auxControl.maximo_valor_referencia_maximo = json['maximo_valor_referencia_maximo'];
       auxControl.maximo_valor_referencia_minimo = json['maximo_valor_referencia_minimo'];
     }
-
     return auxControl;
   }
 
@@ -52,8 +52,11 @@ class Control {
   String get nombre => this._nombre;
   set nombre(String value) => this._nombre = value;
 
-  String get valor => this._valor;
-  set valor(String value) => this._valor = value;
+  double get valor => this._valor;
+  set valor(double value) => this._valor = value;
+
+  double get segundoValor => this._segundoValor;
+  set segundoValor(double value) => this._segundoValor = value;
 
   String get unidad => this._unidad;
   set unidad(String value) => this._unidad = value;

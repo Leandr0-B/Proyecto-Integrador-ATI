@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/src/material/time.dart';
 import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/APIService/apiService.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
@@ -52,5 +53,21 @@ class ServicioControl {
     List<Map<String, dynamic>> listaControles = Control.listaParaApi(selectedControles);
     await APIService.registrarPrescripcionControl(
         selectedResidente, geriatra?.ci, selectedSucursal, listaControles, horaSeleccionadaString, descripcion, frecuencia, prescripcionCronica, duracion, geriatra?.getToken());
+  }
+
+  Future<List<RegistroControlConPrescripcion>?> obtenerRegistrosPrescripcionesControlesPaginadosConfiltros(
+      int paginaActual, int elementosPorPagina, DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String prescripciones = await APIService.obtenerRegistrosPrescripcionesControlesPaginadosConfiltros(
+        paginaActual, elementosPorPagina, fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(prescripciones);
+    return RegistroControlConPrescripcion.listaVistaPrevia(jsonList);
+  }
+
+  Future<int?> obtenerRegistrosPrescripcionesControlesPaginadosConfiltrosCantidadTotal(
+      DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
+    String cantidadTotal = await APIService.obtenerRegistrosPrescripcionesControlesPaginadosConfiltrosCantidadTotal(
+        fechaDesde, fechaHasta, ciResidente, palabraClave, Fachada.getInstancia()?.getUsuario()!.getToken());
+    int? total = jsonDecode(cantidadTotal)['total'];
+    return total;
   }
 }
