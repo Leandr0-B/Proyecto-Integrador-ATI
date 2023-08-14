@@ -8,7 +8,7 @@ class PrescripcionDeControl {
   //Atributos
   int _id_prescripcion = 0;
   Residente _residente = Residente.empty();
-  Control _control = Control.empty();
+  List<Control> _controles = [];
   String _descripcion = "";
   DateTime _fecha_desde = DateTime(0);
   DateTime _fecha_hasta = DateTime(0);
@@ -61,6 +61,9 @@ class PrescripcionDeControl {
   get descripcion => this._descripcion;
   set descripcion(value) => this._descripcion = value;
 
+  List<Control> get controles => this._controles;
+  set controles(List<Control> value) => this._controles = value;
+
   //Funciones
   void agregarGeriatra(Usuario geriatra) {
     _geriatra.usuario = geriatra;
@@ -96,25 +99,5 @@ class PrescripcionDeControl {
 
   String ciGeriatra() {
     return _geriatra.ciUsuario();
-  }
-
-  double valorReferenciaMinimo() {
-    return _control.valor_referencia_minimo;
-  }
-
-  double valorReferenciaMaximo() {
-    return _control.valor_referencia_maximo;
-  }
-
-  double maximoValorReferenciaMinimo() {
-    return _control.maximo_valor_referencia_minimo;
-  }
-
-  double maximoValorReferenciaMaximo() {
-    return _control.maximo_valor_referencia_maximo;
-  }
-
-  int rangoControl() {
-    return _control.rango;
   }
 }

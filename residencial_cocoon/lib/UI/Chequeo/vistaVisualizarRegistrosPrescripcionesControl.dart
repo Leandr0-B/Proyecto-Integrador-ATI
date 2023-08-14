@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarPrescripcionMedicamento.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarRegistrosPrescripcionesControl.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
-import 'package:residencial_cocoon/UI/Medicamentos/iVistaVisualizarPrescripcionMedicamento.dart';
+import 'package:residencial_cocoon/UI/Chequeo/iVistaVisualizarRegistrosPrescripcionesControl.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
-class VistaVisualizarPrescripcionMedicamento extends StatefulWidget {
-  const VistaVisualizarPrescripcionMedicamento({super.key});
-
+class VistaVisualizarRegistrosPrescripcionesControl extends StatefulWidget {
   @override
-  State<VistaVisualizarPrescripcionMedicamento> createState() => _VistaVisualizarPrescripcionMedicamentoState();
+  State<VistaVisualizarRegistrosPrescripcionesControl> createState() => _VistaVisualizarRegistrosPrescripcionesControl();
 }
 
-class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizarPrescripcionMedicamento> implements IvistaVisualizarPrescripcionMedicamento {
-  Future<List<PrescripcionDeMedicamento>> _prescripcionesMedicamentos = Future.value([]);
-  ControllerVistaVisualizarPrescripcionMedicamento _controller = ControllerVistaVisualizarPrescripcionMedicamento.empty();
+class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualizarRegistrosPrescripcionesControl> implements IvistaVisualizarRegistrosPrescripcionesControl {
+  Future<List<RegistroControlConPrescripcion>> _prescripciones = Future.value([]);
+  ControllerVistaVisualizarRegistrosPrescripcionesControl _controller = ControllerVistaVisualizarRegistrosPrescripcionesControl.empty();
   int _paginaActual = 1;
   int _elementosPorPagina = 5;
   Future<int> _cantidadDePaginas = Future.value(0);
@@ -33,11 +31,11 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaVisualizarPrescripcionMedicamento(this);
+    _controller = ControllerVistaVisualizarRegistrosPrescripcionesControl(this);
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
       _ciResidente = usuario?.ci;
     }
-    obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+    obtenerPrescripcionesControlesPaginadosConfiltros();
   }
 
   @override
@@ -45,7 +43,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Prescripciones de Medicamentos',
+          'Registros de Prescripciones de Controles Médicos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -133,7 +131,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar();
+                  obtenerPrescripcionesControlesPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -142,7 +140,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                 onPressed: () {
                   setState(() {
                     limpiarFiltros();
-                    obtenerPrescripcionesMedicamentosPaginados();
+                    obtenerPrescripcionesControlesPaginados();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -151,9 +149,9 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<PrescripcionDeMedicamento>>(
-            future: _prescripcionesMedicamentos,
-            builder: (BuildContext context, AsyncSnapshot<List<PrescripcionDeMedicamento>> snapshot) {
+          child: FutureBuilder<List<RegistroControlConPrescripcion>>(
+            future: _prescripciones,
+            builder: (BuildContext context, AsyncSnapshot<List<RegistroControlConPrescripcion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -167,7 +165,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Prescripciones de medicamentos',
+                            'Aún no hay Prescripciones de controles.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -183,10 +181,10 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      PrescripcionDeMedicamento prescripcionMed = snapshot.data![index];
+                      RegistroControlConPrescripcion prescripcion = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(prescripcionMed);
+                          mostrarPopUp(prescripcion);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -209,7 +207,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -217,36 +215,27 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_creacion)}',
+                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion: ${prescripcionMed.descripcion}',
+                                      'Descripcion: ${prescripcion.descripcionPrescripcion()}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcionMed.fecha_desde != DateTime(0)
-                                          ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}'
-                                          : 'Fecha desde: ---',
+                                      prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcionMed.fecha_hasta != DateTime(0)
-                                          ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}'
-                                          : 'Fecha Hasta: ---',
+                                      prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock}  ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrado por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
+                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -284,7 +273,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+                                        obtenerPrescripcionesControlesPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -296,7 +285,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+                                        obtenerPrescripcionesControlesPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -380,7 +369,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar();
+                  obtenerPrescripcionesControlesPaginadosBotonFiltrar();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -388,7 +377,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    obtenerPrescripcionesMedicamentosPaginados();
+                    obtenerPrescripcionesControlesPaginados();
                   });
                 },
                 child: const Text('Mostrar Todas'),
@@ -397,9 +386,9 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
           ),
         ],
         Expanded(
-          child: FutureBuilder<List<PrescripcionDeMedicamento>>(
-            future: _prescripcionesMedicamentos,
-            builder: (BuildContext context, AsyncSnapshot<List<PrescripcionDeMedicamento>> snapshot) {
+          child: FutureBuilder<List<RegistroControlConPrescripcion>>(
+            future: _prescripciones,
+            builder: (BuildContext context, AsyncSnapshot<List<RegistroControlConPrescripcion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -413,7 +402,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Prescripciones de Medicamentos',
+                            'Aún no hay Prescripciones de Controles.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -431,10 +420,10 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      PrescripcionDeMedicamento prescripcionMed = snapshot.data![index];
+                      RegistroControlConPrescripcion prescripcion = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(prescripcionMed);
+                          mostrarPopUp(prescripcion);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -457,7 +446,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -465,36 +454,27 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_creacion)}',
+                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion: ${prescripcionMed.descripcion}',
+                                      'Descripcion: ${prescripcion.descripcionPrescripcion()}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcionMed.fecha_desde != DateTime(0)
-                                          ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}'
-                                          : 'Fecha desde: ---',
+                                      prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcionMed.fecha_hasta != DateTime(0)
-                                          ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}'
-                                          : 'Fecha Hasta: ---',
+                                      prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Regitrado por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
+                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -532,7 +512,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   : () {
                                       setState(() {
                                         _paginaActual--;
-                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+                                        obtenerPrescripcionesControlesPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -544,7 +524,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
                                   : () {
                                       setState(() {
                                         _paginaActual++;
-                                        obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+                                        obtenerPrescripcionesControlesPaginadosConfiltros();
                                       });
                                     },
                             ),
@@ -596,26 +576,26 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
     ));
   }
 
-  void obtenerPrescripcionesMedicamentosPaginadosConfiltros() {
-    _prescripcionesMedicamentos =
-        _controller.obtenerPrescripcionesMedicamentosPaginadosConfiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+  void obtenerPrescripcionesControlesPaginadosConfiltros() {
+    _prescripciones =
+        _controller.obtenerRegistrosPrescripcionesControlesPaginadosConfiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
     setState(() {});
   }
 
-  void obtenerPrescripcionesMedicamentosPaginados() {
+  void obtenerPrescripcionesControlesPaginados() {
     limpiarFiltros();
-    obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+    obtenerPrescripcionesControlesPaginadosConfiltros();
   }
 
-  void obtenerPrescripcionesMedicamentosPaginadosBotonFiltrar() {
+  void obtenerPrescripcionesControlesPaginadosBotonFiltrar() {
     if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
       mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
     } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
       mostrarMensajeError("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
-      obtenerPrescripcionesMedicamentosPaginadosConfiltros();
+      obtenerPrescripcionesControlesPaginadosConfiltros();
     }
   }
 
@@ -649,7 +629,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
     }
   }
 
-  void mostrarPopUp(PrescripcionDeMedicamento prescripcionMed) {
+  void mostrarPopUp(RegistroControlConPrescripcion prescripcion) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -664,7 +644,7 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Prescripción ${prescripcionMed.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcionMed.ciResidente()} - ${prescripcionMed.nombreResidente()} - ${prescripcionMed.apellidoResidente()}',
+                'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -672,32 +652,32 @@ class _VistaVisualizarPrescripcionMedicamentoState extends State<VistaVisualizar
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_creacion)}',
+                'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
                 style: const TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Descripcion: ${prescripcionMed.descripcion}',
+                'Descripcion: ${prescripcion.descripcionPrescripcion()}',
                 style: const TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                prescripcionMed.fecha_desde != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_desde)}' : 'Fecha desde: ---',
+                prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                prescripcionMed.fecha_hasta != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcionMed.fecha_hasta)}' : 'Fecha Hasta: ---',
+                prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Medicamento: ${prescripcionMed.medicamento.nombre} - ${prescripcionMed.medicamento.unidad} - Cantidad Recetada: ${prescripcionMed.cantidad} - Stock Actual: ${prescripcionMed.stock} ${prescripcionMed.esCronica() ? '' : ' - Duracion ${prescripcionMed.duracion} Dias'}',
-                style: const TextStyle(fontSize: 14.0),
+                'Controles:\n${prescripcion.controles().map((control) => control.toStringPrescripcion()).join("\n")}',
+                style: const TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrador por: ${prescripcionMed.ciGeriatra()} - ${prescripcionMed.nombreGeriatra()} - ${prescripcionMed.apellidoGeriatra()}',
+                'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),
