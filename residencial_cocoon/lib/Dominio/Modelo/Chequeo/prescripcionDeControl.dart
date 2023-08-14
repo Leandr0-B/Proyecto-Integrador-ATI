@@ -31,7 +31,44 @@ class PrescripcionDeControl {
     this._fecha_creacion,
     this._duracion,
     this._cronica,
+    this._controles,
   );
+
+  factory PrescripcionDeControl.fromJsonVistaPrevia(Map<String, dynamic> json) {
+    Usuario geriatraAux = Usuario.empty();
+    geriatraAux.ci = json['ci_geriatra'];
+    geriatraAux.nombre = json['nombre_geriatra'];
+    geriatraAux.apellido = json['apellido_geriatra'];
+
+    Usuario residenteAux = Usuario.empty();
+    residenteAux.ci = json['ci_residente'];
+    residenteAux.nombre = json['nombre_residente'];
+    residenteAux.apellido = json['apellido_residente'];
+
+    String stringHoraComienzo = json['hora_comienzo'];
+    List<String> partsHoraComienzo = stringHoraComienzo.split(':');
+    int hourHoraComienzo = int.parse(partsHoraComienzo[0]);
+    int minuteHoraComienzo = int.parse(partsHoraComienzo[1]);
+    TimeOfDay hora_comienzo = TimeOfDay(hour: hourHoraComienzo, minute: minuteHoraComienzo);
+
+    List<Control> controles = Control.fromJsonListPrescripcion(json['controles']);
+
+    PrescripcionDeControl prescripcionAux = PrescripcionDeControl(
+      json['id_prescripcion'],
+      json['descripcion'],
+      DateTime.parse(json['fecha_desde']),
+      DateTime.parse(json['fecha_hasta']),
+      json['frecuencia'],
+      hora_comienzo,
+      DateTime.parse(json['fecha_creacion']),
+      json['duracion'] ?? 0,
+      json['cronica'],
+      controles,
+    );
+    prescripcionAux.agregarGeriatra(geriatraAux);
+    prescripcionAux.agregarResidente(residenteAux);
+    return prescripcionAux;
+  }
 
   //Get Set
   int get id_prescripcion => this._id_prescripcion;
@@ -65,6 +102,10 @@ class PrescripcionDeControl {
   set controles(List<Control> value) => this._controles = value;
 
   //Funciones
+  static List<PrescripcionDeControl> listaVistaPrevia(List jsonList) {
+    return jsonList.cast<Map<String, dynamic>>().map<PrescripcionDeControl>((json) => PrescripcionDeControl.fromJsonVistaPrevia(json)).toList();
+  }
+
   void agregarGeriatra(Usuario geriatra) {
     _geriatra.usuario = geriatra;
   }
