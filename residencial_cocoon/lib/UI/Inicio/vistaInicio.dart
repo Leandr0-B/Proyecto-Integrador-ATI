@@ -3,6 +3,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaInicio.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Chequeo/vistaPrescripcionControl.dart';
+import 'package:residencial_cocoon/UI/Chequeo/vistaRegistrarControlPeriodico.dart';
 import 'package:residencial_cocoon/UI/Chequeo/vistaVisualizarPrescripcionesControl.dart';
 import 'package:residencial_cocoon/UI/Chequeo/vistaVisualizarRegistrosPrescripcionesControl.dart';
 import 'package:residencial_cocoon/UI/Inicio/fondoInicio.dart';
@@ -193,6 +194,9 @@ class _VistaInicioState extends State<VistaInicio> with WidgetsBindingObserver i
       case DrawerSections.visualizarPrescripcionesControles:
         container = VistaVisualizarPrescripcionesControl();
         break;
+      case DrawerSections.registrarControlPeriodico:
+        container = VistaRegistrarControlPeriodico();
+        break;
       default:
         container = Container();
         break;
@@ -369,6 +373,7 @@ class MyDrawerList extends StatelessWidget {
                       children: [
                         menuSubItem(53, "Agregar Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
                         menuSubItem(61, "Registro Medicación Periódica", Icons.fact_check, DrawerSections.medicacionPeriodica),
+                        menuSubItem(61, "Registro Control Periódico", Icons.fact_check, DrawerSections.registrarControlPeriodico),
                       ],
                     ),
                   ),
@@ -482,6 +487,7 @@ enum DrawerSections {
   prescripcionControl,
   visualizarRegistrosPrescripcionesControles,
   visualizarPrescripcionesControles,
+  registrarControlPeriodico,
 }
 
 class NotificacionActualizadaCallback {

@@ -42,6 +42,8 @@ class Control {
       auxControl.maximo_valor_referencia_maximo = json['maximo_valor_referencia_maximo'];
       auxControl.maximo_valor_referencia_minimo = json['maximo_valor_referencia_minimo'];
     }
+    auxControl.valor = json['valor'] ?? 0;
+    auxControl.segundoValor = json['segundo_valor'] ?? 0;
     return auxControl;
   }
 
@@ -109,6 +111,52 @@ class Control {
     }).toList();
   }
 
+  static List<Map<String, dynamic>> listaParaRegistro(List<Control?> controles) {
+    return controles.map((control) {
+      if (control != null) {
+        switch (control.valor_compuesto) {
+          case 1:
+            return {
+              'id_control': control.id_control,
+              'nombre': control.nombre,
+              'valor': control.valor,
+              'segundo_valor': control.segundoValor,
+            };
+            break;
+          case 0:
+            return {
+              'id_control': control.id_control,
+              'nombre': control.nombre,
+              'valor': control.valor,
+            };
+            break;
+          default:
+        }
+      }
+      return <String, dynamic>{};
+    }).toList();
+  }
+
+  static bool validarControles(List<Control> controles) {
+    bool resultado = true;
+    for (var control in controles) {
+      switch (control.valor_compuesto) {
+        case 0:
+          if (control.valor == 0) {
+            resultado = false;
+          }
+          break;
+        case 1:
+          if (control.valor == 0 || control.segundoValor == 0) {
+            resultado = false;
+          }
+          break;
+        default:
+      }
+    }
+    return resultado;
+  }
+
   //Equals
   @override
   bool operator ==(Object other) {
@@ -132,6 +180,24 @@ class Control {
     String retorno = "";
     retorno += "Nombre: $_nombre, ";
     retorno += "Unidad: $_unidad";
+
+    return retorno;
+  }
+
+  String toStringProcesar() {
+    String retorno = "";
+    retorno += "Nombre: $_nombre, ";
+    retorno += "Unidad: $_unidad";
+    switch (_valor_compuesto) {
+      case 1:
+        retorno += "Primer valor: $_valor";
+        retorno += "Segundo valor: $_segundoValor";
+        break;
+      case 0:
+        retorno += "Valor: $_valor";
+        break;
+      default:
+    }
 
     return retorno;
   }

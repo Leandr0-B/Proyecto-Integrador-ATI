@@ -86,4 +86,17 @@ class ServicioControl {
     int? total = jsonDecode(cantidadTotal)['total'];
     return total;
   }
+
+  Future<List<RegistroControlConPrescripcion>?> obtenerRegistrosControlesConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {
+    String prescripciones = await APIService.obtenerRegistrosControlesConPrescripcion(fechaFiltro, ciFiltro, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(prescripciones);
+    return RegistroControlConPrescripcion.listaVistaPrevia(jsonList);
+  }
+
+  Future<void> procesarControl(RegistroControlConPrescripcion registro) async {
+    List<Map<String, dynamic>> listaControles = Control.listaParaRegistro(registro.controles());
+    String horaSeleccionadaString = '${registro.hora_de_realizacion!.hour}:${registro.hora_de_realizacion!.minute.toString().padLeft(2, '0')}';
+    String fechaRealizacion = DateFormat('yyyy-MM-dd').format(registro.fecha_realizada);
+    await APIService.procesarControl(registro, listaControles, fechaRealizacion, horaSeleccionadaString, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
 }
