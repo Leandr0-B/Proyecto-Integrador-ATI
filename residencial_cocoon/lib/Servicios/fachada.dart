@@ -295,4 +295,12 @@ class Fachada {
   Future<int?> obtenerPrescripcionesControlesPaginadosConfiltrosCantidadTotal(DateTime? fechaDesde, DateTime? fechaHasta, String? ciResidente, String? palabraClave) async {
     return await _servicioControl?.obtenerPrescripcionesControlesPaginadosConfiltrosCantidadTotal(fechaDesde, fechaHasta, ciResidente, palabraClave);
   }
+
+  Future<List<RegistroControlConPrescripcion>?> obtenerRegistrosControlesConPrescripcion(DateTime? fechaFiltro, String? ciFiltro) async {
+    return await _servicioControl?.obtenerRegistrosControlesConPrescripcion(fechaFiltro, ciFiltro);
+  }
+
+  Future<void> procesarControl(RegistroControlConPrescripcion registro) async {
+    await _servicioControl?.procesarControl(registro);
+  }
 }

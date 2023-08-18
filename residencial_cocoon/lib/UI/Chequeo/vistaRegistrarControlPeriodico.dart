@@ -1,39 +1,45 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:residencial_cocoon/Controladores/controllerVistaVisualizarMedicacionPeriodica.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedicamento.dart';
-import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
-import 'package:residencial_cocoon/UI/Medicamentos/iVistaRegistrarMedicacionPeriodica.dart';
+import 'package:residencial_cocoon/Controladores/controllerVistaRegistrarControlPeriodico.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/UI/Chequeo/iVistaRegistrarControlPeriodico.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
-class VistaRegistrarMedicacionPeriodica extends StatefulWidget {
+class VistaRegistrarControlPeriodico extends StatefulWidget {
   @override
-  State<VistaRegistrarMedicacionPeriodica> createState() => _VistaVisualizarMedicacionPeriodicaState();
+  State<VistaRegistrarControlPeriodico> createState() => _VistaRegistrarControlPeriodicoState();
 }
 
-class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedicacionPeriodica> implements IvistaRegistrarMedicacionPeriodica {
-  ControllerVistaRegistrarMedicacionPeriodica _controller = ControllerVistaRegistrarMedicacionPeriodica.empty();
-  Future<List<RegistroMedicacionConPrescripcion>> _registros = Future.value([]);
+class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPeriodico> implements IvistaRegistrarControlPeriodico {
+  ControllerVistaRegistrarControlPeriodico _controller = ControllerVistaRegistrarControlPeriodico.empty();
+  Future<List<RegistroControlConPrescripcion>> _registros = Future.value([]);
   DateTime? _fechaFiltro;
   String? _ciFiltro;
   final _formKey = GlobalKey<FormState>();
-  final _fieldDescripcion = TextEditingController();
-  String _descripcionPopUp = '';
-  final _fieldCantidad = TextEditingController();
-  final _fieldHora = TextEditingController();
-  final _fieldFecha = TextEditingController();
-  int _cantidadPopUp = 0;
+  //RegistroControlConPrescripcion? _selectedRegistro;
+  String _seleccionIcono = "";
   TimeOfDay? _horaPopUp;
   DateTime? _fechaPopUp;
-  RegistroMedicacionConPrescripcion? _selectedRegistro;
-  String _seleccionIcono = "";
+  String _descripcionPopUp = '';
+  List<Control> _controles = [];
+
+  double _primerValor = 0;
+  double _segundoValor = 0;
+  final _formKeyControl = GlobalKey<FormState>();
+  final _fieldPrimerValor = TextEditingController();
+  final _fieldSegundoValor = TextEditingController();
+
+  final _fieldDescripcion = TextEditingController();
+  final _fieldHora = TextEditingController();
+  final _fieldFecha = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = ControllerVistaRegistrarMedicacionPeriodica(this);
-    obtenerRegistrosMedicamentosConPrescripcion();
+    _controller = ControllerVistaRegistrarControlPeriodico(this);
+    obtenerRegistrosControlesConPrescripcion();
   }
 
   @override
@@ -41,7 +47,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Registro de Medicación Periódica',
+          'Registro de Controles Periódicos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -99,7 +105,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerRegistrosMedicamentosConPrescripcion();
+                  obtenerRegistrosControlesConPrescripcion();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -107,9 +113,9 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<RegistroMedicacionConPrescripcion>>(
+          child: FutureBuilder<List<RegistroControlConPrescripcion>>(
             future: _registros,
-            builder: (BuildContext context, AsyncSnapshot<List<RegistroMedicacionConPrescripcion>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<RegistroControlConPrescripcion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -123,7 +129,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'No hay medicaciones periodicas para el día.',
+                            'No hay controles periódicos para el día.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -139,7 +145,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      RegistroMedicacionConPrescripcion registro = snapshot.data![index];
+                      RegistroControlConPrescripcion registro = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
                           _mostrarPopUp(registro);
@@ -172,7 +178,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                         children: [
                                           const SizedBox(height: 8.0),
                                           Text(
-                                            'Medicacion Periódica, Residente: ${registro.prescripcion.ciResidente()} - ${registro.prescripcion.nombreResidente()} - ${registro.prescripcion.apellidoResidente()} ',
+                                            'Control Periódica, Residente: ${registro.ciResidente()} - ${registro.nombreResidente()} - ${registro.apellidoResidente()} ',
                                             style: const TextStyle(
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
@@ -180,12 +186,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                           ),
                                           const SizedBox(height: 8.0),
                                           Text(
-                                            'Descripcion : ${registro.prescripcion.descripcion}',
-                                            style: const TextStyle(fontSize: 16.0),
-                                          ),
-                                          const SizedBox(height: 8.0),
-                                          Text(
-                                            'Medicamento : ${registro.prescripcion.medicamento.nombre}- Cantidad: ${registro.prescripcion.cantidad} - Unidad: ${registro.prescripcion.medicamento.unidad}',
+                                            'Descripcion : ${registro.descripcionPrescripcion()}',
                                             style: const TextStyle(fontSize: 16.0),
                                           ),
                                           const SizedBox(height: 8.0),
@@ -195,12 +196,12 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                           ),
                                           const SizedBox(height: 8.0),
                                           Text(
-                                            'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
+                                            'Hora Pactada: ${registro.hora_pactada.hour.toString().padLeft(2, '0')}:${registro.hora_pactada.minute.toString().padLeft(2, '0')}',
                                             style: const TextStyle(fontSize: 14.0),
                                           ),
                                           const SizedBox(height: 8.0),
                                           Text(
-                                            'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
+                                            'Programado por: ${registro.ciGeriatra()} - ${registro.nombreGeriatra()} - ${registro.apellidoGeriatra()}',
                                             style: const TextStyle(fontSize: 14.0),
                                           ),
                                         ],
@@ -275,7 +276,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
               ElevatedButton(
                 onPressed: () {
                   // Filtrar notificaciones
-                  obtenerRegistrosMedicamentosConPrescripcion();
+                  obtenerRegistrosControlesConPrescripcion();
                 },
                 child: const Text('Filtrar'),
               ),
@@ -283,9 +284,9 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<RegistroMedicacionConPrescripcion>>(
+          child: FutureBuilder<List<RegistroControlConPrescripcion>>(
             future: _registros,
-            builder: (BuildContext context, AsyncSnapshot<List<RegistroMedicacionConPrescripcion>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<RegistroControlConPrescripcion>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -299,7 +300,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'No hay medicaciones periodicas para el día.',
+                            'No hay controles periódicos para el día.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -317,7 +318,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      RegistroMedicacionConPrescripcion registro = snapshot.data![index];
+                      RegistroControlConPrescripcion registro = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
                           _mostrarPopUp(registro);
@@ -344,7 +345,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                   children: [
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicacion Periódica, Residente: ${registro.prescripcion.ciResidente()} - ${registro.prescripcion.nombreResidente()} - ${registro.prescripcion.apellidoResidente()} ',
+                                      'Control Periódica, Residente: ${registro.ciResidente()} - ${registro.nombreResidente()} - ${registro.apellidoResidente()} ',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -352,12 +353,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Descripcion : ${registro.prescripcion.descripcion}',
-                                      style: const TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Medicamento : ${registro.prescripcion.medicamento.nombre}- Cantidad: ${registro.prescripcion.cantidad} - Unidad: ${registro.prescripcion.medicamento.unidad}',
+                                      'Descripcion : ${registro.descripcionPrescripcion()}',
                                       style: const TextStyle(fontSize: 16.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -367,12 +363,12 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Hora Pactada: ${registro.horaPactada.hour.toString().padLeft(2, '0')}:${registro.horaPactada.minute.toString().padLeft(2, '0')}',
+                                      'Hora Pactada: ${registro.hora_pactada.hour.toString().padLeft(2, '0')}:${registro.hora_pactada.minute.toString().padLeft(2, '0')}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Programado por: ${registro.prescripcion.ciGeriatra()} - ${registro.prescripcion.nombreGeriatra()} - ${registro.prescripcion.apellidoGeriatra()}',
+                                      'Programado por: ${registro.ciGeriatra()} - ${registro.nombreGeriatra()} - ${registro.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 16.0),
@@ -402,6 +398,26 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     );
   }
 
+  void obtenerRegistrosControlesConPrescripcion() {
+    _registros = _controller.obtenerRegistrosControlesConPrescripcion(_fechaFiltro, _ciFiltro);
+    setState(() {});
+  }
+
+  Future<void> _selectFecha(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _fechaFiltro ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != _fechaFiltro) {
+      setState(() {
+        _fechaFiltro = picked;
+      });
+    }
+  }
+
   IconData _obtenerIcono(String icono) {
     switch (icono) {
       case 'procesado':
@@ -417,7 +433,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     }
   }
 
-  Color colorDelRegistro(RegistroMedicacionConPrescripcion registro) {
+  Color colorDelRegistro(RegistroControlConPrescripcion registro) {
     if (registro.procesada == 1) {
       _seleccionIcono = "procesado";
       return const Color.fromARGB(150, 42, 119, 44);
@@ -426,7 +442,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
       return const Color.fromARGB(120, 145, 21, 12);
     } else {
       final currentTime = TimeOfDay.now();
-      switch (_compareTimeOfDay(registro.horaPactada, currentTime)) {
+      switch (_compareTimeOfDay(registro.hora_pactada, currentTime)) {
         case 0:
           _seleccionIcono = "enHora";
           return Colors.orange;
@@ -434,7 +450,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
           _seleccionIcono = "vencido";
           return const Color.fromARGB(120, 145, 21, 12);
         case 1:
-          if (_diferencia15Minutos(registro.horaPactada, currentTime)) {
+          if (_diferencia15Minutos(registro.hora_pactada, currentTime)) {
             _seleccionIcono = "porVencer";
             return const Color.fromARGB(150, 235, 214, 29);
           } else {
@@ -449,6 +465,11 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   }
 
   @override
+  void cambiarColor() {
+    setState(() {});
+  }
+
+  @override
   void cerrarSesion() {
     Utilidades.cerrarSesion(context);
   }
@@ -457,7 +478,6 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   void limpiar() {
     _horaPopUp = null;
     _fechaPopUp = null;
-    _fieldCantidad.clear();
     _fieldDescripcion.clear();
     _fieldHora.clear();
     _fieldFecha.clear();
@@ -477,26 +497,6 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
       content: Text(mensaje),
       backgroundColor: Colors.red,
     ));
-  }
-
-  void obtenerRegistrosMedicamentosConPrescripcion() {
-    _registros = _controller.obtenerRegistrosMedicamentosConPrescripcion(_fechaFiltro, _ciFiltro);
-    setState(() {});
-  }
-
-  Future<void> _selectFecha(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaFiltro ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null && picked != _fechaFiltro) {
-      setState(() {
-        _fechaFiltro = picked;
-      });
-    }
   }
 
   int _compareTimeOfDay(TimeOfDay time1, TimeOfDay time2) {
@@ -525,22 +525,6 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     return diferencia <= 15;
   }
 
-  Future<void> _selectHora(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _horaPopUp ?? TimeOfDay.now(),
-    );
-
-    if (picked != null && picked != _horaPopUp) {
-      setState(() {
-        _horaPopUp = picked;
-        _fieldHora.text = DateFormat('HH:mm').format(
-          DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _horaPopUp!.hour, _horaPopUp!.minute),
-        );
-      });
-    }
-  }
-
   Future<void> _selectFechaPopup(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -557,40 +541,49 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     }
   }
 
-  @override
-  void cambiarColor() {
-    //unRegistro?.procesada = 1;
-    setState(() {});
+  Future<void> _selectHora(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _horaPopUp ?? TimeOfDay.now(),
+    );
+
+    if (picked != null && picked != _horaPopUp) {
+      setState(() {
+        _horaPopUp = picked;
+        _fieldHora.text = DateFormat('HH:mm').format(
+          DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _horaPopUp!.hour, _horaPopUp!.minute),
+        );
+      });
+    }
   }
 
-  void _mostrarPopUp(RegistroMedicacionConPrescripcion registro) {
-    _selectedRegistro = registro;
-    _horaPopUp = registro.horaPactada;
+  void _mostrarPopUp(RegistroControlConPrescripcion registro) {
+    _horaPopUp = registro.hora_pactada;
     _fechaPopUp = registro.fecha_pactada;
-
+    Control? _selectedControl;
     if (registro.procesada == 1) {
       _fieldDescripcion.text = registro.descripcion;
-      _fieldCantidad.text = registro.cantidadDada.toString();
       _fieldHora.text = DateFormat('HH:mm').format(
         DateTime(
           DateTime.now().year,
           DateTime.now().month,
           DateTime.now().day,
-          registro.horaDeRealizacion.hour,
-          registro.horaDeRealizacion.minute,
+          registro.hora_de_realizacion.hour,
+          registro.hora_de_realizacion.minute,
         ),
       );
-      _fieldFecha.text = DateFormat('dd/MM/yyyy').format(registro.fecha_de_realizacion);
+      _fieldFecha.text = DateFormat('dd/MM/yyyy').format(registro.fecha_realizada);
     } else {
+      _controles = registro.controles();
+      _selectedControl = null;
       _fieldDescripcion.text = registro.descripcion;
-      _fieldCantidad.text = registro.cantidadSugerida.toString();
       _fieldHora.text = DateFormat('HH:mm').format(
         DateTime(
           DateTime.now().year,
           DateTime.now().month,
           DateTime.now().day,
-          registro.horaPactada.hour,
-          registro.horaPactada.minute,
+          registro.hora_pactada.hour,
+          registro.hora_pactada.minute,
         ),
       );
       _fieldFecha.text = DateFormat('dd/MM/yyyy').format(registro.fecha_pactada);
@@ -612,7 +605,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Medicacion Periódica, Residente: ${registro.prescripcion.ciResidente()} - ${registro.prescripcion.nombreResidente()} - ${registro.prescripcion.apellidoResidente()}',
+                  'Control Periódico, Residente: ${registro.ciResidente()} - ${registro.nombreResidente()} - ${registro.apellidoResidente()}',
                   style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -620,28 +613,75 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Descripcion : ${registro.prescripcion.descripcion}',
+                  'Descripcion : ${registro.descripcionPrescripcion()}',
                   style: const TextStyle(fontSize: 16.0),
                 ),
                 Text(
                   'Fecha Pactada: ${DateFormat('dd/MM/yyyy').format(registro.fecha_pactada)}',
-                  style: const TextStyle(fontSize: 14.0),
+                  style: const TextStyle(fontSize: 16.0),
                 ),
                 Text(
                   'Hora pactada: ${DateFormat('HH:mm').format(
-                    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, registro.horaPactada.hour, registro.horaPactada.minute),
+                    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, registro.hora_pactada.hour, registro.hora_pactada.minute),
                   )}',
-                  style: const TextStyle(fontSize: 14.0),
+                  style: const TextStyle(fontSize: 16.0),
                 ),
                 const SizedBox(height: 8.0),
-                Text(
-                  'Stock actual del medicamento: ${registro.prescripcion.medicamento.stock < registro.cantidadSugerida ? "No hay stock suficiente" : registro.prescripcion.medicamento.stock}',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: registro.prescripcion.medicamento.stock < registro.cantidadSugerida ? Colors.red : Colors.black,
+                if (registro.procesada == 1) ...[
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Controles:\n${registro.controles().map((control) => control.toStringProcesar()).join("\n")}',
+                    style: const TextStyle(fontSize: 16.0),
                   ),
-                ),
-                const SizedBox(height: 8.0),
+                ] else ...[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Lista de controles"),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _controles.length,
+                    itemBuilder: (context, index) {
+                      final control = _controles[index];
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Text('${control.nombre} ${control.unidad}'),
+                            IconButton(
+                              icon: Icon(Icons.arrow_circle_right_outlined),
+                              onPressed: () {
+                                setState(() {
+                                  Navigator.pop(context);
+                                  _valorControlPopUp(control, registro);
+
+                                  setState(() {});
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Lista de valores"),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _controles.length,
+                    itemBuilder: (context, index) {
+                      final control = _controles[index];
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Text('${control.nombre} ${control.unidad} ${control.valor_compuesto == 1 ? "${control.valor} - ${control.segundoValor}" : control.valor}'),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
                 SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -671,31 +711,6 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                     ),
                     enabled: registro.procesada != 1, // Habilita o deshabilita la edición según el estado de procesada
                   ),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Ingrese la cantidad administrada (0 si no se dio)',
-                    hintText: 'Cantidad administrada al residente',
-                  ),
-                  maxLength: 100,
-                  controller: _fieldCantidad,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese la cantidad administrada del medicamento.';
-                    }
-                    if (num.tryParse(value) == null) {
-                      return 'Solo puede ingresar valores numéricos.';
-                    }
-                    if (num.tryParse(value)! < 0) {
-                      return 'Solo puede ingresar valores positivos.';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _cantidadPopUp = int.parse(value!);
-                  },
-                  enabled: registro.procesada != 1, // Habilita o deshabilita la edición según el estado de procesada
                 ),
                 SizedBox(height: 10),
                 TextFormField(
@@ -732,26 +747,16 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
                     children: [
-                      if (registro.prescripcion.medicamento.stock >= registro.cantidadSugerida)
-                        ElevatedButton(
-                          child: Text("Procesar"),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              procesarMedicacion();
-                              Navigator.pop(context);
-                            }
-                          },
-                        ),
-                      SizedBox(width: 8.0),
-                      if (registro.prescripcion.medicamento.stock < registro.cantidadSugerida)
-                        ElevatedButton(
-                          child: Text("Solicitar Stock"),
-                          onPressed: () {
+                      ElevatedButton(
+                        child: Text("Procesar"),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            procesarControl(registro);
                             Navigator.pop(context);
-                            _popUpConfirmacion(registro);
-                          },
-                        ),
+                          }
+                        },
+                      ),
                     ],
                   )
                 ]
@@ -763,62 +768,151 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
     );
   }
 
-  void _popUpConfirmacion(RegistroMedicacionConPrescripcion registro) {
+  Future<void> procesarControl(RegistroControlConPrescripcion registro) async {
+    registro.descripcion = _descripcionPopUp;
+    registro.hora_de_realizacion = _horaPopUp;
+    registro.fecha_realizada = _fechaPopUp;
+    await _controller.procesarControl(registro);
+  }
+
+  void _valorControlPopUp(Control control, RegistroControlConPrescripcion registro) {
+    _fieldPrimerValor.clear();
+    _fieldSegundoValor.clear();
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8, // Ancho máximo deseado
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(
-                '¿Estas seguro que quieres solicitar mas stock de la medicacion: ${registro.prescripcion.medicamento.nombre} para el residente: ${registro.prescripcion.nombreResidente()} ${registro.prescripcion.apellidoResidente()}?',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
-                children: [
-                  ElevatedButton(
-                    child: Text("Si"),
-                    onPressed: () {
-                      notificarStock(registro);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(width: 8.0),
-                  ElevatedButton(
-                    child: Text("No"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              )
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> notificarStock(RegistroMedicacionConPrescripcion registro) async {
-    await _controller.notificarStock(registro);
-  }
-
-  Future<void> procesarMedicacion() async {
-    _selectedRegistro?.cantidadDada = _cantidadPopUp;
-    _selectedRegistro?.horaDeRealizacion = _horaPopUp!;
-    _selectedRegistro?.fecha_de_realizacion = _fechaPopUp!;
-    _selectedRegistro?.descripcion = _descripcionPopUp;
-    await _controller.procesarMedicacion(_selectedRegistro);
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKeyControl,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 16.0),
+                          if (control.valor_compuesto == 1) ...[
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Ingrese primer valor:',
+                                hintText: 'Valor del control',
+                              ),
+                              maxLength: 100,
+                              controller: _fieldPrimerValor,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese el valor del control.';
+                                }
+                                if (num.tryParse(value) == null) {
+                                  return 'Solo puede ingresar valores numéricos.';
+                                }
+                                if (num.tryParse(value)! <= 0) {
+                                  return 'Solo puede ingresar valores positivos.';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _primerValor = double.parse(value!);
+                              },
+                            ),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Ingrese el segundo valor:',
+                                hintText: 'Valor del control',
+                              ),
+                              maxLength: 100,
+                              controller: _fieldSegundoValor,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese el valor del control.';
+                                }
+                                if (num.tryParse(value) == null) {
+                                  return 'Solo puede ingresar valores numéricos.';
+                                }
+                                if (num.tryParse(value)! <= 0) {
+                                  return 'Solo puede ingresar valores positivos.';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _segundoValor = double.parse(value!);
+                              },
+                            ),
+                          ] else ...[
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Ingrese el valor:',
+                                hintText: 'Valor del control',
+                              ),
+                              maxLength: 100,
+                              controller: _fieldPrimerValor,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese el valor del control.';
+                                }
+                                if (num.tryParse(value) == null) {
+                                  return 'Solo puede ingresar valores numéricos.';
+                                }
+                                if (num.tryParse(value)! <= 0) {
+                                  return 'Solo puede ingresar valores positivos.';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _primerValor = double.parse(value!);
+                              },
+                            ),
+                          ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKeyControl.currentState!.validate()) {
+                                    _formKeyControl.currentState!.save();
+                                    setState(() {
+                                      if (control.valor_compuesto == 0) {
+                                        control.valor = _primerValor;
+                                      } else {
+                                        control.valor = _primerValor;
+                                        control.segundoValor = _segundoValor;
+                                      }
+                                    });
+                                    Navigator.of(context).pop();
+                                    _mostrarPopUp(registro);
+                                    setState(() {});
+                                  }
+                                },
+                                child: const Text('Guardar valores'),
+                              ),
+                              SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  _mostrarPopUp(registro);
+                                  setState(() {});
+                                },
+                                child: const Text('Cerrar'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      setState(() {});
+    });
   }
 }

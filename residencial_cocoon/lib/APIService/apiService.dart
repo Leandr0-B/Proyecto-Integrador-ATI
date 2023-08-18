@@ -14,10 +14,12 @@ import 'package:residencial_cocoon/Dominio/Exceptions/medicacionPeriodicaExcepti
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionControlException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionMedicamentoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/prescripcionStockException.dart';
+import 'package:residencial_cocoon/Dominio/Exceptions/procesarControlException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/salidaMedicaException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/solicitarStockException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/visitaMedicaExternaException.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/medicamento.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
@@ -1116,6 +1118,45 @@ class APIService {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static obtenerRegistrosControlesConPrescripcion(DateTime? fechaFiltro, String? ciFiltro, String? token) async {
+    final url = Uri.parse(
+        'https://residencialapi.azurewebsites.net/registro-control/listado-del-dia?page=1${fechaFiltro != null ? '&fecha=${fechaFiltro.toString().split(' ')[0]}' : ''}${ciFiltro != null ? '&ci_residente=$ciFiltro' : ''}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
+
+  static procesarControl(
+      RegistroControlConPrescripcion registro, List<Map<String, dynamic>> listaControles, String fechaRealizacion, String horaSeleccionadaString, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-control/realizar-ingreso/${registro.id_registro_control_prescripcion}');
+
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'horaDeRealizacion': horaSeleccionadaString,
+        'fechaRealizacion': fechaRealizacion,
+        'descripcion': registro.descripcion,
+        'controles': listaControles,
+      }),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      throw ProcesarControlException("Controles procesados exitosamente.");
     } else {
       throw Exception(errorObtenerToken);
     }

@@ -127,6 +127,9 @@ class RegistroControlConPrescripcion {
   get descripcion => this._descripcion;
   set descripcion(value) => this._descripcion = value;
 
+  int get id_registro_control_prescripcion => this._id_registro_control_prescripcion;
+  set id_registro_control_prescripcion(int value) => this._id_registro_control_prescripcion = value;
+
   //Funciones
   static List<RegistroControlConPrescripcion> listaVistaPrevia(List jsonList) {
     return jsonList.cast<Map<String, dynamic>>().map<RegistroControlConPrescripcion>((json) => RegistroControlConPrescripcion.fromJsonVistaPrevia(json)).toList();
@@ -198,5 +201,9 @@ class RegistroControlConPrescripcion {
 
   List<Control> controles() {
     return _prescripcion.controles;
+  }
+
+  void procesar() {
+    this._procesada = 1;
   }
 }
