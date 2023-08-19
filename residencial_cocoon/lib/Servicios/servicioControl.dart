@@ -45,8 +45,8 @@ class ServicioControl {
     return aux;
   }
 
-  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo,
-      int maximoValorReferenciaMinimo, int maximoValorReferenciaMaximo) async {
+  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, double valorReferenciaMinimo, double valorReferenciaMaximo,
+      double maximoValorReferenciaMinimo, double maximoValorReferenciaMaximo) async {
     await APIService.registrarControl(nombreControl, unidadControl, compuestoControl, valorReferenciaMinimo, valorReferenciaMaximo, maximoValorReferenciaMinimo,
         maximoValorReferenciaMaximo, Fachada.getInstancia()?.getUsuario()!.getToken());
   }

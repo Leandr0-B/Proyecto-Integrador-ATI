@@ -55,8 +55,8 @@ class ControllerVistaPrescripcionControl {
     _vista?.cerrarSesion();
   }
 
-  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo,
-      int maximoValorReferenciaMinimo, int maximoValorReferenciaMaximo) async {
+  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, double valorReferenciaMinimo, double valorReferenciaMaximo,
+      double maximoValorReferenciaMinimo, double maximoValorReferenciaMaximo) async {
     try {
       if (_controlesControl(compuestoControl, valorReferenciaMinimo, valorReferenciaMaximo, maximoValorReferenciaMinimo, maximoValorReferenciaMaximo)) {
         await Fachada.getInstancia()?.registrarControl(
@@ -66,13 +66,13 @@ class ControllerVistaPrescripcionControl {
       _cerrarSesion(e.toString());
     } on ControlException catch (e) {
       _vista?.mostrarMensaje(e.toString());
-      _vista?.limpiar();
+      _vista?.limpiarControl();
     } on Exception catch (e) {
       _vista?.mostrarMensajeError(e.toString());
     }
   }
 
-  bool _controlesControl(int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo, int maximoValorReferenciaMinimo, int maximoValorReferenciaMaximo) {
+  bool _controlesControl(int compuestoControl, double valorReferenciaMinimo, double valorReferenciaMaximo, double maximoValorReferenciaMinimo, double maximoValorReferenciaMaximo) {
     if (compuestoControl == 0) {
       if (valorReferenciaMinimo > valorReferenciaMaximo) {
         _vista?.mostrarMensajeError("Valor minimo no puede ser mayor al valor maximo.");

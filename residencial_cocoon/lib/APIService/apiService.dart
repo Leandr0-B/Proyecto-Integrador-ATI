@@ -986,8 +986,8 @@ class APIService {
     }
   }
 
-  static registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo, int maximoValorReferenciaMinimo,
-      int maximoValorReferenciaMaximo, String? token) async {
+  static registrarControl(String nombreControl, String unidadControl, int compuestoControl, double valorReferenciaMinimo, double valorReferenciaMaximo,
+      double maximoValorReferenciaMinimo, double maximoValorReferenciaMaximo, String? token) async {
     final url = Uri.parse('https://residencialapi.azurewebsites.net/control/crear');
 
     final response = await http.post(

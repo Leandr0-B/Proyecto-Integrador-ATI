@@ -135,8 +135,8 @@ class Fachada {
     return await _servicioControl?.listaControles();
   }
 
-  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, int valorReferenciaMinimo, int valorReferenciaMaximo,
-      int maximoValorReferenciaMinimo, int maximoValorReferenciaMaximo) async {
+  Future<void> registrarControl(String nombreControl, String unidadControl, int compuestoControl, double valorReferenciaMinimo, double valorReferenciaMaximo,
+      double maximoValorReferenciaMinimo, double maximoValorReferenciaMaximo) async {
     await _servicioControl?.registrarControl(
         nombreControl, unidadControl, compuestoControl, valorReferenciaMinimo, valorReferenciaMaximo, maximoValorReferenciaMinimo, maximoValorReferenciaMaximo);
   }
