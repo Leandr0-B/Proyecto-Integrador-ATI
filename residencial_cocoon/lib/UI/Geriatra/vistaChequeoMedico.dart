@@ -17,14 +17,22 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
   final _formKey = GlobalKey<FormState>();
   String descripcion = '';
   final fieldDescripcion = TextEditingController();
-  final fieldValor = TextEditingController();
+  //final fieldValor = TextEditingController();
   Usuario? selectedResidente;
   Sucursal? selectedSucursal;
   bool residentesVisible = false;
   List<Control?> selectedControles = [];
   Control? selectedControl;
   ControllerVistaChequeoMedico controller = ControllerVistaChequeoMedico.empty();
-  String valor = '';
+  //String valor = '';
+  TimeOfDay? _hora;
+
+  double _primerValor = 0;
+  double _segundoValor = 0;
+  final _fieldPrimerValor = TextEditingController();
+  final _fieldSegundoValor = TextEditingController();
+  final _formKeyControl = GlobalKey<FormState>();
+
   bool agregarControles = false;
 
   @override
@@ -146,6 +154,22 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                 SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
+                  child: Text("Seleccione la hora:"),
+                ),
+                InkWell(
+                  onTap: () => _selectHora(context),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      hintText: 'Hora',
+                    ),
+                    child: Text(
+                      _hora != null ? _hora!.format(context) : 'Seleccione una hora',
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción del control:"),
                 ),
                 Container(
@@ -183,6 +207,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                   value: agregarControles,
                   onChanged: (newValue) {
                     setState(() {
+                      selectedControles.clear();
                       agregarControles = newValue!;
                     });
                   },
@@ -218,6 +243,8 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                                 ],
                                 onChanged: (Control? newValue) {
                                   setState(() {
+                                    _fieldSegundoValor.clear();
+                                    _fieldPrimerValor.clear();
                                     selectedControl = newValue;
                                   });
                                 },
@@ -230,57 +257,128 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                         ),
                       ),
                       SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Ingrese valor del control:"),
-                      ),
-                      TextFormField(
-                        controller: fieldValor,
-                        onSaved: (value) {
-                          valor = value!;
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Valor control:',
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      if (selectedControles != null && selectedControles!.isNotEmpty)
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Lista de controles"),
-                        ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: selectedControles?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final control = selectedControles![index];
-                          return ListTile(
-                            title: Row(
+                      Container(
+                        child: Form(
+                          key: _formKeyControl,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('${control?.nombre} ${control?.valor}'),
-                                IconButton(
-                                  icon: Icon(Icons.remove_circle),
+                                if (selectedControl?.valor_compuesto == 0) ...[
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'Ingrese valor:',
+                                      hintText: 'Valor del control',
+                                    ),
+                                    maxLength: 100,
+                                    controller: _fieldPrimerValor,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor ingrese el valor del control.';
+                                      }
+                                      if (num.tryParse(value) == null) {
+                                        return 'Solo puede ingresar valores numéricos.';
+                                      }
+                                      if (num.tryParse(value)! <= 0) {
+                                        return 'Solo puede ingresar valores positivos.';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      _primerValor = double.parse(value!);
+                                    },
+                                  ),
+                                ] else ...[
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'Ingrese primer valor:',
+                                      hintText: 'Valor del control',
+                                    ),
+                                    maxLength: 100,
+                                    controller: _fieldPrimerValor,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor ingrese el valor del control.';
+                                      }
+                                      if (num.tryParse(value) == null) {
+                                        return 'Solo puede ingresar valores numéricos.';
+                                      }
+                                      if (num.tryParse(value)! <= 0) {
+                                        return 'Solo puede ingresar valores positivos.';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      _primerValor = double.parse(value!);
+                                    },
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'Ingrese el segundo valor:',
+                                      hintText: 'Valor del control',
+                                    ),
+                                    maxLength: 100,
+                                    controller: _fieldSegundoValor,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor ingrese el valor del control.';
+                                      }
+                                      if (num.tryParse(value) == null) {
+                                        return 'Solo puede ingresar valores numéricos.';
+                                      }
+                                      if (num.tryParse(value)! <= 0) {
+                                        return 'Solo puede ingresar valores positivos.';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      _segundoValor = double.parse(value!);
+                                    },
+                                  ),
+                                ],
+                                SizedBox(height: 10),
+                                if (selectedControles != null && selectedControles!.isNotEmpty)
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("Lista de controles"),
+                                  ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: selectedControles?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    final control = selectedControles![index];
+                                    return ListTile(
+                                      title: Row(
+                                        children: [
+                                          Text(
+                                              '${control?.nombre} ${control?.unidad} ${control?.valor_compuesto == 1 ? "${control?.valor} - ${control?.segundoValor}" : control?.valor}'),
+                                          IconButton(
+                                            icon: Icon(Icons.remove_circle),
+                                            onPressed: () {
+                                              _eliminarControl(index);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                ElevatedButton(
+                                  child: Text("Agregar control"),
                                   onPressed: () {
-                                    _eliminarControl(index);
+                                    if (_formKeyControl.currentState!.validate()) {
+                                      _formKeyControl.currentState!.save();
+                                      _agregarControl(selectedControl, _primerValor, _segundoValor);
+                                    }
                                   },
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                        child: Text("Agregar control"),
-                        onPressed: () {
-                          if (fieldValor.text.isNotEmpty) {
-                            _formKey.currentState!.save();
-                            _agregarControl(selectedControl, valor);
-                          } else {
-                            mostrarMensajeError("Tiene que ingresar un valor.");
-                          }
-                        },
-                      ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 SizedBox(height: 10),
@@ -299,6 +397,19 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
         ),
       ),
     );
+  }
+
+  Future<void> _selectHora(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _hora ?? TimeOfDay.now(),
+    );
+
+    if (picked != null && picked != _hora) {
+      setState(() {
+        _hora = picked;
+      });
+    }
   }
 
   Future<void> _selectFecha(BuildContext context) async {
@@ -321,9 +432,9 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
     });
   }
 
-  void _agregarControl(Control? control, String valor) {
+  void _agregarControl(Control? control, double primerValor, double segundoValor) {
     setState(() {
-      controller.altaSelectedControl(control, valor, selectedControles);
+      controller.altaSelectedControl(control, primerValor, segundoValor, selectedControles);
     });
   }
 
@@ -331,8 +442,10 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
   void limpiar() {
     setState(() {
       fieldDescripcion.clear();
-      fieldValor.clear();
+      _fieldSegundoValor.clear();
+      _fieldPrimerValor.clear();
       fecha = null;
+      _hora = null;
       selectedResidente = null;
       selectedSucursal = null;
       residentesVisible = false;
@@ -359,7 +472,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
 
   @override
   Future<void> altaChequeoMedico() async {
-    await controller.altaChequeoMedico(selectedSucursal, selectedResidente, selectedControles, fecha, descripcion);
+    await controller.altaChequeoMedico(selectedSucursal, selectedResidente, selectedControles, fecha, _hora, descripcion, agregarControles);
   }
 
   @override

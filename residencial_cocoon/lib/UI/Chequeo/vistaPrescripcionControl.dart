@@ -34,10 +34,10 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
   String _nombreControl = "";
   String _unidadControl = "";
   int _compuestoControl = 0;
-  int _valorReferenciaMinimo = 0;
-  int _valorReferenciaMaximo = 0;
-  int _maximoValorReferenciaMaximo = 0;
-  int _maximoValorReferenciaMinimo = 0;
+  double _valorReferenciaMinimo = 0;
+  double _valorReferenciaMaximo = 0;
+  double _maximoValorReferenciaMaximo = 0;
+  double _maximoValorReferenciaMinimo = 0;
   final _nombreControlController = TextEditingController();
   final _unidadControlController = TextEditingController();
   final _valorReferenciaMinimoController = TextEditingController();
@@ -166,7 +166,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                               return ListTile(
                                 title: Row(
                                   children: [
-                                    Text('${control?.nombre} ${control?.valor}'),
+                                    Text('${control?.nombre} ${control?.unidad}'),
                                     IconButton(
                                       icon: Icon(Icons.remove_circle),
                                       onPressed: () {
@@ -399,6 +399,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
   Future<void> _registrarControl() async {
     await _controller.registrarControl(
         _nombreControl, _unidadControl, _compuestoControl, _valorReferenciaMinimo, _valorReferenciaMaximo, _maximoValorReferenciaMinimo, _maximoValorReferenciaMaximo);
+    setState(() {});
   }
 
   void _altaPopUp() {
@@ -503,7 +504,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _valorReferenciaMinimo = int.parse(value!);
+                                _valorReferenciaMinimo = double.parse(value!);
                               },
                             ),
                             SizedBox(height: 16.0),
@@ -527,7 +528,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _valorReferenciaMaximo = int.parse(value!);
+                                _valorReferenciaMaximo = double.parse(value!);
                               },
                             ),
                           ] else ...[
@@ -552,7 +553,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _valorReferenciaMinimo = int.parse(value!);
+                                _valorReferenciaMinimo = double.parse(value!);
                               },
                             ),
                             SizedBox(height: 16.0),
@@ -576,7 +577,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _valorReferenciaMaximo = int.parse(value!);
+                                _valorReferenciaMaximo = double.parse(value!);
                               },
                             ),
                             SizedBox(height: 16.0),
@@ -600,7 +601,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _maximoValorReferenciaMinimo = int.parse(value!);
+                                _maximoValorReferenciaMinimo = double.parse(value!);
                               },
                             ),
                             SizedBox(height: 16.0),
@@ -624,7 +625,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 return null;
                               },
                               onSaved: (value) {
-                                _maximoValorReferenciaMaximo = int.parse(value!);
+                                _maximoValorReferenciaMaximo = double.parse(value!);
                               },
                             ),
                           ],

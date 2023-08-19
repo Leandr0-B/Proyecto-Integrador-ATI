@@ -32,8 +32,7 @@ class ChequeoMedico {
     residenteAux.nombre = json['nombre_residente'];
     residenteAux.apellido = json['apellido_residente'];
 
-    ChequeoMedico aux = ChequeoMedico(
-        json['id_chequeo'], json['descripcion'], DateTime.parse(json['fecha']));
+    ChequeoMedico aux = ChequeoMedico(json['id_chequeo'], json['descripcion'], DateTime.parse(json['fecha']));
     aux.agregarGeriatra(geriatraAux);
     aux.agregarResidente(residenteAux);
 
@@ -42,9 +41,7 @@ class ChequeoMedico {
     if (json.containsKey('controles')) {
       List<dynamic> controlesJson = json['controles'];
       if (controlesJson.isNotEmpty) {
-        controlesList = controlesJson
-            .map((controlJson) => Control.fromJsonParaPreview(controlJson))
-            .toList();
+        controlesList = controlesJson.map((controlJson) => Control.fromJsonPrescripcion(controlJson)).toList();
       }
     }
     aux._controles = controlesList;
@@ -66,10 +63,7 @@ class ChequeoMedico {
   set fecha(DateTime value) => _fecha = value;
 
   static List<ChequeoMedico> listaVistaPrevia(List jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<ChequeoMedico>((json) => ChequeoMedico.fromJsonVistaPrevia(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<ChequeoMedico>((json) => ChequeoMedico.fromJsonVistaPrevia(json)).toList();
   }
 
   void agregarGeriatra(Usuario geriatra) {
@@ -108,8 +102,7 @@ class ChequeoMedico {
     String result = '\n';
     if (_controles.isNotEmpty) {
       for (var control in _controles) {
-        result +=
-            '${control.nombre} - Valor: ${control.valor} - Unidad: ${control.unidad}\n';
+        result += '${control.nombre} ${control.unidad} ${control.valor_compuesto == 1 ? "${control.valor} - ${control.segundoValor}" : control.valor}\n';
       }
     }
     return result;
