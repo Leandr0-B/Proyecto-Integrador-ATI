@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/chequeoMedicoException.dart';
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
@@ -52,10 +53,11 @@ class ControllerVistaChequeoMedico {
     return _sucursales;
   }
 
-  Future<void> altaChequeoMedico(Sucursal? selectedSucursal, Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
+  Future<void> altaChequeoMedico(
+      Sucursal? selectedSucursal, Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, TimeOfDay? hora, String descripcion, bool agregarControles) async {
     try {
-      if (_controlesDatos(fecha, selectedSucursal, selectedResidente, descripcion)) {
-        await Fachada.getInstancia()?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
+      if (_controlesDatos(fecha, hora, selectedSucursal, selectedResidente, descripcion, selectedControles, agregarControles)) {
+        await Fachada.getInstancia()?.altaChequeoMedico(selectedResidente, selectedControles, fecha, hora, descripcion);
       }
     } on ChequeoMedicoException catch (e) {
       _vistaChequeo?.mostrarMensaje(e.toString());
@@ -67,9 +69,13 @@ class ControllerVistaChequeoMedico {
     }
   }
 
-  bool _controlesDatos(DateTime? fecha, Sucursal? selectedSucursal, Usuario? residenteSeleccionado, String descripcion) {
+  bool _controlesDatos(
+      DateTime? fecha, TimeOfDay? hora, Sucursal? selectedSucursal, Usuario? residenteSeleccionado, String descripcion, List<Control?> selectedControles, bool agregarControles) {
     if (fecha == null) {
       _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar la fecha.");
+      return false;
+    } else if (hora == null) {
+      _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar la hora.");
       return false;
     }
     if (selectedSucursal == null) {
@@ -78,13 +84,20 @@ class ControllerVistaChequeoMedico {
     } else if (residenteSeleccionado == null) {
       _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar un residente.");
       return false;
+    } else if (agregarControles && selectedControles.isEmpty) {
+      _vistaChequeo?.mostrarMensajeError("Tiene que seleccionar por lo menos un control.");
+      return false;
     }
     return true;
   }
 
-  void altaSelectedControl(Control? control, String valor, List<Control?> selectedControl) {
+  void altaSelectedControl(Control? control, double primerValor, double segundoValor, List<Control?> selectedControl) {
     if (control != null) {
-      control = Control.sinUnidad(control.id_control, control.nombre, double.parse(valor));
+      if (control.valor_compuesto == 0) {
+        control = Control.noCompuesto(control.id_control, control.nombre, primerValor);
+      } else {
+        control = Control.compuesto(control.id_control, control.nombre, primerValor, segundoValor);
+      }
       if (!selectedControl.contains(control)) {
         selectedControl.add(control);
       } else {

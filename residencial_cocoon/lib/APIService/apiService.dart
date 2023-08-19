@@ -356,7 +356,7 @@ class APIService {
         'ci_residente': ci_residente,
         'ci_geriatra': ci_geriatra,
         'descripcion': descripcion,
-        'fecha': fecha.toString(),
+        'fecha': fecha,
         'controles': controles,
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},

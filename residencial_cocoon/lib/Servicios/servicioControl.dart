@@ -23,14 +23,18 @@ class ServicioControl {
     return Control.fromJsonListPrescripcion(jsonList);
   }
 
-  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
+  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, TimeOfDay? hora, String descripcion) async {
     DateTime fecha_sin_hora = DateTime(fecha!.year, fecha!.month, fecha!.day);
     String fecha_desde_formateada = DateFormat('yyyy-MM-dd').format(fecha_sin_hora);
     Usuario? geriatra = Fachada.getInstancia()?.getUsuario();
 
-    List<Map<String, dynamic>> selectedControlesJson = selectedControles.map((control) => control!.toJson()).toList();
+    List<Map<String, dynamic>> selectedControlesJson = Control.listaParaChequeo(selectedControles);
 
-    await APIService.postChequeoMedico(geriatra?.getToken(), selectedResidente?.ci, geriatra?.ci, descripcion, fecha_desde_formateada, selectedControlesJson);
+    String horaSeleccionadaString = '${hora!.hour}:${hora!.minute.toString().padLeft(2, '0')}';
+
+    String fechaHora = fecha_desde_formateada + " " + horaSeleccionadaString;
+
+    await APIService.postChequeoMedico(geriatra?.getToken(), selectedResidente?.ci, geriatra?.ci, descripcion, fechaHora, selectedControlesJson);
   }
 
   List<int> _convertirControles(List<Control> controles) {

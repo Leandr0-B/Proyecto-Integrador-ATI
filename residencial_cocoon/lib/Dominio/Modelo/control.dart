@@ -23,7 +23,13 @@ class Control {
     return Control(json['id_control'], json['nombre'], json['unidad']);
   }
 
-  Control.sinUnidad(this._id_control, this._nombre, this._valor);
+  //Control.sinUnidad(this._id_control, this._nombre, this._valor);
+
+  Control.noCompuesto(this._id_control, this._nombre, this._valor);
+
+  Control.compuesto(this._id_control, this._nombre, this._valor, this._segundoValor) {
+    _valor_compuesto = 1;
+  }
 
   factory Control.fromJsonParaPreview(Map<String, dynamic> json) {
     return Control.preview(json['id_control'], json['nombre'], json['unidad'], json['valor']);
@@ -127,6 +133,30 @@ class Control {
             return {
               'id_control': control.id_control,
               'nombre': control.nombre,
+              'valor': control.valor,
+            };
+            break;
+          default:
+        }
+      }
+      return <String, dynamic>{};
+    }).toList();
+  }
+
+  static List<Map<String, dynamic>> listaParaChequeo(List<Control?> controles) {
+    return controles.map((control) {
+      if (control != null) {
+        switch (control.valor_compuesto) {
+          case 1:
+            return {
+              'id_control': control.id_control,
+              'valor': control.valor,
+              'segundo_valor': control.segundoValor,
+            };
+            break;
+          case 0:
+            return {
+              'id_control': control.id_control,
               'valor': control.valor,
             };
             break;

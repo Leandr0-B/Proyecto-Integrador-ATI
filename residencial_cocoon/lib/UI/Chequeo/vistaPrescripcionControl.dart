@@ -166,7 +166,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                               return ListTile(
                                 title: Row(
                                   children: [
-                                    Text('${control?.nombre} ${control?.valor}'),
+                                    Text('${control?.nombre} ${control?.unidad}'),
                                     IconButton(
                                       icon: Icon(Icons.remove_circle),
                                       onPressed: () {

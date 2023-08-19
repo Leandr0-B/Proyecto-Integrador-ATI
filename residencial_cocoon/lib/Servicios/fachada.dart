@@ -141,8 +141,8 @@ class Fachada {
         nombreControl, unidadControl, compuestoControl, valorReferenciaMinimo, valorReferenciaMaximo, maximoValorReferenciaMinimo, maximoValorReferenciaMaximo);
   }
 
-  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, String descripcion) async {
-    await _servicioControl?.altaChequeoMedico(selectedResidente, selectedControles, fecha, descripcion);
+  Future<void> altaChequeoMedico(Usuario? selectedResidente, List<Control?> selectedControles, DateTime? fecha, TimeOfDay? hora, String descripcion) async {
+    await _servicioControl?.altaChequeoMedico(selectedResidente, selectedControles, fecha, hora, descripcion);
   }
 
   Future<List<Notificacion>?> obtenerNotificacionesPaginadasConfiltros(int page, int limit, DateTime? desde, DateTime? hasta, String? palabras) async {
