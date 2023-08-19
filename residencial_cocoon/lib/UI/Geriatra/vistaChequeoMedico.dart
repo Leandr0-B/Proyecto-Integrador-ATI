@@ -207,6 +207,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                   value: agregarControles,
                   onChanged: (newValue) {
                     setState(() {
+                      selectedControles.clear();
                       agregarControles = newValue!;
                     });
                   },
