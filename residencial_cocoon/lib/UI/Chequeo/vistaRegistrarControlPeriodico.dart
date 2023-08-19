@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Controladores/controllerVistaRegistrarControl
 import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
 import 'package:residencial_cocoon/UI/Chequeo/iVistaRegistrarControlPeriodico.dart';
+import 'package:residencial_cocoon/Utilidades/auxRegistro.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
 
 class VistaRegistrarControlPeriodico extends StatefulWidget {
@@ -404,12 +405,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
   }
 
   Future<void> _selectFecha(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaFiltro ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaFiltro);
 
     if (picked != null && picked != _fechaFiltro) {
       setState(() {
@@ -419,49 +415,13 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
   }
 
   IconData _obtenerIcono(String icono) {
-    switch (icono) {
-      case 'procesado':
-        return Icons.check_circle_outline;
-      case 'vencido':
-        return Icons.watch_later_outlined;
-      case 'enHora':
-        return Icons.circle_notifications_outlined;
-      case 'porVencer':
-        return Icons.warning_amber_rounded;
-      default:
-        return Icons.live_help_rounded;
-    }
+    return Utilidades.obtenerIcono(icono);
   }
 
   Color colorDelRegistro(RegistroControlConPrescripcion registro) {
-    if (registro.procesada == 1) {
-      _seleccionIcono = "procesado";
-      return const Color.fromARGB(150, 42, 119, 44);
-    } else if (registro.fecha_pactada.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
-      _seleccionIcono = "vencido";
-      return const Color.fromARGB(120, 145, 21, 12);
-    } else {
-      final currentTime = TimeOfDay.now();
-      switch (_compareTimeOfDay(registro.hora_pactada, currentTime)) {
-        case 0:
-          _seleccionIcono = "enHora";
-          return Colors.orange;
-        case -1:
-          _seleccionIcono = "vencido";
-          return const Color.fromARGB(120, 145, 21, 12);
-        case 1:
-          if (_diferencia15Minutos(registro.hora_pactada, currentTime)) {
-            _seleccionIcono = "porVencer";
-            return const Color.fromARGB(150, 235, 214, 29);
-          } else {
-            _seleccionIcono = "";
-            return Colors.white;
-          }
-        default:
-          _seleccionIcono = "";
-          return Colors.white;
-      }
-    }
+    AuxRegistro auxiliar = Utilidades.colorDelRegistro(registro);
+    _seleccionIcono = auxiliar.tipoIcono;
+    return auxiliar.color;
   }
 
   @override
@@ -499,39 +459,8 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
     ));
   }
 
-  int _compareTimeOfDay(TimeOfDay time1, TimeOfDay time2) {
-    if (time1.hour < time2.hour) {
-      return -1;
-    } else if (time1.hour > time2.hour) {
-      return 1;
-    } else {
-      // Las horas son iguales, comparar los minutos
-      if (time1.minute < time2.minute) {
-        return -1;
-      } else if (time1.minute > time2.minute) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  }
-
-  bool _diferencia15Minutos(TimeOfDay time1, TimeOfDay time2) {
-    int minutes1 = time1.hour * 60 + time1.minute;
-    int minutes2 = time2.hour * 60 + time2.minute;
-
-    int diferencia = (minutes1 - minutes2).abs();
-
-    return diferencia <= 15;
-  }
-
   Future<void> _selectFechaPopup(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaPopUp ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaPopUp);
 
     if (picked != null && picked != _fechaPopUp) {
       setState(() {
@@ -542,11 +471,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
   }
 
   Future<void> _selectHora(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _horaPopUp ?? TimeOfDay.now(),
-    );
-
+    TimeOfDay? picked = await Utilidades.selectHora(context, _horaPopUp);
     if (picked != null && picked != _horaPopUp) {
       setState(() {
         _horaPopUp = picked;
