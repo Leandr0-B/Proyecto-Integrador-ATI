@@ -324,7 +324,7 @@ class MyDrawerList extends StatelessWidget {
                 title: const Text("Usuarios", style: TextStyle(color: Colors.black, fontSize: 18)),
                 children: [
                   Container(
-                    color: Color.fromRGBO(225, 183, 72, 1), // El color de fondo que desees
+                    color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
                         menuSubItem(20, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
@@ -342,7 +342,7 @@ class MyDrawerList extends StatelessWidget {
                 title: const Text("Geriatra", style: TextStyle(color: Colors.black, fontSize: 18)),
                 children: [
                   Container(
-                    color: Color.fromRGBO(225, 183, 72, 1), // El color de fondo que desees
+                    color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
                         menuSubItem(52, "Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
@@ -368,7 +368,7 @@ class MyDrawerList extends StatelessWidget {
                 title: const Text("Enfermero", style: TextStyle(color: Colors.black, fontSize: 18)),
                 children: [
                   Container(
-                    color: Color.fromRGBO(225, 183, 72, 1), // El color de fondo que desees
+                    color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
                         menuSubItem(53, "Agregar Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
@@ -386,7 +386,7 @@ class MyDrawerList extends StatelessWidget {
                 title: const Text("Residente", style: TextStyle(color: Colors.black, fontSize: 18)),
                 children: [
                   Container(
-                    color: Color.fromRGBO(225, 183, 72, 1), // El color de fondo que desees
+                    color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
                         menuSubItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
