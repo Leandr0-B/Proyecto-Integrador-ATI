@@ -2,6 +2,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/procesarControlException.d
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/datosGrafica.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Chequeo/iVistaRegistrarControlPeriodico.dart';
 
@@ -44,6 +45,18 @@ class ControllerVistaRegistrarControlPeriodico {
       _vista?.mostrarMensaje(e.toString());
     } on Exception catch (e) {
       _vista?.mostrarMensajeError(e.toString());
+    }
+  }
+
+  Future<List<DatosGrafica>> datosGrafica(String ciResidente) async {
+    try {
+      return await Fachada.getInstancia()?.datosGrafica(ciResidente) ?? [];
+    } on TokenException catch (e) {
+      _cerrarSesion(e.toString());
+      return [];
+    } on Exception catch (e) {
+      _vista?.mostrarMensajeError(e.toString());
+      return [];
     }
   }
 }

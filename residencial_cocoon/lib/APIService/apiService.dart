@@ -1161,4 +1161,20 @@ class APIService {
       throw Exception(errorObtenerToken);
     }
   }
+
+  static datosGrafica(String ciResidente, String? token) async {
+    final url = Uri.parse('https://residencialapi.azurewebsites.net/registro-control/promedio-peso-ultimos-3-meses/${ciResidente}');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 401) {
+      throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
+    } else if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(errorObtenerToken);
+    }
+  }
 }
