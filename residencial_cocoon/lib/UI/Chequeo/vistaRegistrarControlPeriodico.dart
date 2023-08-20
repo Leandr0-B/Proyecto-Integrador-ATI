@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaRegistrarControlPeriodico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/datosGrafica.dart';
 import 'package:residencial_cocoon/UI/Chequeo/iVistaRegistrarControlPeriodico.dart';
 import 'package:residencial_cocoon/Utilidades/auxRegistro.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class VistaRegistrarControlPeriodico extends StatefulWidget {
   @override
@@ -485,6 +487,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
   void _mostrarPopUp(RegistroControlConPrescripcion registro) {
     _horaPopUp = registro.hora_pactada;
     _fechaPopUp = registro.fecha_pactada;
+    Future<List<DatosGrafica>> datos;
     Control? _selectedControl;
     if (registro.procesada == 1) {
       _fieldDescripcion.text = registro.descripcion;
@@ -684,6 +687,18 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                       ),
                     ],
                   )
+                ],
+                if (registro.controles().contains(Control(5, "Peso", "KG"))) ...[
+                  SizedBox(width: 8.0),
+                  ElevatedButton(
+                    child: Text("Evolucion"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      datos = _datosEstadisticas(registro.ciResidente());
+
+                      _estadisticaPopUp(registro, datos);
+                    },
+                  ),
                 ]
               ],
             ),
@@ -839,5 +854,137 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
     ).then((_) {
       setState(() {});
     });
+  }
+
+  void _estadisticaPopUp(RegistroControlConPrescripcion registro, Future<List<DatosGrafica>> datosFuture) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Control de peso - Evolución de los ultimos 3 meses',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 25.0),
+                        Container(
+                          width: 400,
+                          height: 300,
+                          child: FutureBuilder<List<DatosGrafica>>(
+                            future: datosFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                if (snapshot.hasError) {
+                                  return Center(child: Text('Error: ${snapshot.error}'));
+                                }
+
+                                List<DatosGrafica>? datos = snapshot.data;
+                                if (datos == null || datos.isEmpty) {
+                                  return Center(child: Text('No hay datos disponibles.'));
+                                }
+
+                                return LineChart(
+                                  LineChartData(
+                                    gridData: FlGridData(show: true),
+                                    titlesData: FlTitlesData(
+                                      rightTitles: AxisTitles(drawBelowEverything: true),
+                                      bottomTitles: AxisTitles(drawBelowEverything: false),
+                                      topTitles: AxisTitles(drawBelowEverything: false),
+                                    ),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border.all(
+                                        color: const Color(0xff37434d),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    minX: datos!.first.fecha.millisecondsSinceEpoch.toDouble(),
+                                    maxX: datos!.last.fecha.millisecondsSinceEpoch.toDouble(),
+                                    minY: datos!.map((e) => e.valor).reduce((a, b) => a < b ? a : b),
+                                    maxY: datos!.map((e) => e.valor).reduce((a, b) => a > b ? a : b),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: datos!.map((dato) {
+                                          return FlSpot(dato.fecha.millisecondsSinceEpoch.toDouble(), dato.valor);
+                                        }).toList(),
+                                        isCurved: false,
+                                        color: Colors.blue,
+                                        dotData: FlDotData(
+                                          show: true,
+                                        ),
+                                        belowBarData: BarAreaData(show: false),
+                                      ),
+                                    ],
+                                    lineTouchData: LineTouchData(
+                                      touchTooltipData: LineTouchTooltipData(
+                                        tooltipBgColor: Colors.blueAccent,
+                                        getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                                          return touchedBarSpots.map((barSpot) {
+                                            final flSpot = barSpot;
+                                            DateTime fecha = DateTime.fromMillisecondsSinceEpoch(flSpot.x.toInt());
+                                            return LineTooltipItem(
+                                              'Fecha: ${fecha.day}/${fecha.month}/${fecha.year}\nValor: ${flSpot.y}',
+                                              const TextStyle(color: Colors.white),
+                                            );
+                                          }).toList();
+                                        },
+                                      ),
+                                      handleBuiltInTouches: true,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 8.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _mostrarPopUp(registro);
+                                setState(() {});
+                              },
+                              child: const Text('Volver'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      setState(() {});
+    });
+  }
+
+  Future<List<DatosGrafica>> _datosEstadisticas(String ciResidente) async {
+    return await _controller.datosGrafica(ciResidente);
   }
 }

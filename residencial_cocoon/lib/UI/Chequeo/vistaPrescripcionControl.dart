@@ -747,13 +747,6 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                           },
                           child: const Text('Nuevo Control'),
                         ),
-                        SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Cerrar'),
-                        ),
                       ],
                     ),
                   ],

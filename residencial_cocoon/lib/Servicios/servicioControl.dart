@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/APIService/apiService.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/prescripcionDeControl.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/Chequeo/registroControlConPrescripcion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/datosGrafica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
@@ -98,5 +99,11 @@ class ServicioControl {
     String horaSeleccionadaString = '${registro.hora_de_realizacion!.hour}:${registro.hora_de_realizacion!.minute.toString().padLeft(2, '0')}';
     String fechaRealizacion = DateFormat('yyyy-MM-dd').format(registro.fecha_realizada);
     await APIService.procesarControl(registro, listaControles, fechaRealizacion, horaSeleccionadaString, Fachada.getInstancia()?.getUsuario()?.getToken());
+  }
+
+  Future<List<DatosGrafica>> datosGrafica(String ciResidente) async {
+    String datos = await APIService.datosGrafica(ciResidente, Fachada.getInstancia()?.getUsuario()?.getToken());
+    List<dynamic> jsonList = jsonDecode(datos);
+    return DatosGrafica.listaJson(jsonList);
   }
 }

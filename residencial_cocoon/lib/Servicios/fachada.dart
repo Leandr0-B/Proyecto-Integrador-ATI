@@ -9,6 +9,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedic
 import 'package:residencial_cocoon/Dominio/Modelo/Notificacion/notificacion.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/chequeoMedico.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/control.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/datosGrafica.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/salidaMedica.dart';
@@ -302,5 +303,9 @@ class Fachada {
 
   Future<void> procesarControl(RegistroControlConPrescripcion registro) async {
     await _servicioControl?.procesarControl(registro);
+  }
+
+  Future<List<DatosGrafica>?> datosGrafica(String ciResidente) async {
+    return await _servicioControl?.datosGrafica(ciResidente);
   }
 }
