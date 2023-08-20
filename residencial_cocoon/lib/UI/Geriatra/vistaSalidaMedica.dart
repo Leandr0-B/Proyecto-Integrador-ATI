@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaSalidaMedica.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VistaSalidaMedica extends StatefulWidget {
   @override
@@ -22,10 +23,53 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
   DateTime? fechaHasta;
   final fieldDescripcion = TextEditingController();
 
+  //Speech
+  stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = true;
+
   @override
   void initState() {
     super.initState();
+    _initializeSpeech();
     controller = ControllerVistaSalidaMedica(this);
+  }
+
+  void _initializeSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _toggleListening() {
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          descripcion = result.recognizedWords;
+          fieldDescripcion.text = descripcion; // Rellenar el campo de descripción con el texto reconocido
+        });
+      },
+    );
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   @override
@@ -148,6 +192,10 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                     },
                     decoration: InputDecoration(
                       hintText: 'Descripción',
+                      suffixIcon: IconButton(
+                        onPressed: _toggleListening,
+                        icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                      ),
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 8.0,
                         horizontal: 12.0,
