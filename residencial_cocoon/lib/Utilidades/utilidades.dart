@@ -104,6 +104,16 @@ class Utilidades {
     return picked;
   }
 
+  static Future<DateTime?> selectFechaSinTope(BuildContext context, DateTime? fecha) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: fecha ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    return picked;
+  }
+
   static Future<TimeOfDay?> selectHora(BuildContext context, TimeOfDay? hora) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
