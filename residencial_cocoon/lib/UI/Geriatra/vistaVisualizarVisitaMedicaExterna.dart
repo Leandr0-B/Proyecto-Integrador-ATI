@@ -35,12 +35,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   final _ciResidenteController = TextEditingController();
 
   Future<void> selectFechaDesde(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaDesde ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaDesde);
 
     if (picked != null && picked != _fechaDesde) {
       setState(() {
@@ -50,12 +45,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
   }
 
   Future<void> selectFechaHasta(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaHasta ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaHasta);
 
     if (picked != null && picked != _fechaHasta) {
       setState(() {
@@ -256,7 +246,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha : ${visitaMedicaExterna.fecha}',
+                                      'Fecha : ${DateFormat('dd/MM/yyyy').format(visitaMedicaExterna.fecha)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -485,7 +475,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha : ${visitaMedicaExterna.fecha}',
+                                      'Fecha : ${DateFormat('dd/MM/yyyy').format(visitaMedicaExterna.fecha)}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -584,7 +574,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha : ${visitaMedicaExterna.fecha}',
+                'Fecha : ${DateFormat('dd/MM/yyyy').format(visitaMedicaExterna.fecha)}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),

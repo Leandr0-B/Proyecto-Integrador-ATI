@@ -600,12 +600,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
   }
 
   Future<void> selectFechaDesde(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaDesde ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaDesde);
 
     if (picked != null && picked != _fechaDesde) {
       setState(() {
@@ -615,12 +610,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
   }
 
   Future<void> selectFechaHasta(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaHasta ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaHasta);
 
     if (picked != null && picked != _fechaHasta) {
       setState(() {

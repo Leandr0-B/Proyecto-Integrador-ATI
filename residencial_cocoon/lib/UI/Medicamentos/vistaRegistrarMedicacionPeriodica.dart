@@ -6,6 +6,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/prescripcionDeMedic
 import 'package:residencial_cocoon/Dominio/Modelo/Medicacion/registroMedicacionConPrescripcion.dart';
 import 'package:residencial_cocoon/UI/Medicamentos/iVistaRegistrarMedicacionPeriodica.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VistaRegistrarMedicacionPeriodica extends StatefulWidget {
   @override
@@ -29,11 +30,54 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   RegistroMedicacionConPrescripcion? _selectedRegistro;
   String _seleccionIcono = "";
 
+  //Speech
+  stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = true;
+
   @override
   void initState() {
     super.initState();
     _controller = ControllerVistaRegistrarMedicacionPeriodica(this);
+    _initializeSpeech();
     obtenerRegistrosMedicamentosConPrescripcion();
+  }
+
+  void _initializeSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _toggleListening() {
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          _descripcionPopUp = result.recognizedWords;
+          _fieldDescripcion.text = _descripcionPopUp; // Rellenar el campo de descripción con el texto reconocido
+        });
+      },
+    );
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   @override
@@ -485,12 +529,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   }
 
   Future<void> _selectFecha(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaFiltro ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaFiltro);
 
     if (picked != null && picked != _fechaFiltro) {
       setState(() {
@@ -526,10 +565,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   }
 
   Future<void> _selectHora(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _horaPopUp ?? TimeOfDay.now(),
-    );
+    TimeOfDay? picked = await Utilidades.selectHora(context, _horaPopUp);
 
     if (picked != null && picked != _horaPopUp) {
       setState(() {
@@ -542,12 +578,7 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
   }
 
   Future<void> _selectFechaPopup(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaPopUp ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-    );
+    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaPopUp);
 
     if (picked != null && picked != _fechaPopUp) {
       setState(() {
@@ -655,21 +686,34 @@ class _VistaVisualizarMedicacionPeriodicaState extends State<VistaRegistrarMedic
                     ),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
-                  child: TextFormField(
-                    controller: _fieldDescripcion,
-                    maxLines: null,
-                    onChanged: (value) {
-                      _descripcionPopUp = value;
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      bool isDesktop = constraints.maxWidth >= 600;
+
+                      return TextFormField(
+                        controller: _fieldDescripcion,
+                        maxLines: null,
+                        onChanged: (value) {
+                          _descripcionPopUp = value;
+                        },
+
+                        decoration: InputDecoration(
+                          hintText: registro.procesada != 1 ? 'Descripción' : '',
+                          suffixIcon: isDesktop
+                              ? IconButton(
+                                  onPressed: _toggleListening,
+                                  icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                                )
+                              : null,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 12.0,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        enabled: registro.procesada != 1, // Habilita o deshabilita la edición según el estado de procesada
+                      );
                     },
-                    decoration: InputDecoration(
-                      hintText: registro.procesada != 1 ? 'Descripción' : '',
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 12.0,
-                      ),
-                      border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
-                    ),
-                    enabled: registro.procesada != 1, // Habilita o deshabilita la edición según el estado de procesada
                   ),
                 ),
                 SizedBox(height: 10),

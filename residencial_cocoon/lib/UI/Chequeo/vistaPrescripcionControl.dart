@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Chequeo/iVistaPrescripcionControl.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VistaPrescripcionControl extends StatefulWidget {
   @override
@@ -29,6 +30,10 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
   final _fieldFrecuencia = TextEditingController();
   final _fieldDuracion = TextEditingController();
 
+  //Speech
+  stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = true;
+
   //Control alta
   final _formKeyControl = GlobalKey<FormState>();
   String _nombreControl = "";
@@ -48,7 +53,46 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
   @override
   void initState() {
     super.initState();
+    _initializeSpeech();
     _controller = ControllerVistaPrescripcionControl(this);
+  }
+
+  void _initializeSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _toggleListening() {
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          _descripcion = result.recognizedWords;
+          _fieldDescripcion.text = _descripcion; // Rellenar el campo de descripción con el texto reconocido
+        });
+      },
+    );
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   @override
@@ -193,25 +237,37 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                               ),
                               borderRadius: BorderRadius.circular(4.0),
                             ),
-                            child: TextFormField(
-                              controller: _fieldDescripcion,
-                              maxLines: null,
-                              onChanged: (value) {
-                                _descripcion = value;
+                            child: LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                bool isDesktop = constraints.maxWidth >= 600;
+
+                                return TextFormField(
+                                  controller: _fieldDescripcion,
+                                  maxLines: null,
+                                  onChanged: (value) {
+                                    _descripcion = value;
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingrese una descripción.';
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Descripción',
+                                    suffixIcon: isDesktop
+                                        ? IconButton(
+                                            onPressed: _toggleListening,
+                                            icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                                          )
+                                        : null,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal: 12.0,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                );
                               },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor ingrese una descripción.';
-                                }
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Descripción',
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 12.0,
-                                ),
-                                border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
-                              ),
                             ),
                           ),
                           SizedBox(height: 10),
@@ -315,10 +371,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
   }
 
   Future<void> _selectHora(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _hora_comienzo ?? TimeOfDay.now(),
-    );
+    TimeOfDay? picked = await Utilidades.selectHora(context, _hora_comienzo);
 
     if (picked != null && picked != _hora_comienzo) {
       setState(() {

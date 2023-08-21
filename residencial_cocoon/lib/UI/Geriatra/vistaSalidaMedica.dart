@@ -22,6 +22,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
   DateTime? fechaDesde;
   DateTime? fechaHasta;
   final fieldDescripcion = TextEditingController();
+  bool esComputadora = false;
 
   //Speech
   stt.SpeechToText _speech = stt.SpeechToText();
@@ -179,29 +180,37 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                     ),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
-                  child: TextFormField(
-                    controller: fieldDescripcion,
-                    maxLines: null,
-                    onChanged: (value) {
-                      descripcion = value;
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      bool isDesktop = constraints.maxWidth >= 600;
+
+                      return TextFormField(
+                        controller: fieldDescripcion,
+                        maxLines: null,
+                        onChanged: (value) {
+                          descripcion = value;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese una descripción.';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Descripción',
+                          suffixIcon: isDesktop
+                              ? IconButton(
+                                  onPressed: _toggleListening,
+                                  icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                                )
+                              : null,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 12.0,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      );
                     },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese una descripción.';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Descripción',
-                      suffixIcon: IconButton(
-                        onPressed: _toggleListening,
-                        icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 12.0,
-                      ),
-                      border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
-                    ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -281,12 +290,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
   }
 
   Future<void> _selectFechaDesde(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: fechaDesde ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
+    DateTime? picked = await Utilidades.selectFechaSinTope(context, fechaDesde);
     if (picked != null && picked != fechaDesde) {
       setState(() {
         fechaDesde = picked;
@@ -295,12 +299,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
   }
 
   Future<void> _selectFechaHasta(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: fechaHasta ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
+    DateTime? picked = await Utilidades.selectFechaSinTope(context, fechaHasta);
     if (picked != null && picked != fechaHasta) {
       setState(() {
         fechaHasta = picked;

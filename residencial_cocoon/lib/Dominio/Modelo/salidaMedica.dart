@@ -25,10 +25,7 @@ class SalidaMedica {
     residenteAux.nombre = json['nombre_residente'];
     residenteAux.apellido = json['apellido_residente'];
 
-    SalidaMedica aux = SalidaMedica(
-        json['descripcion'],
-        DateTime.parse(json['fecha_desde']),
-        DateTime.parse(json['fecha_hasta']));
+    SalidaMedica aux = SalidaMedica(json['descripcion'], DateTime.parse(json['fecha_desde']), DateTime.parse(json['fecha_hasta']));
     aux.agregarGeriatra(geriatraAux);
     aux.agregarResidente(residenteAux);
     aux._id_salida_medica = json['id_salida_medica'];
@@ -50,10 +47,7 @@ class SalidaMedica {
   set fechaHasta(DateTime value) => _fecha_hasta = value;
 
   static List<SalidaMedica> listaVistaPrevia(List jsonList) {
-    return jsonList
-        .cast<Map<String, dynamic>>()
-        .map<SalidaMedica>((json) => SalidaMedica.fromJsonVistaPrevia(json))
-        .toList();
+    return jsonList.cast<Map<String, dynamic>>().map<SalidaMedica>((json) => SalidaMedica.fromJsonVistaPrevia(json)).toList();
   }
 
   void agregarGeriatra(Usuario geriatra) {
@@ -89,4 +83,18 @@ class SalidaMedica {
   }
 
   //Funciones
+
+  String imprimirFechaDesde() {
+    String dia = _fecha_desde.day.toString().padLeft(2, '0');
+    String mes = _fecha_desde.month.toString().padLeft(2, '0');
+    String anio = _fecha_desde.year.toString();
+    return '$dia/$mes/$anio';
+  }
+
+  String imprimirFechaHasta() {
+    String dia = _fecha_hasta.day.toString().padLeft(2, '0');
+    String mes = _fecha_hasta.month.toString().padLeft(2, '0');
+    String anio = _fecha_hasta.year.toString();
+    return '$dia/$mes/$anio';
+  }
 }

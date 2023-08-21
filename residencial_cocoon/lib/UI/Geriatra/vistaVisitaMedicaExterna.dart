@@ -5,6 +5,7 @@ import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/UI/Geriatra/iVistaVisitaMedicaExterna.dart';
 import 'package:residencial_cocoon/Utilidades/utilidades.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VistaVisitaMedicaExterna extends StatefulWidget {
   @override
@@ -21,10 +22,53 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> imp
   DateTime? fecha;
   final fieldDescripcion = TextEditingController();
 
+  //Speech
+  stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = true;
+
   @override
   void initState() {
     super.initState();
+    _initializeSpeech();
     controller = ControllerVistaVisitaMedicaExterna(this);
+  }
+
+  void _initializeSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _toggleListening() {
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() {
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          descripcion = result.recognizedWords;
+          fieldDescripcion.text = descripcion; // Rellenar el campo de descripción con el texto reconocido
+        });
+      },
+    );
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   @override
@@ -134,25 +178,37 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> imp
                     ),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
-                  child: TextFormField(
-                    controller: fieldDescripcion,
-                    maxLines: null,
-                    onChanged: (value) {
-                      descripcion = value;
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      bool isDesktop = constraints.maxWidth >= 600;
+
+                      return TextFormField(
+                        controller: fieldDescripcion,
+                        maxLines: null,
+                        onChanged: (value) {
+                          descripcion = value;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese una descripción.';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Descripción',
+                          suffixIcon: isDesktop
+                              ? IconButton(
+                                  onPressed: _toggleListening,
+                                  icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                                )
+                              : null,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 12.0,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      );
                     },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese una descripción.';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Descripción',
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 12.0,
-                      ),
-                      border: InputBorder.none, // Elimina el borde predeterminado del TextFormField
-                    ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -190,12 +246,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> imp
   }
 
   Future<void> _selectFecha(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: fecha ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
+    DateTime? picked = await Utilidades.selectFechaSinTope(context, fecha);
     if (picked != null && picked != fecha) {
       setState(() {
         fecha = picked;
