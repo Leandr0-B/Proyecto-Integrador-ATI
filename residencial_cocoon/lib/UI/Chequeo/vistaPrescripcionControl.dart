@@ -280,7 +280,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                             controller: _fieldFrecuencia,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese la frecuencia de consumo.';
+                                return 'Por favor ingrese la frecuencia del control.';
                               }
                               if (num.tryParse(value) == null) {
                                 return 'Solo puede ingresar valores numéricos.';
