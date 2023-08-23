@@ -293,7 +293,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                                   ...controles.map((control) {
                                     return DropdownMenuItem<Control>(
                                       value: control,
-                                      child: Text(control.nombre),
+                                      child: Text(control.nombre + ' | ' + control.unidad),
                                     );
                                   }),
                                 ],
@@ -408,7 +408,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                                       title: Row(
                                         children: [
                                           Text(
-                                              '${control?.nombre} ${control?.unidad} ${control?.valor_compuesto == 1 ? "${control?.valor} - ${control?.segundoValor}" : control?.valor}'),
+                                              '${control?.nombre}  ${control?.valor_compuesto == 1 ? "${control?.valor} - ${control?.segundoValor}" : control?.valor} ${control?.unidad}'),
                                           IconButton(
                                             icon: Icon(Icons.remove_circle),
                                             onPressed: () {

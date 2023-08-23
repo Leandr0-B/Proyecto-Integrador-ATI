@@ -94,9 +94,9 @@ class ControllerVistaChequeoMedico {
   void altaSelectedControl(Control? control, double primerValor, double segundoValor, List<Control?> selectedControl) {
     if (control != null) {
       if (control.valor_compuesto == 0) {
-        control = Control.noCompuesto(control.id_control, control.nombre, primerValor);
+        control = Control.noCompuesto(control.id_control, control.unidad, control.nombre, primerValor);
       } else {
-        control = Control.compuesto(control.id_control, control.nombre, primerValor, segundoValor);
+        control = Control.compuesto(control.id_control, control.unidad, control.nombre, primerValor, segundoValor);
       }
       if (!selectedControl.contains(control)) {
         selectedControl.add(control);

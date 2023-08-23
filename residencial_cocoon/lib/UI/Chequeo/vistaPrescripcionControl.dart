@@ -274,7 +274,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Ingrese la frecuencia en horas:',
-                              hintText: 'Frecuencia de consumo en horas',
+                              hintText: 'Frecuencia de control en horas',
                             ),
                             maxLength: 100,
                             controller: _fieldFrecuencia,

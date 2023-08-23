@@ -25,9 +25,9 @@ class Control {
 
   //Control.sinUnidad(this._id_control, this._nombre, this._valor);
 
-  Control.noCompuesto(this._id_control, this._nombre, this._valor);
+  Control.noCompuesto(this._id_control, this._unidad, this._nombre, this._valor);
 
-  Control.compuesto(this._id_control, this._nombre, this._valor, this._segundoValor) {
+  Control.compuesto(this._id_control, this._unidad, this._nombre, this._valor, this._segundoValor) {
     _valor_compuesto = 1;
   }
 
