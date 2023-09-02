@@ -253,7 +253,7 @@ class _VistaSalidaMedicaState extends State<VistaSalidaMedica> implements Ivista
                       altaSalidaMedica();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Ingresar salida'),
                 ),
               ],
             ),

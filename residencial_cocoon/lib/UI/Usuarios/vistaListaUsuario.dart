@@ -68,7 +68,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
               Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Ci Residente',
+                    labelText: 'Documento Identificador',
                   ),
                   controller: _ciResidenteController,
                   onChanged: (value) {
@@ -309,7 +309,7 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
         if (_filtroExpandido) ...[
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Ci Residente',
+              labelText: 'Documento Identificador',
             ),
             controller: _ciResidenteController,
             onChanged: (value) {

@@ -8,10 +8,8 @@ class VistaCambioContrasena extends StatefulWidget {
   State<VistaCambioContrasena> createState() => _VistaCambioContrasenaState();
 }
 
-class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
-    implements IvistaCambioContrasena {
-  ControllerVistaCambioContrasena controller =
-      ControllerVistaCambioContrasena.empty();
+class _VistaCambioContrasenaState extends State<VistaCambioContrasena> implements IvistaCambioContrasena {
+  ControllerVistaCambioContrasena controller = ControllerVistaCambioContrasena.empty();
   final _formKey = GlobalKey<FormState>();
   String _contrasenaActual = "";
   String _nuevaContrasena = "";
@@ -100,12 +98,11 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
                   },
                 ),
                 ElevatedButton(
-                  child: Text("Cambiar clave"),
+                  child: Text("Cambiar contraseña"),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      cambioClave(_contrasenaActual, _nuevaContrasena,
-                          _nuevaContrasenaVerif);
+                      cambioClave(_contrasenaActual, _nuevaContrasena, _nuevaContrasenaVerif);
                     }
                   },
                 ),
@@ -118,8 +115,7 @@ class _VistaCambioContrasenaState extends State<VistaCambioContrasena>
   }
 
   @override
-  Future<void> cambioClave(
-      String actual, String nueva, String verificacion) async {
+  Future<void> cambioClave(String actual, String nueva, String verificacion) async {
     await controller.cambioClave(actual, nueva, verificacion);
   }
 
