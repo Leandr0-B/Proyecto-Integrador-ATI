@@ -1,3 +1,6 @@
+import 'dart:html';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -424,7 +427,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                                         child: Icon(
                                           _obtenerIcono(_seleccionIcono),
                                           size: 80, // Tamaño del ícono
-                                          color: Color.fromARGB(150, 0, 0, 0), // Color del ícono
+                                          color: const Color.fromARGB(150, 0, 0, 0), // Color del ícono
                                         ),
                                       ),
                                   ],
@@ -532,6 +535,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
     _horaPopUp = registro.hora_pactada;
     _fechaPopUp = registro.fecha_pactada;
     Future<List<DatosGrafica>> datos;
+    List<DatosGrafica> fechasEquidistantes;
     Control? _selectedControl;
     if (registro.procesada == 1) {
       _fieldDescripcion.text = registro.descripcion;
@@ -608,7 +612,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                 ] else ...[
                   Container(
                     alignment: Alignment.centerLeft,
-                    child: Text("Lista de controles"),
+                    child: const Text("Lista de controles"),
                   ),
                   ListView.builder(
                     shrinkWrap: true,
@@ -620,7 +624,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                           children: [
                             Text('${control.nombre} ${control.unidad}'),
                             IconButton(
-                              icon: Icon(Icons.arrow_circle_right_outlined),
+                              icon: const Icon(Icons.arrow_circle_right_outlined),
                               onPressed: () {
                                 setState(() {
                                   Navigator.pop(context);
@@ -637,7 +641,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    child: Text("Lista de valores"),
+                    child: const Text("Lista de valores"),
                   ),
                   ListView.builder(
                     shrinkWrap: true,
@@ -654,8 +658,8 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                     },
                   ),
                 ],
-                SizedBox(height: 10),
-                Align(
+                const SizedBox(height: 10),
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("Ingrese una descripción (si es necesario):"),
                 ),
@@ -686,7 +690,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                                   icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
                                 )
                               : null,
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             vertical: 8.0,
                             horizontal: 12.0,
                           ),
@@ -697,9 +701,9 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                     },
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Fecha Realizacion',
                     hintText: 'Fecha',
                   ),
@@ -712,9 +716,9 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                   },
                   readOnly: true, // Deshabilita la edición directa del campo de texto
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Hora Realizacion',
                     hintText: 'Hora',
                   ),
@@ -727,13 +731,13 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                   },
                   readOnly: true, // Deshabilita la edición directa del campo de texto
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (registro.procesada != 1) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center, // Centra los botones horizontalmente
                     children: [
                       ElevatedButton(
-                        child: Text("Procesar"),
+                        child: const Text("Procesar"),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
@@ -746,9 +750,9 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                   )
                 ],
                 if (registro.controles().contains(Control(5, "Peso", "KG"))) ...[
-                  SizedBox(width: 8.0),
+                  const SizedBox(width: 8.0),
                   ElevatedButton(
-                    child: Text("Evolucion"),
+                    child: const Text("Evolucion"),
                     onPressed: () {
                       Navigator.pop(context);
                       datos = _datosEstadisticas(registro.ciResidente());
@@ -889,7 +893,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                                 },
                                 child: const Text('Guardar valores'),
                               ),
-                              SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
+                              const SizedBox(width: 8.0), // Ajusta la separación entre los botones según tus necesidades
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -932,7 +936,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
+                        const Text(
                           'Control de peso - Evolución de los ultimos 3 meses',
                           style: TextStyle(
                             fontSize: 18.0,
@@ -953,16 +957,40 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
 
                                 List<DatosGrafica>? datos = snapshot.data;
                                 if (datos == null || datos.isEmpty) {
-                                  return Center(child: Text('No hay datos disponibles.'));
+                                  return const Center(child: Text('No hay datos disponibles.'));
                                 }
+                                // Filtra los datos para obtener las fechas que deseas mostrar en el eje X
+                                List<DateTime> fechasParaMostrar = obtenerFechasParaMostrar(datos);
 
                                 return LineChart(
                                   LineChartData(
-                                    gridData: FlGridData(show: true),
+                                    gridData: const FlGridData(show: true),
                                     titlesData: FlTitlesData(
-                                      rightTitles: AxisTitles(drawBelowEverything: true),
-                                      bottomTitles: AxisTitles(drawBelowEverything: false),
-                                      topTitles: AxisTitles(drawBelowEverything: false),
+                                      rightTitles: const AxisTitles(drawBelowEverything: true),
+                                      bottomTitles: AxisTitles(
+                                        drawBelowEverything: true,
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          reservedSize: 22,
+                                          getTitlesWidget: (value, titleMeta) {
+                                            DateTime fecha = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                                            // if (existeLaFecha(fechasParaMostrar, fecha)) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(top: 8.0), // Ajusta el valor según tu preferencia
+                                              child: Text(
+                                                '${fecha.day}/${fecha.month}',
+                                                style: const TextStyle(
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            );
+                                            // } else {
+                                            //   return const SizedBox.shrink(); // Esto ocultará las etiquetas en otras fechas
+                                            // }
+                                          },
+                                        ),
+                                      ),
+                                      topTitles: const AxisTitles(drawBelowEverything: false),
                                     ),
                                     borderData: FlBorderData(
                                       show: true,
@@ -982,7 +1010,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                                         }).toList(),
                                         isCurved: false,
                                         color: Colors.blue,
-                                        dotData: FlDotData(
+                                        dotData: const FlDotData(
                                           show: true,
                                         ),
                                         belowBarData: BarAreaData(show: false),
@@ -1007,7 +1035,7 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
                                   ),
                                 );
                               } else {
-                                return Center(child: CircularProgressIndicator());
+                                return const Center(child: CircularProgressIndicator());
                               }
                             },
                           ),
@@ -1043,5 +1071,35 @@ class _VistaRegistrarControlPeriodicoState extends State<VistaRegistrarControlPe
 
   Future<List<DatosGrafica>> _datosEstadisticas(String ciResidente) async {
     return await _controller.datosGrafica(ciResidente);
+  }
+
+  // Función para filtrar las fechas que deseas mostrar
+  List<DateTime> obtenerFechasParaMostrar(List<DatosGrafica> datos) {
+    // Crea una lista de fechas equidistantes
+    List<DateTime> fechasEquidistantes = [];
+    // Obtén la cantidad de puntos de datos deseada (máximo 8)
+    int cantidadDeseada = 8;
+
+    // Asegura que al menos haya un punto de datos
+    if (datos.isEmpty) {
+      return fechasEquidistantes;
+    }
+
+    // Calcula el paso entre las fechas
+    int paso;
+    if (datos.length < cantidadDeseada) {
+      paso = 1;
+    } else {
+      paso = (datos.length / (cantidadDeseada - 1)).ceil();
+    }
+    for (int i = 0; i < datos.length; i += paso) {
+      fechasEquidistantes.add(datos[i].fecha);
+    }
+
+    return fechasEquidistantes;
+  }
+
+  bool existeLaFecha(List<DateTime> listaFechas, DateTime fechaBuscada) {
+    return listaFechas.any((fecha) => fecha.year == fechaBuscada.year && fecha.month == fechaBuscada.month && fecha.day == fechaBuscada.day);
   }
 }
