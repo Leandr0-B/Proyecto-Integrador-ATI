@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaFuncionario.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
@@ -10,8 +11,7 @@ class VistaAltaFuncionario extends StatefulWidget {
   _VistaAltaFuncionarioState createState() => _VistaAltaFuncionarioState();
 }
 
-class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
-    implements IvistaAltaFuncionario {
+class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements IvistaAltaFuncionario {
   final _formKey = GlobalKey<FormState>();
   String _ci = '';
   String _nombre = '';
@@ -19,10 +19,10 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   String _telefono = '';
   int _administrador = 0;
   String _email = '';
+  DateTime? _fechaNacimiento;
   List<int> selectedRoles = [];
   List<int> selectedSucursales = [];
-  ControllerVistaAltaFuncionario controller =
-      ControllerVistaAltaFuncionario.empty();
+  ControllerVistaAltaFuncionario controller = ControllerVistaAltaFuncionario.empty();
   final fieldCi = TextEditingController();
   final fieldNombre = TextEditingController();
   final fieldApellido = TextEditingController();
@@ -143,6 +143,21 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                     _email = value!;
                   },
                 ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Seleccione la fecha de nacimiento:"),
+                ),
+                InkWell(
+                  onTap: () => _selectFechaNacimiento(context),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      hintText: 'Fecha nacimiento',
+                    ),
+                    child: Text(
+                      _fechaNacimiento != null ? DateFormat('dd/MM/yyyy').format(_fechaNacimiento!) : 'Seleccione una fecha',
+                    ),
+                  ),
+                ),
                 SizedBox(height: 16.0),
                 CheckboxListTile(
                   title: Text("Administrador"),
@@ -166,18 +181,14 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                       ),
                       FutureBuilder<List<Rol>?>(
                         future: getRoles(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Rol>?> snapshot) {
+                        builder: (BuildContext context, AsyncSnapshot<List<Rol>?> snapshot) {
                           if (snapshot.hasData) {
                             return Column(
                               children: snapshot.data!
-                                  .where((role) =>
-                                      role.idRol !=
-                                      3) // Esto excluirá el rol con id 3
+                                  .where((role) => role.idRol != 3) // Esto excluirá el rol con id 3
                                   .map((role) => CheckboxListTile(
                                         title: Text(role.descripcion),
-                                        value:
-                                            selectedRoles.contains(role.idRol),
+                                        value: selectedRoles.contains(role.idRol),
                                         onChanged: (newValue) {
                                           setState(() {
                                             if (newValue!) {
@@ -187,10 +198,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                                             }
                                           });
                                         },
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        contentPadding:
-                                            EdgeInsets.only(left: 16, right: 0),
+                                        controlAffinity: ListTileControlAffinity.leading,
+                                        contentPadding: EdgeInsets.only(left: 16, right: 0),
                                       ))
                                   .toList(),
                             );
@@ -207,30 +216,24 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                       ),
                       FutureBuilder<List<Sucursal>?>(
                         future: getSucursales(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Sucursal>?> snapshot) {
+                        builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
                           if (snapshot.hasData) {
                             return Column(
                               children: snapshot.data!
                                   .map((sucursal) => CheckboxListTile(
                                         title: Text(sucursal.nombre),
-                                        value: selectedSucursales
-                                            .contains(sucursal.idSucursal),
+                                        value: selectedSucursales.contains(sucursal.idSucursal),
                                         onChanged: (newValue) {
                                           setState(() {
                                             if (newValue!) {
-                                              selectedSucursales
-                                                  .add(sucursal.idSucursal);
+                                              selectedSucursales.add(sucursal.idSucursal);
                                             } else {
-                                              selectedSucursales
-                                                  .remove(sucursal.idSucursal);
+                                              selectedSucursales.remove(sucursal.idSucursal);
                                             }
                                           });
                                         },
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        contentPadding:
-                                            EdgeInsets.only(left: 16, right: 0),
+                                        controlAffinity: ListTileControlAffinity.leading,
+                                        contentPadding: EdgeInsets.only(left: 16, right: 0),
                                       ))
                                   .toList(),
                             );
@@ -247,15 +250,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      altaUsuarioFuncionario(
-                          _ci,
-                          _nombre,
-                          _administrador,
-                          selectedRoles,
-                          selectedSucursales,
-                          _apellido,
-                          _telefono,
-                          _email);
+                      altaUsuarioFuncionario(_ci, _nombre, _administrador, selectedRoles, selectedSucursales, _apellido, _telefono, _email);
                     }
                   },
                 ),
@@ -265,6 +260,15 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
         ),
       ),
     );
+  }
+
+  Future<void> _selectFechaNacimiento(BuildContext context) async {
+    DateTime? picked = await Utilidades.selectFechaNacimiento(context, _fechaNacimiento);
+    if (picked != null && picked != _fechaNacimiento) {
+      setState(() {
+        _fechaNacimiento = picked;
+      });
+    }
   }
 
   @override
@@ -278,17 +282,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
   }
 
   @override
-  Future<void> altaUsuarioFuncionario(
-      String ci,
-      String nombre,
-      int administrador,
-      List<int> roles,
-      List<int> sucursales,
-      String apellido,
-      String telefono,
-      String email) async {
-    await controller.altaUsuario(ci, nombre, administrador, selectedRoles,
-        selectedSucursales, apellido, telefono, email);
+  Future<void> altaUsuarioFuncionario(String ci, String nombre, int administrador, List<int> roles, List<int> sucursales, String apellido, String telefono, String email) async {
+    await controller.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email, _fechaNacimiento);
   }
 
   @override
@@ -317,6 +312,7 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario>
       fieldApellido.clear();
       fieldTelefono.clear();
       fieldEmail.clear();
+      _fechaNacimiento = null;
     });
   }
 

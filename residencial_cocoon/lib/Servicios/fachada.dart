@@ -70,13 +70,13 @@ class Fachada {
     return await _servicioUsuario?.listaRoles();
   }
 
-  Future<void> altaUsuario(
-      String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email) async {
-    await _servicioUsuario?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email);
+  Future<void> altaUsuario(String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email,
+      DateTime? fechaNacimiento) async {
+    await _servicioUsuario?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email, fechaNacimiento);
   }
 
-  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido) async {
-    await _servicioUsuario?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido);
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido, DateTime? fechaNacimiento) async {
+    await _servicioUsuario?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido, fechaNacimiento);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {

@@ -39,15 +39,13 @@ class ControllerVistaAltaFuncionario {
     }
   }
 
-  Future<void> altaUsuario(
-      String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email) async {
+  Future<void> altaUsuario(String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email,
+      DateTime? fechaNacimiento) async {
     nombre = _capitalize(nombre);
     apellido = _capitalize(apellido);
     try {
-      if (Usuario.esEmailValido(email)) {
-        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email);
-      } else {
-        _vista?.mostrarMensajeError("El email no tiene el formato correcto.");
+      if (_controles(email, fechaNacimiento)) {
+        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email, fechaNacimiento);
       }
     } on AltaUsuarioException catch (ex) {
       _vista?.mostrarMensaje(ex.mensaje);
@@ -62,6 +60,18 @@ class ControllerVistaAltaFuncionario {
   void _cerrarSesion(String mensaje) {
     _vista?.mostrarMensajeError(mensaje);
     _vista?.cerrarSesion();
+  }
+
+  bool _controles(String email, DateTime? fechaNacimiento) {
+    if (!Usuario.esEmailValido(email)) {
+      _vista?.mostrarMensajeError("El email no tiene el formato correcto.");
+      return false;
+    }
+    if (fechaNacimiento == null) {
+      _vista?.mostrarMensajeError("Tiene que seleccionar la fecha de nacimiento");
+      return false;
+    }
+    return true;
   }
 
   String _capitalize(String text) {

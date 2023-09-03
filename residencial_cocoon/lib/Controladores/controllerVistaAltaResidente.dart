@@ -26,7 +26,7 @@ class ControllerVistaAltaResidente {
     }
   }
 
-  Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido) async {
+  Future<void> altaUsuario(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido, DateTime? fechaNacimiento) async {
     nombre = _capitalize(nombre);
     apellido = _capitalize(apellido);
     try {
@@ -36,8 +36,10 @@ class ControllerVistaAltaResidente {
         _vistaAlta?.mostrarMensajeError("El documento identificador del residente tiene que ser distinto al de los familiares.");
       } else if (!_controlPrimario(familiares)) {
         _vistaAlta?.mostrarMensajeError("La lista de familiares tiene que tener por lo menos un familiar primario.");
+      } else if (fechaNacimiento == null) {
+        _vistaAlta?.mostrarMensajeError("Tiene que seleccionar la fecha de nacimiento.");
       } else {
-        await Fachada.getInstancia()?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido);
+        await Fachada.getInstancia()?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido, fechaNacimiento);
       }
     } on AltaUsuarioException catch (ex) {
       _vistaAlta?.mostrarMensaje(ex.mensaje);

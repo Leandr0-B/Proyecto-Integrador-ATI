@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/Controladores/controllerVistaAltaResidente.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
@@ -10,8 +11,7 @@ class VistaAltaResidente extends StatefulWidget {
   _VistaAltaResidenteState createState() => _VistaAltaResidenteState();
 }
 
-class _VistaAltaResidenteState extends State<VistaAltaResidente>
-    implements IvistaAltaResidente {
+class _VistaAltaResidenteState extends State<VistaAltaResidente> implements IvistaAltaResidente {
   final _formKey = GlobalKey<FormState>();
   final _familiarKey = GlobalKey<FormState>();
   String _ci = '';
@@ -21,11 +21,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   String _nombreFamiliar = '';
   String _apellidoFamiliar = '';
   String _emailFamiliar = '';
+  DateTime? _fechaNacimiento;
   String _telefono = '';
   int _contactoPrimarioFamiliar = 0;
   bool _agregarContactoPrimario = false;
-  ControllerVistaAltaResidente controller =
-      ControllerVistaAltaResidente.empty();
+  ControllerVistaAltaResidente controller = ControllerVistaAltaResidente.empty();
   int? selectedSucursal;
   List<Familiar> _familiares = []; // Variable _familiares declarada aquí
   final fieldCi = TextEditingController();
@@ -112,6 +112,21 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                     _apellido = value!;
                   },
                 ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Seleccione la fecha de nacimiento:"),
+                ),
+                InkWell(
+                  onTap: () => _selectFechaNacimiento(context),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      hintText: 'Fecha nacimiento',
+                    ),
+                    child: Text(
+                      _fechaNacimiento != null ? DateFormat('dd/MM/yyyy').format(_fechaNacimiento!) : 'Seleccione una fecha',
+                    ),
+                  ),
+                ),
                 SizedBox(height: 16.0),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -119,13 +134,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                 ),
                 FutureBuilder<List<Sucursal>?>(
                   future: getSucursales(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Sucursal>?> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Sucursal>?> snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!.map((sucursal) {
-                          final bool isSelected =
-                              selectedSucursal == sucursal.idSucursal;
+                          final bool isSelected = selectedSucursal == sucursal.idSucursal;
 
                           return RadioListTile<int>(
                             title: Text(sucursal.nombre),
@@ -209,8 +222,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'Email del familiar',
-                          hintText:
-                              'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
+                          hintText: 'Ingrese Email del Familiar (ejemplo@ejemplo.ejem)',
                         ),
                         maxLength: 100,
                         controller: emailFamiliar,
@@ -281,9 +293,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                     }
                   },
                 ),
-                if (_familiares != null &&
-                    _familiares!
-                        .isNotEmpty) // Verifica que _familiares no sea nulo antes de usarlo
+                if (_familiares != null && _familiares!.isNotEmpty) // Verifica que _familiares no sea nulo antes de usarlo
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text("Lista de familiares:"),
@@ -296,8 +306,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
                     return ListTile(
                       title: Row(
                         children: [
-                          Text(
-                              '${familiar.nombre} ${familiar.apellido} ${familiar.ci}'),
+                          Text('${familiar.nombre} ${familiar.apellido} ${familiar.ci}'),
                           if (familiar.contactoPrimario == 1)
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
@@ -335,6 +344,15 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     );
   }
 
+  Future<void> _selectFechaNacimiento(BuildContext context) async {
+    DateTime? picked = await Utilidades.selectFechaNacimiento(context, _fechaNacimiento);
+    if (picked != null && picked != _fechaNacimiento) {
+      setState(() {
+        _fechaNacimiento = picked;
+      });
+    }
+  }
+
   bool _shouldShowContactoPrimarioCheckbox() {
     return controller.mostrarPrimario(_familiares);
   }
@@ -346,13 +364,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
     String _emailFamiliar,
     int _contactoPrimarioFamiliar,
   ) {
-    Familiar familiar = Familiar(
-        _ciFamiliar,
-        _nombreFamiliar,
-        _apellidoFamiliar,
-        _emailFamiliar,
-        _agregarContactoPrimario ? 1 : 0,
-        _telefono);
+    Familiar familiar = Familiar(_ciFamiliar, _nombreFamiliar, _apellidoFamiliar, _emailFamiliar, _agregarContactoPrimario ? 1 : 0, _telefono);
 
     setState(() {
       bool resultado = controller.controlAltaFamiliar(familiar, _familiares);
@@ -374,8 +386,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
   Future<void> crearUsuario() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await controller.altaUsuario(
-          _familiares, _ci, _nombre, selectedSucursal, _apellido);
+      await controller.altaUsuario(_familiares, _ci, _nombre, selectedSucursal, _apellido, _fechaNacimiento);
     }
   }
 
@@ -413,6 +424,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente>
       _agregarContactoPrimario = false;
       _familiares = [];
       fieldApellido.clear();
+      _fechaNacimiento = null;
     });
   }
 

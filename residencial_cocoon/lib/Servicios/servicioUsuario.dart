@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:residencial_cocoon/APIService/apiService.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/rol.dart';
@@ -43,20 +44,25 @@ class ServicioUsuario {
     return Rol.fromJsonList(jsonList);
   }
 
-  Future<void> altaUsuario(
-      String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email) async {
+  Future<void> altaUsuario(String ci, String nombre, int administrador, List<int> selectedRoles, List<int> selectedSucursales, String apellido, String telefono, String email,
+      DateTime? fechaNacimiento) async {
+    DateTime fecha_nacimiento_sin_hora = DateTime(fechaNacimiento!.year, fechaNacimiento!.month, fechaNacimiento!.day);
+    String fecha_nacimiento_formateada = DateFormat('yyyy-MM-dd').format(fecha_nacimiento_sin_hora);
     if (administrador == 0) {
       Usuario.validarRoles(selectedRoles);
       Usuario.validarSucursales(selectedSucursales);
     }
-    await APIService.postAltaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido, telefono, email);
+    await APIService.postAltaUsuario(
+        ci, nombre, administrador, selectedRoles, selectedSucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido, telefono, email, fecha_nacimiento_formateada);
   }
 
-  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido) async {
+  Future<void> altaUsuarioResidente(List<Familiar> familiares, String ci, String nombre, int? selectedSucursal, String apellido, DateTime? fechaNacimiento) async {
     List<Map<String, dynamic>> familiaresJsonList = familiares.map((familiar) => familiar.toJson()).toList();
     List<int?> sucursales = [];
     sucursales.add(selectedSucursal);
-    await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList, sucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido);
+    DateTime fecha_nacimiento_sin_hora = DateTime(fechaNacimiento!.year, fechaNacimiento!.month, fechaNacimiento!.day);
+    String fecha_nacimiento_formateada = DateFormat('yyyy-MM-dd').format(fecha_nacimiento_sin_hora);
+    await APIService.postAltaUsuarioResidente(ci, nombre, familiaresJsonList, sucursales, Fachada.getInstancia()?.getUsuario()?.getToken(), apellido, fecha_nacimiento_formateada);
   }
 
   Future<List<Usuario>?> obtenerUsuarios() async {
