@@ -114,6 +114,20 @@ class Utilidades {
     return picked;
   }
 
+  static Future<DateTime?> selectFechaNacimiento(BuildContext context, DateTime? fecha) async {
+    final DateTime now = DateTime.now();
+    final DateTime initialDate = now.subtract(Duration(days: 18 * 365)); // Resta 18 años en días
+    final DateTime lastDate = now.subtract(Duration(days: 120 * 365)); // Resta 120 años en días
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: fecha ?? initialDate,
+      firstDate: lastDate,
+      lastDate: initialDate,
+    );
+    return picked;
+  }
+
   static Future<TimeOfDay?> selectHora(BuildContext context, TimeOfDay? hora) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,

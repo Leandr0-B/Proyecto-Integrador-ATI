@@ -12,6 +12,7 @@ class Usuario {
   String _apellido = "";
   String _telefono = "";
   String _email = "";
+  DateTime _fechaNacimiento = DateTime(0);
   int _administrador = 0;
   List<Rol> _roles = [];
   List<Sucursal> _sucursales = [];
@@ -34,6 +35,7 @@ class Usuario {
     this._apellido,
     this._telefono,
     this._email,
+    this._fechaNacimiento,
   );
 
   Usuario.residente(
@@ -94,7 +96,17 @@ class Usuario {
 
     // Crear y retornar un nuevo objeto Usuario
     return Usuario.paraLista(
-        json['ci'], json['nombre'], json['administrador'] ?? 0, rolesList, sucursalesList, json['inactivo'] ?? 0, json['apellido'], json['telefono'], json['email']);
+      json['ci'],
+      json['nombre'],
+      json['administrador'] ?? 0,
+      rolesList,
+      sucursalesList,
+      json['inactivo'] ?? 0,
+      json['apellido'],
+      json['telefono'],
+      json['email'],
+      DateTime.parse(json['fecha_nacimiento']),
+    );
   }
 
   factory Usuario.fromJsonListaResidente(Map<String, dynamic> json) {
@@ -261,6 +273,18 @@ class Usuario {
       }
     }
     return telefono;
+  }
+
+  int mostrarEdad() {
+    final DateTime ahora = DateTime.now();
+    int edad = ahora.year - this._fechaNacimiento.year;
+
+    // Ajusta la edad si aún no ha tenido su cumpleaños este año
+    if (ahora.month < this._fechaNacimiento.month || (ahora.month == this._fechaNacimiento.month && ahora.day < this._fechaNacimiento.day)) {
+      edad--;
+    }
+
+    return edad;
   }
 
   //ToString

@@ -102,8 +102,8 @@ class APIService {
     }
   }
 
-  static Future<void> postAltaUsuario(
-      String ci, String nombre, int administrador, List<int> roles, List<int> sucursales, String? token, String apellido, String telefono, String email) async {
+  static Future<void> postAltaUsuario(String ci, String nombre, int administrador, List<int> roles, List<int> sucursales, String? token, String apellido, String telefono,
+      String email, String fechaNacimiento) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
@@ -120,6 +120,7 @@ class APIService {
         'administrador': administrador,
         'sucursales': sucursales,
         'roles': roles,
+        'fecha_nacimiento': fechaNacimiento,
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
@@ -137,7 +138,8 @@ class APIService {
     }
   }
 
-  static Future<void> postAltaUsuarioResidente(String ci, String nombre, List<Map<String, dynamic>> familiares, List<int?> sucursales, String? token, String apellido) async {
+  static Future<void> postAltaUsuarioResidente(
+      String ci, String nombre, List<Map<String, dynamic>> familiares, List<int?> sucursales, String? token, String apellido, String fechaNacimiento) async {
     // const String ERROR_USUARIO_CLAVE = "Usuario o Contrseña incorrectos";
 
     final url = Uri.parse('https://residencialapi.azurewebsites.net/usuario/crear');
@@ -153,6 +155,7 @@ class APIService {
         'sucursales': sucursales,
         'roles': [3],
         'familiares': familiares,
+        'fecha_nacimiento': fechaNacimiento,
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );

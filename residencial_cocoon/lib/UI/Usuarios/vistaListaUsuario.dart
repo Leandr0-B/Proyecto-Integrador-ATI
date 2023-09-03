@@ -193,6 +193,14 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
+                                    Text(
+                                      'Edad: ${usuario.mostrarEdad()}',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0),
                                     if (usuario.esAdministrador())
                                       Text(
                                         'Usuario Administrador',
@@ -433,6 +441,14 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
+                                    Text(
+                                      'Edad: ${usuario.mostrarEdad()}',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0),
                                     if (usuario.esAdministrador())
                                       Text(
                                         'Usuario Administrador',
@@ -550,6 +566,14 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
             children: [
               Text(
                 'Usuario, Nombre: ${usuario.nombre} - Apellido: ${usuario.apellido} - Documento: ${usuario.ci}',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Edad: ${usuario.mostrarEdad()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
