@@ -257,7 +257,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
+                                      'Registrado por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -492,7 +492,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
+                                      'Registrado por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -597,7 +597,7 @@ class _VistaVisualizarChequeoMedicoState extends State<VistaVisualizarChequeoMed
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrador por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
+                'Registrado por: ${chequeoMedico.ciGeriatra()} - ${chequeoMedico.nombreGeriatra()} - ${chequeoMedico.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
             ],

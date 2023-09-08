@@ -263,7 +263,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -525,7 +525,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -661,7 +661,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                  'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 20.0),

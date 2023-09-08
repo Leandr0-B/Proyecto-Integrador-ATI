@@ -251,7 +251,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                                        'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -508,7 +508,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                                        'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -714,7 +714,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Regitrador por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                  'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 20.0),

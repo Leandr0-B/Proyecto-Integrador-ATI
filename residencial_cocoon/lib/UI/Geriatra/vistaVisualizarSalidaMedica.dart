@@ -256,7 +256,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
+                                      'Registrado por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -490,7 +490,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
+                                      'Registrado por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -591,7 +591,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
               ),
               const SizedBox(height: 10.0),
               Text(
-                'Regitrador por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
+                'Registrado por: ${salidaMedica.ciGeriatra()} - ${salidaMedica.nombreGeriatra()} - ${salidaMedica.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),

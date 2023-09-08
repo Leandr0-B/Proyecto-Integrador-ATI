@@ -236,7 +236,7 @@ class _VistaVisualizarPrescripcionesControlState extends State<VistaVisualizarPr
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                                      'Registrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -475,7 +475,7 @@ class _VistaVisualizarPrescripcionesControlState extends State<VistaVisualizarPr
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                                      'Registrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -610,7 +610,7 @@ class _VistaVisualizarPrescripcionesControlState extends State<VistaVisualizarPr
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                'Registrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),
