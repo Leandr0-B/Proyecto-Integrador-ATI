@@ -19,6 +19,11 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
   String? _palabraClaveNombre;
   String? _palabraClaveApellido;
   String? _ciResidente;
+
+  String? _palabraClaveNombreFiltro;
+  String? _palabraClaveApellidoFiltro;
+  String? _ciResidenteFiltro;
+
   bool _filtroExpandido = false;
 
   final _palabraClaveNombreController = TextEditingController();
@@ -648,12 +653,15 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
   }
 
   void obtenerUsuariosPaginadosConfiltros() {
-    _usuarios = _controller.obtenerUsuariosPaginadosConfiltros(_paginaActual, _elementosPorPagina, _ciResidente, _palabraClaveNombre, _palabraClaveApellido);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _ciResidente, _palabraClaveNombre, _palabraClaveApellido);
+    _usuarios = _controller.obtenerUsuariosPaginadosConfiltros(_paginaActual, _elementosPorPagina, _ciResidenteFiltro, _palabraClaveNombreFiltro, _palabraClaveApellidoFiltro);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _ciResidenteFiltro, _palabraClaveNombreFiltro, _palabraClaveApellidoFiltro);
     setState(() {});
   }
 
   void obtenerUsuariosPaginadosBotonFiltrar() {
+    _palabraClaveNombreFiltro = _palabraClaveNombre;
+    _palabraClaveApellidoFiltro = _palabraClaveApellido;
+    _ciResidenteFiltro = _ciResidente;
     _paginaActual = 1;
     obtenerUsuariosPaginadosConfiltros();
   }
@@ -668,6 +676,9 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
     _palabraClaveNombre = null;
     _palabraClaveApellido = null;
     _ciResidente = null;
+    _palabraClaveNombreFiltro = null;
+    _palabraClaveApellidoFiltro = null;
+    _ciResidenteFiltro = null;
     _palabraClaveNombreController.clear();
     _palabraClaveApellidoController.clear();
     _ciResidenteController.clear();

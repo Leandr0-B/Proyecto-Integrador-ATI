@@ -22,6 +22,10 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
   int _elementosPorPagina = 6;
   String? _palabraClave = "";
   String? _ciResidente;
+
+  String? _palabraClaveFiltro = "";
+  String? _ciResidenteFiltro;
+
   Future<List<PrescripcionDeMedicamento>> _prescripciones = Future.value([]);
   Future<List<Familiar>?> _familiares = Future.value([]);
   Familiar? _selectedFamiliar;
@@ -522,6 +526,8 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
     _paginaActual = 1;
     _palabraClave = null;
     _ciResidente = null;
+    _palabraClaveFiltro = null;
+    _ciResidenteFiltro = null;
     _palabraClaveController.clear();
     _ciResidenteController.clear();
   }
@@ -553,12 +559,14 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
   }
 
   void obtenerPrescripcionesActivasPaginadosConfiltros() {
-    _prescripciones = _controller.obtenerPrescripcionesActivasPaginadosConfiltros(_paginaActual, _elementosPorPagina, _ciResidente, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _ciResidente, _palabraClave);
+    _prescripciones = _controller.obtenerPrescripcionesActivasPaginadosConfiltros(_paginaActual, _elementosPorPagina, _ciResidenteFiltro, _palabraClaveFiltro);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _ciResidenteFiltro, _palabraClaveFiltro);
     setState(() {});
   }
 
   void obtenerPrescripcionesActivasPaginadosBotonFiltrar() {
+    _palabraClaveFiltro = _palabraClave;
+    _ciResidenteFiltro = _ciResidente;
     _paginaActual = 1;
     obtenerPrescripcionesActivasPaginadosConfiltros();
   }
@@ -567,6 +575,8 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
     _paginaActual = 1;
     _palabraClave = null;
     _ciResidente = null;
+    _palabraClaveFiltro = null;
+    _ciResidenteFiltro = null;
     _palabraClaveController.clear();
     _ciResidenteController.clear();
   }
