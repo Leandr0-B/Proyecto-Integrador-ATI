@@ -214,7 +214,7 @@ class _VistaChequeoMedicoState extends State<VistaChequeoMedico> implements Ivis
                 SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Ingrese una descripción del control:"),
+                  child: Text("Ingrese una descripción del chequeo:"),
                 ),
                 Container(
                   decoration: BoxDecoration(

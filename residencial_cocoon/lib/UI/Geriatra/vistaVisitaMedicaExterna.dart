@@ -235,7 +235,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> imp
                       altaVisitaMedicaExt();
                     }
                   },
-                  child: Text('Ingresar alta'),
+                  child: Text('Ingresar visita'),
                 ),
               ],
             ),
