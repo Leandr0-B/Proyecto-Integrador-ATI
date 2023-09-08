@@ -203,6 +203,10 @@ class RegistroControlConPrescripcion {
     return _prescripcion.controles;
   }
 
+  bool esProcesada() {
+    return _procesada == 1;
+  }
+
   void procesar() {
     this._procesada = 1;
   }

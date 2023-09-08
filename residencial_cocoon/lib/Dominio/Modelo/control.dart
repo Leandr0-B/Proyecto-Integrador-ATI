@@ -208,23 +208,23 @@ class Control {
 
   String toStringPrescripcion() {
     String retorno = "";
-    retorno += "Nombre: $_nombre, ";
-    retorno += "Unidad: $_unidad";
+    retorno += "$_nombre, ";
+    retorno += "Unidad: $_unidad ";
 
     return retorno;
   }
 
   String toStringProcesar() {
     String retorno = "";
-    retorno += "Nombre: $_nombre, ";
-    retorno += "Unidad: $_unidad";
+    retorno += "$_nombre, ";
+    retorno += "Unidad: $_unidad, ";
     switch (_valor_compuesto) {
       case 1:
-        retorno += "Primer valor: $_valor";
-        retorno += "Segundo valor: $_segundoValor";
+        retorno += "Primer valor: $_valor ";
+        retorno += "Segundo valor: $_segundoValor ";
         break;
       case 0:
-        retorno += "Valor: $_valor";
+        retorno += "Valor: $_valor ";
         break;
       default:
     }

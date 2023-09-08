@@ -50,7 +50,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Registro de Medicaciones Periódicas',
+          'Consumo de Medicación Periódica',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -172,7 +172,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Medicaciones Periódicas Registradas',
+                            'No hay Medicaciones Periódicas Registradas',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -227,17 +227,17 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${registroMed.prescripcion.medicamento.nombre} - ${registroMed.prescripcion.medicamento.unidad}',
+                                      'Medicamento: ${registroMed.nombreMedicamento()} - ${registroMed.uniadMedicamento()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Cantidad Recetada: ${registroMed.prescripcion.cantidad}',
+                                      'Cantidad Recetada: ${registroMed.cantidadRecetada()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Estado: ${registroMed.procesada == 1 ? 'Realizado' : 'Pendiente'}',
+                                      'Estado: ${registroMed.esProcesada() ? 'Realizado' : 'Pendiente'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -251,7 +251,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    if (registroMed.procesada == 1) ...{
+                                    if (registroMed.esProcesada()) ...{
                                       Text(
                                         'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
                                         style: const TextStyle(fontSize: 14.0),
@@ -268,7 +268,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -437,7 +437,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Medicaciones Periódicas Registradas',
+                            'No hay Medicaciones Periódicas Registradas',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -494,12 +494,12 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Medicamento: ${registroMed.prescripcion.medicamento.nombre} - ${registroMed.prescripcion.medicamento.unidad}',
+                                      'Medicamento: ${registroMed.nombreMedicamento()} - ${registroMed.uniadMedicamento()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Estado: ${registroMed.procesada == 1 ? 'Realizado' : 'Pendiente'}',
+                                      'Estado: ${registroMed.esProcesada() ? 'Realizado' : 'Pendiente'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -508,7 +508,12 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    if (registroMed.procesada == 1) ...{
+                                    Text(
+                                      'Hora Pactada: ${registroMed.horaPactada.hour.toString().padLeft(2, '0')}:${registroMed.horaPactada.minute.toString().padLeft(2, '0')}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    if (registroMed.esProcesada()) ...{
                                       Text(
                                         'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
                                         style: const TextStyle(fontSize: 14.0),
@@ -525,7 +530,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                                        'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
                                       const SizedBox(height: 20.0),
@@ -620,17 +625,17 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Medicamento: ${registroMed.prescripcion.medicamento.nombre} - ${registroMed.prescripcion.medicamento.unidad}',
+                'Medicamento: ${registroMed.nombreMedicamento()} - ${registroMed.uniadMedicamento()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Cantidad Recetada: ${registroMed.prescripcion.cantidad}',
+                'Cantidad Recetada: ${registroMed.cantidadRecetada()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Estado: ${registroMed.procesada == 1 ? 'Realizado' : 'Pendiente'}',
+                'Estado: ${registroMed.esProcesada() ? 'Realizado' : 'Pendiente'}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
@@ -644,7 +649,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
-              if (registroMed.procesada == 1) ...{
+              if (registroMed.esProcesada()) ...{
                 Text(
                   'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroMed.fecha_de_realizacion)}',
                   style: const TextStyle(fontSize: 14.0),
@@ -661,7 +666,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  'Regitrador por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
+                  'Registrado por: ${registroMed.ciEnfermero()} - ${registroMed.nombreEnfermero()} - ${registroMed.apellidoEnfermero()}',
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 const SizedBox(height: 20.0),

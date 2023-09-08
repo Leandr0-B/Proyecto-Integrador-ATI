@@ -257,7 +257,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
+                                      'Registrado por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -486,7 +486,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
+                                      'Registrado por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -585,7 +585,7 @@ class _VistaVisualizarVisitaMedicaExternaState extends State<VistaVisualizarVisi
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrador por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
+                'Registrado por: ${visitaMedicaExterna.ciGeriatra()} - ${visitaMedicaExterna.nombreGeriatra()} - ${visitaMedicaExterna.apellidoGeriatra()}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20.0),

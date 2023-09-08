@@ -49,7 +49,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Registros de Prescripciones de Controles Médicos',
+          'Controles Médicos Periódicos',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(195, 190, 190, 180),
@@ -171,7 +171,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Prescripciones de controles.',
+                            'No hay controles médicos periédicos registrados.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -187,10 +187,10 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                       return const SizedBox(height: 16.0); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      RegistroControlConPrescripcion prescripcion = snapshot.data![index];
+                      RegistroControlConPrescripcion registroControlPeriodico = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(prescripcion);
+                          mostrarPopUp(registroControlPeriodico);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -213,7 +213,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                                      'Control Periódico, Residente: ${registroControlPeriodico.ciResidente()} - ${registroControlPeriodico.nombreResidente()} - ${registroControlPeriodico.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -221,29 +221,47 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
-                                      style: const TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Descripcion: ${prescripcion.descripcionPrescripcion()}',
-                                      style: const TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
+                                      'Descripcion: ${registroControlPeriodico.descripcion}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
+                                      'Controles:\n${registroControlPeriodico.controles().map((control) => registroControlPeriodico.esProcesada() ? control.toStringProcesar() : control.toStringPrescripcion()).join("\n")}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                                      'Estado: ${registroControlPeriodico.esProcesada() ? 'Realizado' : 'Pendiente'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_pactada)}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Hora Pactada: ${registroControlPeriodico.hora_pactada.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_pactada.minute.toString().padLeft(2, '0')}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    if (registroControlPeriodico.esProcesada()) ...{
+                                      Text(
+                                        'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_realizada)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Hora de realización: ${registroControlPeriodico.hora_de_realizacion.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_de_realizacion.minute.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                    },
                                   ],
                                 ),
                               ),
@@ -408,7 +426,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Aún no hay Prescripciones de Controles.',
+                            'no hay controles médicos periédicos registrados.',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           SizedBox(height: 8.0),
@@ -426,10 +444,10 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                       ); // Espacio entre cada notificación
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      RegistroControlConPrescripcion prescripcion = snapshot.data![index];
+                      RegistroControlConPrescripcion registroControlPeriodico = snapshot.data![index];
                       return GestureDetector(
                         onTap: () {
-                          mostrarPopUp(prescripcion);
+                          mostrarPopUp(registroControlPeriodico);
                         },
                         child: SizedBox(
                           width: 300, // Ancho deseado para las tarjetas
@@ -452,7 +470,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                                      'Control Periódico, Residente: ${registroControlPeriodico.ciResidente()} - ${registroControlPeriodico.nombreResidente()} - ${registroControlPeriodico.apellidoResidente()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -460,29 +478,47 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
-                                      style: const TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'Descripcion: ${prescripcion.descripcionPrescripcion()}',
-                                      style: const TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
+                                      'Descripcion: ${registroControlPeriodico.descripcion}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
+                                      'Controles:\n${registroControlPeriodico.controles().map((control) => registroControlPeriodico.esProcesada() ? control.toStringProcesar() : control.toStringPrescripcion()).join("\n")}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                                      'Estado: ${registroControlPeriodico.esProcesada() ? 'Realizado' : 'Pendiente'}',
                                       style: const TextStyle(fontSize: 14.0),
                                     ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_pactada)}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Hora Pactada: ${registroControlPeriodico.hora_pactada.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_pactada.minute.toString().padLeft(2, '0')}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    if (registroControlPeriodico.esProcesada()) ...{
+                                      Text(
+                                        'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_realizada)}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Hora de realización: ${registroControlPeriodico.hora_de_realizacion.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_de_realizacion.minute.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                    },
                                   ],
                                 ),
                               ),
@@ -632,7 +668,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
     }
   }
 
-  void mostrarPopUp(RegistroControlConPrescripcion prescripcion) {
+  void mostrarPopUp(RegistroControlConPrescripcion registroControlPeriodico) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -647,7 +683,7 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Prescripción ${prescripcion.esCronica() ? 'Cronica' : 'Temporal'}, Residente: ${prescripcion.ciResidente()} - ${prescripcion.nombreResidente()} - ${prescripcion.apellidoResidente()}',
+                'Control Periódico, Residente: ${registroControlPeriodico.ciResidente()} - ${registroControlPeriodico.nombreResidente()} - ${registroControlPeriodico.apellidoResidente()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -655,35 +691,47 @@ class _VistaVisualizarRegistrosPrescripcionesControl extends State<VistaVisualiz
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Fecha Creacion: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaCracion())}',
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Descripcion: ${prescripcion.descripcionPrescripcion()}',
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                prescripcion.fechaDesde() != DateTime(0) ? 'Fecha desde: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaDesde())}' : 'Fecha desde: ---',
+                'Descripcion: ${registroControlPeriodico.descripcion}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                prescripcion.fechaHasta() != DateTime(0) ? 'Fecha Hasta: ${DateFormat('dd/MM/yyyy').format(prescripcion.fechaHasta())}' : 'Fecha Hasta: ---',
+                'Controles:\n${registroControlPeriodico.controles().map((control) => registroControlPeriodico.esProcesada() ? control.toStringProcesar() : control.toStringPrescripcion()).join("\n")}',
                 style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Controles:\n${prescripcion.controles().map((control) => control.toStringPrescripcion()).join("\n")}',
-                style: const TextStyle(fontSize: 16.0),
+                'Estado: ${registroControlPeriodico.esProcesada() ? 'Realizado' : 'Pendiente'}',
+                style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 8.0),
               Text(
-                'Regitrado por: ${prescripcion.ciGeriatra()} - ${prescripcion.nombreGeriatra()} - ${prescripcion.apellidoGeriatra()}',
+                'Fecha pactada: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_pactada)}',
                 style: const TextStyle(fontSize: 14.0),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 8.0),
+              Text(
+                'Hora Pactada: ${registroControlPeriodico.hora_pactada.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_pactada.minute.toString().padLeft(2, '0')}',
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              if (registroControlPeriodico.esProcesada()) ...{
+                Text(
+                  'Fecha de realización: ${DateFormat('dd/MM/yyyy').format(registroControlPeriodico.fecha_realizada)}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Hora de realización: ${registroControlPeriodico.hora_de_realizacion.hour.toString().padLeft(2, '0')}:${registroControlPeriodico.hora_de_realizacion.minute.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Registrado por: ${registroControlPeriodico.ciEnfermero()} - ${registroControlPeriodico.nombreEnfermero()} - ${registroControlPeriodico.apellidoEnfermero()}',
+                  style: const TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 20.0),
+              },
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

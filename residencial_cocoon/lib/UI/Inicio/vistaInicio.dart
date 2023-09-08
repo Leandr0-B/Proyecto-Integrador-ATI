@@ -316,7 +316,7 @@ class MyDrawerList extends StatelessWidget {
               ),
               child: const SideBarHeader(),
             ),
-            menuItem(1, "Inicio", Icons.home, DrawerSections.inicio),
+            menuItem("Inicio", Icons.home, DrawerSections.inicio),
             if (usuario!.esAdministrador()) ...[
               ExpansionTile(
                 leading: const Icon(Icons.people_alt_outlined, size: 20, color: Colors.black),
@@ -326,9 +326,9 @@ class MyDrawerList extends StatelessWidget {
                     color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
-                        menuSubItem(20, "Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
-                        menuSubItem(21, "Registrar Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
-                        menuSubItem(22, "Registrar Residente", Icons.person_add, DrawerSections.altaResidente),
+                        menuSubItem("Lista de Usuarios", Icons.list, DrawerSections.listaUsuarios),
+                        menuSubItem("Registrar Funcionario", Icons.person_add, DrawerSections.altaFuncionario),
+                        menuSubItem("Registrar Residente", Icons.person_add, DrawerSections.altaResidente),
                       ],
                     ),
                   ),
@@ -344,17 +344,17 @@ class MyDrawerList extends StatelessWidget {
                     color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
-                        menuSubItem(52, "Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
-                        menuSubItem(41, "Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
-                        menuSubItem(43, "Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
-                        menuSubItem(45, "Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
-                        menuSubItem(47, "Registrar Prescripcion Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
-                        menuSubItem(45, "Registrar Prescripcion Control", Icons.fact_check, DrawerSections.prescripcionControl),
-                        menuSubItem(42, "Visualizar Salidas Medicas", Icons.list, DrawerSections.visualizarSalidaMedica),
-                        menuSubItem(44, "Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
-                        menuSubItem(46, "Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
-                        menuSubItem(61, "Visualizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
-                        menuSubItem(63, "Visualizar Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
+                        menuSubItem("Asociar Medicamento a residente", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.asociarMedicamento),
+                        menuSubItem("Registrar Salida Medica", Icons.emoji_transportation_outlined, DrawerSections.salidaMedica),
+                        menuSubItem("Registrar Visita Medica Externa", Icons.medical_services_sharp, DrawerSections.visitaMedica),
+                        menuSubItem("Registrar Chequeo Medico", Icons.fact_check, DrawerSections.chequeoMedico),
+                        menuSubItem("Registrar Prescripcion de Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.prescripcionMedicamento),
+                        menuSubItem("Registrar Prescripcion de Controles", Icons.fact_check, DrawerSections.prescripcionControl),
+                        menuSubItem("Visualizar Salidas Medicas", Icons.list, DrawerSections.visualizarSalidaMedica),
+                        menuSubItem("Visualizar Visitas Medicas Externas", Icons.list, DrawerSections.visualizarVisitaMedica),
+                        menuSubItem("Visualizar Chequeos Medicos", Icons.list, DrawerSections.visualizarChequeoMedico),
+                        menuSubItem("Visualizar Prescripciones de Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
+                        menuSubItem("Visualizar Prescripciones de Controles Médicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
                       ],
                     ),
                   ),
@@ -370,9 +370,9 @@ class MyDrawerList extends StatelessWidget {
                     color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
-                        menuSubItem(53, "Agregar Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
-                        menuSubItem(61, "Registro Medicación Periódica", Icons.fact_check, DrawerSections.medicacionPeriodica),
-                        menuSubItem(61, "Registro Control Periódico", Icons.fact_check, DrawerSections.registrarControlPeriodico),
+                        menuSubItem("Agregar Stock Medicamento", const IconData(0xf0351, fontFamily: 'MaterialIcons'), DrawerSections.stockMedicamento),
+                        menuSubItem("Registros de Medicación Periódica", Icons.fact_check, DrawerSections.medicacionPeriodica),
+                        menuSubItem("Registros de Controles Periódicos", Icons.fact_check, DrawerSections.registrarControlPeriodico),
                       ],
                     ),
                   ),
@@ -388,28 +388,28 @@ class MyDrawerList extends StatelessWidget {
                     color: Color.fromRGBO(225, 183, 72, 0.300), // El color de fondo que desees
                     child: Column(
                       children: [
-                        menuSubItem(61, "Visualizar Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
-                        menuSubItem(62, "Visualizar Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
-                        menuSubItem(63, "Visualizar Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
-                        menuSubItem(61, "Visulizar Prescripciones Medicamentos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
-                        menuSubItem(63, "Visualizar Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
-                        menuSubItem(63, "Visualizar Registros Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarRegistrosPrescripcionesControles),
-                        menuSubItem(63, "Visualizar Prescripciones Controles Médicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
+                        menuSubItem("Salidas Medicas", Icons.emoji_transportation_outlined, DrawerSections.visualizarSalidaMedica),
+                        menuSubItem("Visitas Medicas Externas", Icons.medical_services_sharp, DrawerSections.visualizarVisitaMedica),
+                        menuSubItem("Chequeos Medicos", Icons.fact_check, DrawerSections.visualizarChequeoMedico),
+                        menuSubItem("Prescripciones de Medicamentos Periódicos", Icons.list, DrawerSections.visualizarPrescripcionesMedicamentos),
+                        menuSubItem("Prescripciones de Controles Médicos Periódicos", Icons.list, DrawerSections.visualizarPrescripcionesControles),
+                        menuSubItem("Consumo de Medicación Periódica", Icons.list, DrawerSections.visualizarMedicacionPeriodica),
+                        menuSubItem("Controles Médicos Periódicos", Icons.list, DrawerSections.visualizarRegistrosPrescripcionesControles),
                       ],
                     ),
                   ),
                 ],
               ),
             ],
-            menuItem(99, "Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
-            menuItem(999, "Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
+            menuItem("Cambio de contraseña", Icons.password, DrawerSections.cambioContrasena),
+            menuItem("Cerrar Sesion", Icons.lock, DrawerSections.cerrarSesion),
           ],
         ),
       ),
     );
   }
 
-  Widget menuItem(int id, String title, IconData icon, DrawerSections page) {
+  Widget menuItem(String title, IconData icon, DrawerSections page) {
     return ListTile(
       onTap: () {
         Navigator.pop(context);
@@ -434,7 +434,7 @@ class MyDrawerList extends StatelessWidget {
     );
   }
 
-  Widget menuSubItem(int id, String title, IconData icon, DrawerSections page) {
+  Widget menuSubItem(String title, IconData icon, DrawerSections page) {
     return ListTile(
       onTap: () {
         Navigator.pop(context);
