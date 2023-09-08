@@ -27,6 +27,11 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
   Usuario? usuario = Fachada.getInstancia()?.getUsuario();
   String? _ciResidente;
 
+  DateTime? _fechaDesdeFiltro;
+  DateTime? _fechaHastaFiltro;
+  String? _palabraClaveFiltro;
+  String? _ciResidenteFiltro;
+
   final _palabraClaveController = TextEditingController();
   final _ciResidenteController = TextEditingController();
 
@@ -35,7 +40,7 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
     super.initState();
     _controller = ControllerVistaVisualizarRegistroMedicacionPeriodica(this);
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
-      _ciResidente = usuario?.ci;
+      _ciResidenteFiltro = usuario?.ci;
     }
     obtenerMedicacionesPeriodicasPaginadasConfiltros();
   }
@@ -708,11 +713,14 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
+    _fechaDesdeFiltro = null;
+    _fechaHastaFiltro = null;
+    _palabraClaveFiltro = null;
     _palabraClaveController.clear();
     if (usuario!.esResidente() && !usuario!.esAdministrador()) {
-      _ciResidente = usuario?.ci;
+      _ciResidenteFiltro = usuario?.ci;
     } else {
-      _ciResidente = null;
+      _ciResidenteFiltro = null;
       _ciResidenteController.clear();
     }
     setState(() {});
@@ -735,9 +743,9 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
   }
 
   void obtenerMedicacionesPeriodicasPaginadasConfiltros() {
-    _medicacionesPeriodicas =
-        _controller.obtenerMedicacionesPeriodicasPaginadasConfiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _ciResidente, _palabraClave);
+    _medicacionesPeriodicas = _controller.obtenerMedicacionesPeriodicasPaginadasConfiltros(
+        _paginaActual, _elementosPorPagina, _fechaDesdeFiltro, _fechaHastaFiltro, _ciResidenteFiltro, _palabraClaveFiltro);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesdeFiltro, _fechaHastaFiltro, _ciResidenteFiltro, _palabraClaveFiltro);
     setState(() {});
   }
 
@@ -748,9 +756,13 @@ class _VistaVisualizarRegistroMedicacionPeriodicaState extends State<VistaVisual
 
   @override
   void obtenerMedicacionesPeriodicasPaginadasBotonFiltrar() {
-    if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
+    _fechaDesdeFiltro = _fechaDesde;
+    _fechaHastaFiltro = _fechaHasta;
+    _palabraClaveFiltro = _palabraClave;
+    _ciResidenteFiltro = _ciResidente;
+    if (_fechaDesdeFiltro != null && _fechaHastaFiltro != null && _fechaDesdeFiltro!.isAfter(_fechaHastaFiltro!)) {
       mostrarMensajeError("La fecha desde no puede ser mayor a la fecha hasta.");
-    } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
+    } else if (_fechaDesdeFiltro == null && _fechaHastaFiltro != null || _fechaDesdeFiltro != null && _fechaHastaFiltro == null) {
       mostrarMensajeError("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;

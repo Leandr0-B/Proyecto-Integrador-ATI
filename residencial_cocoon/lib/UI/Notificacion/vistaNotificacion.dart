@@ -32,6 +32,11 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
   DateTime? _fechaDesde;
   DateTime? _fechaHasta;
   String? _palabraClave;
+
+  DateTime? _fechaDesdeFiltro;
+  DateTime? _fechaHastaFiltro;
+  String? _palabraClaveFiltro;
+
   bool _filtroExpandido = false;
 
   final _palabraClaveController = TextEditingController();
@@ -675,9 +680,12 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
 
   @override
   void obtenerNotificacionesPaginadasBotonFiltrar() {
-    if (_fechaDesde != null && _fechaHasta != null && _fechaDesde!.isAfter(_fechaHasta!)) {
+    _fechaDesdeFiltro = _fechaDesde;
+    _fechaHastaFiltro = _fechaHasta;
+    _palabraClaveFiltro = _palabraClave;
+    if (_fechaDesdeFiltro != null && _fechaHastaFiltro != null && _fechaDesdeFiltro!.isAfter(_fechaHastaFiltro!)) {
       mostrarMensaje("La fecha desde no puede ser mayor a la fecha hasta.");
-    } else if (_fechaDesde == null && _fechaHasta != null || _fechaDesde != null && _fechaHasta == null) {
+    } else if (_fechaDesdeFiltro == null && _fechaHastaFiltro != null || _fechaDesdeFiltro != null && _fechaHastaFiltro == null) {
       mostrarMensaje("Debe seleccionar ambas fechas.");
     } else {
       _paginaActual = 1;
@@ -687,8 +695,8 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
 
   @override
   void obtenerNotificacionesPaginadasConfiltros() {
-    _notificaciones = _controller.obtenerNotificacionesPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesde, _fechaHasta, _palabraClave);
+    _notificaciones = _controller.obtenerNotificacionesPaginadasConFiltros(_paginaActual, _elementosPorPagina, _fechaDesdeFiltro, _fechaHastaFiltro, _palabraClaveFiltro);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _fechaDesdeFiltro, _fechaHastaFiltro, _palabraClaveFiltro);
     setState(() {});
   }
 
@@ -704,6 +712,9 @@ class _VistaNotificacionState extends State<VistaNotificacion> with WidgetsBindi
     _fechaDesde = null;
     _fechaHasta = null;
     _palabraClave = null;
+    _fechaDesdeFiltro = null;
+    _fechaHastaFiltro = null;
+    _palabraClaveFiltro = null;
     _palabraClaveController.clear();
   }
 

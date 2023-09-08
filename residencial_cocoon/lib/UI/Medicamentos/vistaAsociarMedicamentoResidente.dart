@@ -23,6 +23,8 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
   int _paginaActual = 1;
   int _elementosPorPagina = 10;
   String? _palabraClave = "";
+  String? _palabraClaveFiltro = "";
+
   final _palabraClaveController = TextEditingController();
 
   //Medicamento Alta
@@ -229,13 +231,14 @@ class _VistaPrescripcionMedicamentoState extends State<VistaAsociarMedicamento> 
 
   @override
   void obtenerMedicamentosPaginadosConfiltros() {
-    _medicamentos = _controller.obtenerMedicamentosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _palabraClave);
-    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _palabraClave);
+    _medicamentos = _controller.obtenerMedicamentosPaginadosConFiltros(_paginaActual, _elementosPorPagina, _palabraClaveFiltro);
+    _cantidadDePaginas = _controller.calcularTotalPaginas(_elementosPorPagina, _palabraClaveFiltro);
     setState(() {});
   }
 
   @override
   void obtenerMedicamentosPaginadosBotonFiltrar() {
+    _palabraClaveFiltro = _palabraClave;
     _paginaActual = 1;
     obtenerMedicamentosPaginadosConfiltros();
   }

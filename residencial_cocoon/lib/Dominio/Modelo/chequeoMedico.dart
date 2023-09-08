@@ -79,7 +79,7 @@ class ChequeoMedico {
   }
 
   String apellidoResidente() {
-    return _geriatra.apellidoUsuario();
+    return _residente.apellidoUsuario();
   }
 
   String ciResidente() {
