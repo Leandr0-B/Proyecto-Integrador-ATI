@@ -197,7 +197,6 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                       'Edad: ${usuario.mostrarEdad()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -445,7 +444,6 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                                       'Edad: ${usuario.mostrarEdad()}',
                                       style: const TextStyle(
                                         fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
@@ -576,7 +574,6 @@ class _VistaListaUsuarioState extends State<VistaListaUsuario> implements Ivista
                 'Edad: ${usuario.mostrarEdad()}',
                 style: const TextStyle(
                   fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8.0),

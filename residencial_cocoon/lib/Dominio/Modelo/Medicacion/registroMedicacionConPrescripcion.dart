@@ -171,12 +171,28 @@ class RegistroMedicacionConPrescripcion {
     return _enfermero.ciUsuario();
   }
 
+  String nombreMedicamento() {
+    return _prescripcion.nombreMedicamento();
+  }
+
+  String uniadMedicamento() {
+    return _prescripcion.unidadMedicamento();
+  }
+
   void agregarEnfermero(Usuario enfermero) {
     _enfermero.usuario = enfermero;
   }
 
   int idPrescripcion() {
     return _prescripcion.id_prescripcion;
+  }
+
+  int cantidadRecetada() {
+    return _prescripcion.cantidad;
+  }
+
+  bool esProcesada() {
+    return _procesada == 1;
   }
 
   void procesar() {

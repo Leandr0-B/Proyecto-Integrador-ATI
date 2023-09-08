@@ -173,6 +173,14 @@ class PrescripcionDeMedicamento {
     return _geriatra.apellidoUsuario();
   }
 
+  String nombreMedicamento() {
+    return _medicamento.nombre;
+  }
+
+  String unidadMedicamento() {
+    return medicamento.unidad;
+  }
+
   String ciGeriatra() {
     return _geriatra.ciUsuario();
   }
