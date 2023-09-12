@@ -1006,7 +1006,10 @@ class APIService {
       }),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
-    if (response.statusCode == 401) {
+
+    if (response.statusCode == 400) {
+      throw Exception("El control con este nombre ya esta registrado.");
+    } else if (response.statusCode == 401) {
       throw TokenException("La sesion caduco. Vuelva a inciar sesion.");
     } else if (response.statusCode == 200) {
       throw ControlException("Control agregado exitosamente.");
