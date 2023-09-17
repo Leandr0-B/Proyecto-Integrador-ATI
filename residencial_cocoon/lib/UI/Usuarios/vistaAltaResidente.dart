@@ -370,7 +370,7 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
     String _emailFamiliar,
     int _contactoPrimarioFamiliar,
   ) {
-    Familiar familiar = Familiar(_ciFamiliar, _nombreFamiliar, _apellidoFamiliar, _emailFamiliar, _agregarContactoPrimario ? 1 : 0, _telefono);
+    Familiar familiar = Familiar(_ciFamiliar.trim(), _nombreFamiliar, _apellidoFamiliar, _emailFamiliar, _agregarContactoPrimario ? 1 : 0, _telefono);
 
     setState(() {
       bool resultado = controller.controlAltaFamiliar(familiar, _familiares);

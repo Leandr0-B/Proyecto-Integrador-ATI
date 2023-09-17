@@ -45,7 +45,7 @@ class ControllerVistaAltaFuncionario {
     apellido = _capitalize(apellido);
     try {
       if (_controles(email, fechaNacimiento)) {
-        await Fachada.getInstancia()?.altaUsuario(ci, nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email, fechaNacimiento);
+        await Fachada.getInstancia()?.altaUsuario(ci.trim(), nombre, administrador, selectedRoles, selectedSucursales, apellido, telefono, email, fechaNacimiento);
       }
     } on AltaUsuarioException catch (ex) {
       _vista?.mostrarMensaje(ex.mensaje);

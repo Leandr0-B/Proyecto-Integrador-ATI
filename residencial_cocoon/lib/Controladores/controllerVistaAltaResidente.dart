@@ -2,6 +2,7 @@ import 'package:residencial_cocoon/Dominio/Exceptions/altaUsuarioException.dart'
 import 'package:residencial_cocoon/Dominio/Exceptions/tokenException.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/familiar.dart';
 import 'package:residencial_cocoon/Dominio/Modelo/sucurusal.dart';
+import 'package:residencial_cocoon/Dominio/Modelo/usuario.dart';
 import 'package:residencial_cocoon/Servicios/fachada.dart';
 import 'package:residencial_cocoon/UI/Usuarios/iVistaAltaResidente.dart';
 
@@ -39,7 +40,7 @@ class ControllerVistaAltaResidente {
       } else if (fechaNacimiento == null) {
         _vistaAlta?.mostrarMensajeError("Tiene que seleccionar la fecha de nacimiento.");
       } else {
-        await Fachada.getInstancia()?.altaUsuarioResidente(familiares, ci, nombre, selectedSucursal, apellido, fechaNacimiento);
+        await Fachada.getInstancia()?.altaUsuarioResidente(familiares, ci.trim(), nombre, selectedSucursal, apellido, fechaNacimiento);
       }
     } on AltaUsuarioException catch (ex) {
       _vistaAlta?.mostrarMensaje(ex.mensaje);
@@ -74,7 +75,7 @@ class ControllerVistaAltaResidente {
   }
 
   bool controlAltaFamiliar(Familiar familiar, List<Familiar> lista) {
-    if (!familiar.esEmailValido()) {
+    if (!Usuario.esEmailValido(familiar.email)) {
       _vistaAlta?.mostrarMensajeError("El email del familiar no tiene el formato correcto.");
       return false;
     }

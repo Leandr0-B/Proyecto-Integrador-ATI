@@ -90,7 +90,7 @@ class ControllerVistaStockMedicamento {
   Future<void> altaFamiliar(
       String? ciResidente, String ciFamiliarAlta, String nombreFamiliarAlta, String apellidoFamiliarAlta, String emailFamiliarAlta, String telefonoFamiliarAlta) async {
     try {
-      await Fachada?.getInstancia()?.altaFamiliar(ciResidente, ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta);
+      await Fachada?.getInstancia()?.altaFamiliar(ciResidente?.trim(), ciFamiliarAlta, nombreFamiliarAlta, apellidoFamiliarAlta, emailFamiliarAlta, telefonoFamiliarAlta);
     } on AltaFamiliarException catch (e) {
       _vista?.mostrarMensaje(e.toString());
     } on TokenException catch (e) {
