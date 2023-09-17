@@ -259,8 +259,8 @@ class Usuario {
 
   static bool esEmailValido(String email) {
     // Expresión regular para verificar el formato del email
-    const pattern = r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$';
-    final regex = RegExp(pattern);
+    const pattern = r'^[a-zA-Z0-9-ñÑ_.]+@[a-zA-Z0-9-ñÑ]+(\.[a-zA-Z0-9-ñÑ]+)*(\.[a-zA-ZñÑ]{2,})$';
+    final regex = RegExp(pattern, caseSensitive: false);
 
     return regex.hasMatch(email);
   }

@@ -64,6 +64,9 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements 
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese documento identificador';
                     }
+                    if (num.tryParse(value) == null) {
+                      return 'Solo puede ingresar valores nueméricos.';
+                    }
                     return null;
                   },
                   onSaved: (value) {

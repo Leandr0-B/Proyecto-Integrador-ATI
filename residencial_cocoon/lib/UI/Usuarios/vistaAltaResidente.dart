@@ -72,6 +72,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese documento identificador';
                     }
+                    if (num.tryParse(value) == null) {
+                      return 'Solo puede ingresar valores nueméricos.';
+                    }
                     return null;
                   },
                   onSaved: (value) {
@@ -178,6 +181,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese CI del Familiar';
+                          }
+                          if (num.tryParse(value) == null) {
+                            return 'Solo puede ingresar valores nueméricos.';
                           }
                           return null;
                         },

@@ -635,6 +635,9 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese CI del Familiar';
                               }
+                              if (num.tryParse(value) == null) {
+                                return 'Solo puede ingresar valores nueméricos.';
+                              }
                               return null;
                             },
                             onSaved: (value) {
