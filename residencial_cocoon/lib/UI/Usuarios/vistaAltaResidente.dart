@@ -77,6 +77,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                     } else if (num.tryParse(value)! <= 0) {
                       return 'Ingresar el documento identificador sin puntos ni guiones.';
                     }
+                    if (value.contains(RegExp(r'[,.]'))) {
+                      return 'Ingresar el documento identificador sin puntos ni guiones.';
+                    }
                     return null;
                   },
                   onSaved: (value) {
@@ -199,6 +202,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                           } else if (num.tryParse(value)! <= 0) {
                             return 'Ingresar el documento identificador sin puntos ni guiones.';
                           }
+                          if (value.contains(RegExp(r'[,.]'))) {
+                            return 'Ingresar el documento identificador sin puntos ni guiones.';
+                          }
                           return null;
                         },
                         onSaved: (value) {
@@ -297,6 +303,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                                   return 'Solo puede ingresar valores nueméricos.';
                                 } else if (num.tryParse(value)! <= 0) {
                                   return 'No es un número de telefono válido.';
+                                }
+                                if (value.contains(RegExp(r'[,.]'))) {
+                                  return 'Ingresar telefono sin puntos ni guiones.';
                                 }
                                 return null;
                               },

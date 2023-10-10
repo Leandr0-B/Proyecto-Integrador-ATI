@@ -280,7 +280,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                             if (num.tryParse(value) == null) {
                               return 'Solo puede ingresar valores numéricos.';
                             }
-                            if (num.tryParse(value)! < 0) {
+                            if (num.tryParse(value)! <= 0) {
                               return 'Solo puede ingresar valores positivos.';
                             }
                             return null;
@@ -303,7 +303,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                             if (num.tryParse(value) == null) {
                               return 'Solo puede ingresar valores numéricos.';
                             }
-                            if (num.tryParse(value)! < 0) {
+                            if (num.tryParse(value)! <= 0) {
                               return 'Solo puede ingresar valores positivos.';
                             }
                             return null;
@@ -356,7 +356,7 @@ class _VistaPrescripcionMedicamentoState extends State<VistaPrescripcionMedicame
                               if (num.tryParse(value) == null) {
                                 return 'Solo puede ingresar valores numéricos.';
                               }
-                              if (num.tryParse(value)! < 0) {
+                              if (num.tryParse(value)! <= 0) {
                                 return 'Solo puede ingresar valores positivos.';
                               }
                               return null;
