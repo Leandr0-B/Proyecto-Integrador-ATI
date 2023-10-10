@@ -74,6 +74,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                     }
                     if (num.tryParse(value) == null) {
                       return 'Solo puede ingresar valores nueméricos.';
+                    } else if (num.tryParse(value)! <= 0) {
+                      return 'Ingresar el documento identificador sin puntos ni guiones.';
                     }
                     return null;
                   },
@@ -92,6 +94,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese nombre';
                     }
+                    // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                    final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Por favor ingrese solo letras';
+                    }
                     return null;
                   },
                   onSaved: (value) {
@@ -108,6 +115,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese apellido';
+                    }
+                    // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                    final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Por favor ingrese solo letras';
                     }
                     return null;
                   },
@@ -184,6 +196,8 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                           }
                           if (num.tryParse(value) == null) {
                             return 'Solo puede ingresar valores nueméricos.';
+                          } else if (num.tryParse(value)! <= 0) {
+                            return 'Ingresar el documento identificador sin puntos ni guiones.';
                           }
                           return null;
                         },
@@ -202,6 +216,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese Nombre del Familiar';
                           }
+                          // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                          final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                          if (!regex.hasMatch(value)) {
+                            return 'Por favor ingrese solo letras';
+                          }
                           return null;
                         },
                         onSaved: (value) {
@@ -218,6 +237,11 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese Apellido del Familiar';
+                          }
+                          // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                          final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                          if (!regex.hasMatch(value)) {
+                            return 'Por favor ingrese solo letras';
                           }
                           return null;
                         },
@@ -271,8 +295,9 @@ class _VistaAltaResidenteState extends State<VistaAltaResidente> implements Ivis
                                 }
                                 if (num.tryParse(value) == null) {
                                   return 'Solo puede ingresar valores nueméricos.';
+                                } else if (num.tryParse(value)! <= 0) {
+                                  return 'No es un número de telefono válido.';
                                 }
-
                                 return null;
                               },
                               onSaved: (value) {

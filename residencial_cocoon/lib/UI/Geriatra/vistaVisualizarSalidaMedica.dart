@@ -40,7 +40,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   final _ciResidenteController = TextEditingController();
 
   Future<void> selectFechaDesde(BuildContext context) async {
-    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaDesde);
+    DateTime? picked = await Utilidades.selectFechaSinTope(context, _fechaDesde);
 
     if (picked != null && picked != _fechaDesde) {
       setState(() {
@@ -50,7 +50,7 @@ class _VistaVisualizarSalidaMedicaState extends State<VistaVisualizarSalidaMedic
   }
 
   Future<void> selectFechaHasta(BuildContext context) async {
-    DateTime? picked = await Utilidades.selectFechaConTope(context, _fechaHasta);
+    DateTime? picked = await Utilidades.selectFechaSinTope(context, _fechaHasta);
 
     if (picked != null && picked != _fechaHasta) {
       setState(() {

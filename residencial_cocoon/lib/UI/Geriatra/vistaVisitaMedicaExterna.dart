@@ -246,7 +246,7 @@ class _VistaVisitaMedicaExternaState extends State<VistaVisitaMedicaExterna> imp
   }
 
   Future<void> _selectFecha(BuildContext context) async {
-    DateTime? picked = await Utilidades.selectFechaSinTope(context, fecha);
+    DateTime? picked = await Utilidades.selectFechaConTope(context, fecha);
     if (picked != null && picked != fecha) {
       setState(() {
         fecha = picked;
