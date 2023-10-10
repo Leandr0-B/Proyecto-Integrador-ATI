@@ -285,7 +285,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                               if (num.tryParse(value) == null) {
                                 return 'Solo puede ingresar valores numéricos.';
                               }
-                              if (num.tryParse(value)! < 0) {
+                              if (num.tryParse(value)! <= 0) {
                                 return 'Solo puede ingresar valores positivos.';
                               }
                               return null;
@@ -338,7 +338,7 @@ class _VistaPrescripcionControlState extends State<VistaPrescripcionControl> imp
                                 if (num.tryParse(value) == null) {
                                   return 'Solo puede ingresar valores numéricos.';
                                 }
-                                if (num.tryParse(value)! < 0) {
+                                if (num.tryParse(value)! <= 0) {
                                   return 'Solo puede ingresar valores positivos.';
                                 }
                                 return null;

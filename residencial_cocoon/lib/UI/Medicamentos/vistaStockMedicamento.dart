@@ -640,6 +640,9 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                               } else if (num.tryParse(value)! <= 0) {
                                 return 'Ingresar el documento identificador sin puntos ni guiones.';
                               }
+                              if (value.contains(RegExp(r'[,.]'))) {
+                                return 'Ingresar el documento identificador sin puntos ni guiones.';
+                              }
                               return null;
                             },
                             onSaved: (value) {
@@ -701,6 +704,9 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese Email del Familiar';
                               }
+                              if (!Usuario.esEmailValido(value)) {
+                                return 'Por favor ingrese email con formato correcto';
+                              }
 
                               return null;
                             },
@@ -723,6 +729,9 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                                 return 'Solo puede ingresar valores nueméricos.';
                               } else if (num.tryParse(value)! <= 0) {
                                 return 'No es un número de telefono válido';
+                              }
+                              if (value.contains(RegExp(r'[,.]'))) {
+                                return 'Ingresar telefono sin puntos ni guiones.';
                               }
                               return null;
                             },
@@ -897,14 +906,13 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                           maxLength: 100,
                           controller: _fieldStock,
                           validator: (value) {
-                            if (value == null || value.isEmpty || int.parse(value) == 0) {
-                              // Reemplazar "value == 0" por "int.parse(value) == 0"
+                            if (value == null || value.isEmpty) {
                               return 'Por favor ingrese la cantidad.';
                             }
                             if (num.tryParse(value) == null) {
                               return 'Solo puede ingresar valores numéricos.';
                             }
-                            if (num.tryParse(value)! < 0) {
+                            if (num.tryParse(value)! <= 0) {
                               return 'Solo puede ingresar valores positivos.';
                             }
                             return null;
@@ -921,8 +929,7 @@ class _VistaStockMedicamentoState extends State<VistaStockMedicamento> implement
                           maxLength: 100,
                           controller: _fieldStockNotificacion,
                           validator: (value) {
-                            if (value == null || value.isEmpty || int.parse(value) == 0) {
-                              // Reemplazar "value == 0" por "int.parse(value) == 0"
+                            if (value == null || value.isEmpty) {
                               return 'Por favor ingrese la cantidad para notificación.';
                             }
                             if (num.tryParse(value) == null) {
