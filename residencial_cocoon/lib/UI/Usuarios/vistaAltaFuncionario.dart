@@ -66,6 +66,8 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements 
                     }
                     if (num.tryParse(value) == null) {
                       return 'Solo puede ingresar valores nueméricos.';
+                    } else if (num.tryParse(value)! <= 0) {
+                      return 'Ingresar el documento identificador sin puntos ni guiones.';
                     }
                     return null;
                   },
@@ -84,6 +86,11 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements 
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese nombre';
                     }
+                    // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                    final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Por favor ingrese solo letras';
+                    }
                     return null;
                   },
                   onSaved: (value) {
@@ -100,6 +107,11 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements 
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese apellido';
+                    }
+                    // Expresión regular que permite solo letras (mayúsculas y minúsculas).
+                    final RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Por favor ingrese solo letras';
                     }
                     return null;
                   },
@@ -120,8 +132,9 @@ class _VistaAltaFuncionarioState extends State<VistaAltaFuncionario> implements 
                     }
                     if (num.tryParse(value) == null) {
                       return 'Solo puede ingresar valores nueméricos.';
+                    } else if (num.tryParse(value)! <= 0) {
+                      return 'No es un número de telefono válido.';
                     }
-
                     return null;
                   },
                   onSaved: (value) {
